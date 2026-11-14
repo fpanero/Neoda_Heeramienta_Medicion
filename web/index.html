@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="stylesheet" href="css/style.css?v=15" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z' fill='%2316A6B6'/%3E%3C/svg%3E" />
 </head>
 <body data-view="home">
@@ -22,7 +22,7 @@
     <nav aria-label="Secciones">
       <a href="#" data-go="home">Inicio</a>
       <a href="#mapa" data-go="mapa">Mapa de España</a>
-      <a href="#explorar" data-go="explorar" class="nav-cta">Mi provincia</a>
+      <a href="#explorar" data-go="explorar" class="nav-cta">Panel de análisis</a>
     </nav>
   </header>
 
@@ -31,11 +31,11 @@
   <div class="view" data-view="home">
     <section class="hero">
       <div class="hero-text">
-        <h1>¿Cuánta agua le queda a tu provincia?</h1>
-        <p class="hero-sub">Neoda revisa 45 años de datos de la NASA y te dice, en un vistazo, si la presión sobre el agua está creciendo donde vives.</p>
+        <h1>¿Se está quedando España sin agua?</h1>
+        <p class="hero-sub">Sequías más largas, cultivos que piden más riego, suelos que se secan. Neoda mide con 45 años de datos de la NASA qué está cambiando de verdad en cada provincia.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#explorar" data-go="explorar">Ver mi provincia</a>
-          <a class="btn btn-ghost" href="#mapa" data-go="mapa">Abrir el mapa de España</a>
+          <a class="btn btn-primary" href="#mapa" data-go="mapa">Ver el mapa de España</a>
+          <a class="btn btn-ghost" href="#explorar" data-go="explorar">Abrir el panel de análisis</a>
         </div>
       </div>
       <figure class="tap" aria-hidden="true">
@@ -59,7 +59,7 @@
           </g>
         </svg>
       </figure>
-      <a class="scroll-cue" href="#historia">Sigue bajando para ver qué le pasa al agua de Almería</a>
+      <a class="scroll-cue" href="#historia">Sigue bajando para ver qué le pasa al agua en España</a>
     </section>
 
     <section class="story" id="historia">
@@ -80,52 +80,114 @@
           </g>
           <rect class="glass" x="46" y="36" width="208" height="348" rx="24" fill="none" stroke="#06283D" stroke-width="6"/>
           <g class="ticks" stroke="#06283D" stroke-width="3"><path d="M254 106 h-16 M254 176 h-16 M254 246 h-16 M254 316 h-16"/></g>
-          <text x="150" y="420" text-anchor="middle" class="tank-label">El agua disponible en Almería</text>
+          <text x="150" y="420" text-anchor="middle" class="tank-label">El agua disponible en España</text>
         </svg>
       </div>
       <div class="story-steps">
         <article class="step-card" data-step="1">
-          <p class="step-num" data-live="precip">≈ 258 litros</p>
-          <h2>Llueve más o menos lo mismo que hace 35 años.</h2>
-          <p>Por cada metro cuadrado de Almería caen unos <span data-live="precip-text">258</span> litros al año. Si solo miráramos la lluvia, diríamos que no pasa nada.</p>
+          <p class="step-num" data-live="precip">35 de 52</p>
+          <h2>La lluvia apenas ha cambiado.</h2>
+          <p>Desde 1991, en <span data-live="precip-text">la mayoría de</span> provincias la lluvia no muestra un cambio claro. Si solo miráramos la lluvia, diríamos que no pasa nada.</p>
         </article>
         <article class="step-card" data-step="2">
-          <p class="step-num" data-live="tair">+1,6 °C</p>
-          <h2>Pero hace más calor que en 1991.</h2>
-          <p>La temperatura media ha subido de forma comprobada. Y con el calor, el agua se va antes.</p>
+          <p class="step-num" data-live="tair">52 de 52</p>
+          <h2>Pero hace más calor en toda España.</h2>
+          <p>La temperatura media ha subido de forma comprobada en <span data-live="tair-text">casi todas las</span> provincias, de media <span data-live="tair-avg">+0,4 °C</span> cada década. Y con el calor, el agua se va antes.</p>
         </article>
         <article class="step-card" data-step="3">
-          <p class="step-num" data-live="eto">+66 litros</p>
-          <h2>El aire se bebe cada año más agua.</h2>
-          <p>Es la evaporación que «pide» el clima: cada metro cuadrado de campo pierde <span data-live="eto-text">66</span> litros más al año que en 1991. Para cultivar lo mismo hay que regar más.</p>
+          <p class="step-num" data-live="eto">25 de 52</p>
+          <h2>El clima pide cada año más agua.</h2>
+          <p>La evaporación que «pide» el clima crece de forma comprobada en <span data-live="eto-text">muchas</span> provincias, <span data-live="eto-down">y no baja en ninguna</span>. Para cultivar lo mismo hay que regar más.</p>
         </article>
         <article class="step-card" data-step="4">
-          <p class="step-num warn" data-live="balance">−1.100 litros</p>
-          <h2>La cuenta no sale: el clima gasta más agua de la que llueve.</h2>
-          <p>En Almería faltan unos <span data-live="balance-text">1.100</span> litros por m² cada año. Ese hueco lo tapan los acuíferos y las desaladoras, y cada vez es más grande la presión sobre ellos.</p>
-          <a class="btn btn-primary" href="#explorar" data-go="explorar">Comprobarlo en mi provincia</a>
+          <p class="step-num warn" data-live="balance">40 de 52</p>
+          <h2>Y en buena parte del país la cuenta ya no sale.</h2>
+          <p>En <span data-live="balance-text">muchas</span> provincias el clima evapora más agua de la que llueve, y <span data-live="arid-text">varias</span> son ya zonas áridas o semiáridas según la ONU. Ese hueco lo cubren embalses, acuíferos y desaladoras, cada vez con más presión.</p>
+          <a class="btn btn-primary" href="#mapa" data-go="mapa">Ver dónde pasa en el mapa</a>
         </article>
+      </div>
+    </section>
+
+    <section class="problems" id="problemas">
+      <div class="problems-head">
+        <h2>Los problemas que medimos</h2>
+        <p>El agua no falta por una sola causa. Neoda vigila las tendencias que hay detrás de cada problema, para que los equipos que deciden sepan qué está cambiando y dónde.</p>
+      </div>
+      <div class="problem-list">
+        <article class="problem">
+          <h3>Sequía</h3>
+          <p>Periodos largos con menos agua de la normal, que vacían embalses y ríos.</p>
+          <p class="measures">Lo medimos con: índice de sequía SPI-12, lluvia y balance del agua.</p>
+          <p class="stat" data-live="p-drought"></p>
+        </article>
+        <article class="problem">
+          <h3>Riego y cultivos</h3>
+          <p>Si el clima evapora más, cada hectárea necesita más agua para dar la misma cosecha.</p>
+          <p class="measures">Lo medimos con: evapotranspiración de referencia (FAO-56) y humedad del suelo en las raíces.</p>
+          <p class="stat" data-live="p-irrig"></p>
+        </article>
+        <article class="problem">
+          <h3>Desertificación</h3>
+          <p>Tierras que pasan de húmedas a secas y pierden su capacidad de producir.</p>
+          <p class="measures">Lo medimos con: índice de aridez de la ONU (lluvia entre evaporación).</p>
+          <p class="stat" data-live="p-desert"></p>
+        </article>
+        <article class="problem">
+          <h3>Calor extremo</h3>
+          <p>Veranos más duros que disparan la demanda de agua y estresan a personas y cultivos.</p>
+          <p class="measures">Lo medimos con: temperatura media y temperatura máxima extrema.</p>
+          <p class="stat" data-live="p-heat"></p>
+        </article>
+        <article class="problem">
+          <h3>Reservas de agua</h3>
+          <p>La nieve y la humedad profunda del suelo son el agua guardada para los meses secos.</p>
+          <p class="measures">Lo medimos con: precipitación en forma de nieve y humedad de todo el perfil del suelo.</p>
+          <p class="stat" data-live="p-reserve"></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="scope">
+      <h2>Qué hace Neoda y qué no</h2>
+      <div class="scope-grid">
+        <div class="scope-col yes">
+          <h3>Hace</h3>
+          <ul>
+            <li>Detecta tendencias en 19 indicadores del agua, de 1981 a hoy.</li>
+            <li>Cubre las 52 provincias de España, con datos de NASA POWER descargados al momento.</li>
+            <li>Solo da un cambio por bueno cuando la estadística lo confirma (Mann-Kendall y pendiente de Sen, 95 % de confianza).</li>
+            <li>Compara provincias entre sí para ver dónde el problema avanza más rápido.</li>
+          </ul>
+        </div>
+        <div class="scope-col no">
+          <h3>No hace</h3>
+          <ul>
+            <li>No predice el futuro: mide lo que ya ha pasado.</li>
+            <li>No mide directamente embalses, acuíferos ni desaladoras: mide el clima y el suelo que los alimentan.</li>
+            <li>No baja al nivel de una finca: los datos de la NASA tienen una rejilla de unos 50 km.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
     <section class="how">
       <h2>Cómo funciona</h2>
       <ol class="how-steps">
-        <li><span class="how-n">1</span><h3>Eliges tu provincia</h3><p>Cualquiera de las 52 provincias de España. Si quieres, otra para comparar.</p></li>
+        <li><span class="how-n">1</span><h3>Eliges provincia e indicadores</h3><p>Cualquiera de las 52 provincias, otra para comparar y los indicadores del problema que quieres estudiar.</p></li>
         <li><span class="how-n">2</span><h3>Neoda consulta a la NASA</h3><p>Descarga en ese momento los datos de satélites y modelos de NASA POWER desde 1981.</p></li>
-        <li><span class="how-n">3</span><h3>Ves el semáforo</h3><p>Seis indicadores del agua, cada uno en verde, rojo o gris. Solo marcamos un cambio si la estadística lo confirma al 95 %.</p></li>
+        <li><span class="how-n">3</span><h3>Ves qué cambia y cuánto</h3><p>Para cada indicador: cuánto cambia por década, si el cambio está comprobado y qué variables empujan la pérdida de agua.</p></li>
       </ol>
     </section>
 
     <section class="who">
       <div class="who-text">
-        <h2>Pensado para quien decide qué hacer con el agua</h2>
-        <p>Agricultores y cooperativas que eligen qué plantar y cuánto regar. Ayuntamientos y gestores que planifican embalses, acuíferos y desaladoras. Y cualquiera que quiera saber, con datos y no con impresiones, qué está pasando en su tierra.</p>
+        <h2>Pensado para los equipos que deciden sobre el agua</h2>
+        <p>Equipos científicos y técnicos de confederaciones hidrográficas, administraciones, universidades y cooperativas agrarias. Neoda les da las tendencias ya calculadas y comprobadas para que saquen conclusiones y prioricen dónde actuar.</p>
         <p class="who-note">Neoda no hace predicciones: mide lo que ya ha pasado. Es la base para decidir antes de que falte el agua.</p>
       </div>
       <div class="who-tiles">
         <a class="tile tile-map" href="#mapa" data-go="mapa"><span class="tile-title">Mapa de España</span><span class="tile-sub">Dónde empeora más el agua, provincia a provincia</span></a>
-        <a class="tile tile-me" href="#explorar" data-go="explorar"><span class="tile-title">Mi provincia</span><span class="tile-sub">El semáforo del agua y la comparación con otra provincia</span></a>
+        <a class="tile tile-me" href="#explorar" data-go="explorar"><span class="tile-title">Panel de análisis</span><span class="tile-sub">Las 19 variables con toda la estadística, provincia a provincia</span></a>
       </div>
     </section>
   </div>
@@ -136,7 +198,7 @@
       <div id="chmap" class="chmap" role="img" aria-label="Mapa de provincias coloreado según la variable elegida"></div>
       <div class="map-panel">
         <h1>¿Dónde empeora más?</h1>
-        <p class="map-help">En <span class="key worse">coral</span> las provincias donde el cambio va en contra del agua; en <span class="key better">azul</span>, a favor. Las pálidas no tienen un cambio claro. Pulsa una para ver su semáforo.</p>
+        <p class="map-help">En <span class="key worse">coral</span> las provincias donde el cambio va en contra del agua; en <span class="key better">azul</span>, a favor. Las pálidas no tienen un cambio claro. Pulsa una para analizarla en el panel.</p>
         <div class="chips" id="m-quick">
           <button type="button" class="chip-btn" data-var="tair">Calor</button>
           <button type="button" class="chip-btn on" data-var="eto">Agua que pide el clima</button>
@@ -168,31 +230,9 @@
 
   <!-- ======================= MI PROVINCIA ======================= -->
   <div class="view" data-view="explorar" hidden>
-    <section id="inicio" class="dash">
-      <div class="dash-top">
-        <div class="dash-q">
-          <h1 id="d-question">¿Se está quedando Almería sin agua?</h1>
-          <p id="d-answer" class="answer">Consultando los datos de la NASA…</p>
-        </div>
-        <form class="dash-pick" onsubmit="return false">
-          <label class="field">Mi provincia <select id="d-region"></select></label>
-          <label class="field">Comparar con <select id="d-compare"></select></label>
-          <div class="seg" role="group" aria-label="Periodo">
-            <button type="button" class="chip-btn on" data-from="1991">Últimos 35 años</button>
-            <button type="button" class="chip-btn" data-from="1981">Desde 1981</button>
-          </div>
-        </form>
-      </div>
-      <div id="d-verdict" class="verdict"></div>
-      <div id="d-kpis" class="kpis"></div>
-      <p id="d-source" class="note center"></p>
-    </section>
-
-    <details class="expert" id="experto">
-      <summary>
-        <span class="ex-title">Análisis detallado para expertos</span>
-        <span class="ex-sub">Las 19 variables con toda la estadística: pendiente de Sen, Mann-Kendall, t-test e intervalos de confianza.</span>
-      </summary>
+    <section class="panel-head" id="experto">
+      <h1>Panel de análisis de tendencias</h1>
+      <p>Para el equipo científico: elige provincia, otra para comparar e indicadores. Cada cambio se recalcula al momento con datos de NASA POWER descargados en directo, con la pendiente de Sen, el test de Mann-Kendall, el t-test y sus intervalos de confianza.</p>
       <div id="demo-banner" class="banner" hidden></div>
   <div class="layout">
     <!-- ===== Panel de control ===== -->
@@ -238,7 +278,7 @@
         </label>
       </section>
 
-      <button id="btn-run" class="run">Analizar tendencias</button>
+      <button id="btn-run" class="run">Recalcular</button>
       <p class="hint" id="share-hint" hidden>La dirección de esta página guarda tu análisis: compártela tal cual.</p>
     </aside>
 
@@ -279,7 +319,7 @@
       </div>
     </section>
   </div>
-      <section class="method">
+      <section class="method" id="metodo">
         <h2>Método</h2>
     <div class="method-grid">
       <div><h3>1 · Variables</h3><p>Cada variable describe una parte del ciclo del agua: lo que <b>entra</b> (lluvia), lo que la atmósfera <b>demanda</b> (temperatura, evapotranspiración, viento, radiación), lo que queda <b>almacenado</b> (humedad del suelo, nieve, acuíferos) y cómo <b>responde</b> la superficie (vegetación).</p></div>
@@ -291,7 +331,7 @@
       <div><h3>Limitaciones</h3><p>Los satélites no ven las desaladoras ni el bombeo de pozos. La rejilla de NASA POWER es de ~50 km: describe el clima de la comarca, no de una finca. Correlación no es causalidad: que varias variables cambien a la vez no demuestra que una cause la otra.</p></div>
     </div>
       </section>
-    </details>
+    </section>
   </div>
   </main>
 
@@ -305,8 +345,8 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=13"></script>
-  <script src="js/power.js?v=13"></script>
-  <script src="js/app.js?v=13"></script>
+  <script src="js/stats.js?v=15"></script>
+  <script src="js/power.js?v=15"></script>
+  <script src="js/app.js?v=15"></script>
 </body>
 </html>

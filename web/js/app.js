@@ -7,7 +7,7 @@
   const COLORS = { main: "#0a5f7e", compare: "#f2a93b", trend: "#06283d", trend2: "#b8741a", grid: "#e3eff2", worse: "#ef4e5a", better: "#0a5f7e", green: "#0fa67b", neutral: "#9db4bc" };
   const PLOT_CFG = { displayModeBar: false, responsive: true };
 
-  const state = { region: "almeria", compare: "galicia", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
+  const state = { region: "granada", compare: "", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
   let CFG = { variables: [], groups: [], regions: [], period: { first: 1981, last: 2025, default_from: 1991 } };
   const regionCache = new Map();
   let lastResults = null, map;
@@ -73,8 +73,8 @@
   // ---------- Análisis completo ----------
   async function run() {
     const btn = $("#btn-run");
-    if (!state.vars.size) { alert("Elige al menos una variable."); return; }
-    if (state.from >= state.to - 4) { alert("Elige un periodo de al menos 6 años."); return; }
+    if (!state.vars.size) { $("#empty").hidden = false; $("#output").hidden = true; $("#empty").innerHTML = "<h2>Elige al menos un indicador</h2><p>Marca uno o varios indicadores en el panel de la izquierda.</p>"; return; }
+    if (state.from >= state.to - 4) { $("#empty").hidden = false; $("#output").hidden = true; $("#empty").innerHTML = "<h2>Periodo demasiado corto</h2><p>Elige un periodo de al menos 6 años para poder detectar una tendencia.</p>"; return; }
     btn.disabled = true; btn.textContent = "Analizando…";
     try {
       const regions = [state.region, state.compare].filter(Boolean);
@@ -241,7 +241,7 @@
     });
     const banner = $("#demo-banner");
     banner.hidden = !anyDemo;
-    if (anyDemo) banner.innerHTML = `<strong>Sin conexión con NASA POWER.</strong> Se muestran datos de la copia guardada el ${new Date(anyDemo.fetched).toLocaleDateString("es-ES")}. Pulsa «Analizar» de nuevo para reintentar en directo.`;
+    if (anyDemo) banner.innerHTML = `<strong>Sin conexión con NASA POWER.</strong> Se muestran datos de la copia guardada el ${new Date(anyDemo.fetched).toLocaleDateString("es-ES")}. Pulsa «Recalcular» para reintentar en directo.`;
     const m0 = L.results[main][L.vars[0].id];
     $("#data-info").textContent = m0 ? `Datos: NASA POWER (MERRA-2 + GPM, rejilla 0,5° × 0,625°) · ${m0.source.mode === "live" ? "descargados en vivo" : "copia guardada"} el ${new Date(m0.source.fetched).toLocaleString("es-ES")} · ${m0.source.points} puntos por región.` : "";
     $("#share-hint").hidden = false;
@@ -305,20 +305,20 @@
       }).join("");
       list.appendChild(box);
     });
-    list.addEventListener("change", (e) => { if (e.target.type === "checkbox") { e.target.checked ? state.vars.add(e.target.value) : state.vars.delete(e.target.value); } });
+    list.addEventListener("change", (e) => { if (e.target.type === "checkbox") { e.target.checked ? state.vars.add(e.target.value) : state.vars.delete(e.target.value); autoRun(); } });
     list.addEventListener("click", (e) => { if (e.target.classList.contains("info")) e.preventDefault(); });
 
     document.querySelectorAll(".quick button").forEach((b) => b.addEventListener("click", () => {
       const p = b.dataset.preset;
       state.vars = new Set(p === "todas" ? CFG.variables.map((v) => v.id) : p === "ninguna" ? [] : RECOMMENDED);
-      syncControls();
+      syncControls(); autoRun();
     }));
-    $("#sel-region").addEventListener("change", (e) => { state.region = e.target.value; highlightMap(); syncControls(); renderDashboard(); });
-    $("#sel-compare").addEventListener("change", (e) => { state.compare = e.target.value === state.region ? "" : e.target.value; highlightMap(); syncControls(); renderDashboard(); });
-    $("#sel-from").addEventListener("change", (e) => (state.from = +e.target.value));
-    $("#sel-to").addEventListener("change", (e) => (state.to = +e.target.value));
-    $("#sel-alpha").addEventListener("change", (e) => (state.alpha = +e.target.value));
-    document.querySelectorAll('input[name="mode"]').forEach((r) => r.addEventListener("change", (e) => (state.mode = e.target.value)));
+    $("#sel-region").addEventListener("change", (e) => { state.region = e.target.value; if (state.compare === state.region) state.compare = ""; highlightMap(); syncControls(); autoRun(); });
+    $("#sel-compare").addEventListener("change", (e) => { state.compare = e.target.value === state.region ? "" : e.target.value; highlightMap(); syncControls(); autoRun(); });
+    $("#sel-from").addEventListener("change", (e) => { state.from = +e.target.value; autoRun(); });
+    $("#sel-to").addEventListener("change", (e) => { state.to = +e.target.value; autoRun(); });
+    $("#sel-alpha").addEventListener("change", (e) => { state.alpha = +e.target.value; autoRun(); });
+    document.querySelectorAll('input[name="mode"]').forEach((r) => r.addEventListener("change", (e) => { state.mode = e.target.value; autoRun(); }));
     $("#btn-run").addEventListener("click", run);
     $("#btn-csv").addEventListener("click", downloadCSV);
     $("#btn-demo") && $("#btn-demo").addEventListener("click", () => {
@@ -352,7 +352,7 @@
       layer.on("click", (ev) => {
         if (ev.originalEvent && ev.originalEvent.shiftKey) { if (r.id !== state.region) state.compare = r.id; }
         else { state.region = r.id; if (state.compare === r.id) state.compare = ""; }
-        syncControls(); highlightMap();
+        syncControls(); highlightMap(); autoRun();
       });
       geoLayers[r.id] = layer;
       if (r.type === "provincia") layer.addTo(map);
@@ -474,6 +474,7 @@
   }
 
   async function renderDashboard() {
+    if (!$("#d-kpis")) return;
     const tok = ++D.token, from = D.from, to = CFG.period.last;
     const main = state.region, cmp = state.compare && state.compare !== main ? state.compare : "";
     const name = regionById(main).name, cname = cmp ? regionById(cmp).name : "";
@@ -521,6 +522,7 @@
   }
 
   function buildDashboard() {
+    if (!$("#d-region")) return;
     $("#d-region").innerHTML = $("#sel-region").innerHTML;
     $("#d-compare").innerHTML = $("#sel-compare").innerHTML;
     $("#d-region").value = state.region; $("#d-compare").value = state.compare;
@@ -664,8 +666,7 @@
   function selectFromMap(rid) {
     state.region = rid; if (state.compare === rid) state.compare = "";
     syncControls(); highlightMap();
-    $("#d-region").value = state.region; $("#d-compare").value = state.compare;
-    renderDashboard();
+    dirty = true;
     location.hash = "#explorar";
   }
 
@@ -692,6 +693,49 @@
     if (changed) window.scrollTo({ top: 0 });
     if (v === "mapa" && M.map) setTimeout(() => { M.map.invalidateSize(); fitChoropleth(); }, 30);
     if (v === "explorar" && map) setTimeout(() => { map.invalidateSize(); highlightMap(); }, 30);
+    if (v === "explorar" && (dirty || !lastResults)) { dirty = false; run(); }
+  }
+
+  // ---------- Recalcular al cambiar cualquier control ----------
+  let dirty = false, runTimer = null;
+  function autoRun() {
+    if (currentView() !== "explorar") { dirty = true; return; }
+    clearTimeout(runTimer); runTimer = setTimeout(run, 300);
+  }
+
+  // ---------- Inicio: cifras de toda España (copia de NASA POWER, 52 provincias) ----------
+  async function renderNational() {
+    let D0;
+    try { D0 = await getJSON("data/map/annual.json"); } catch (e) { console.warn("Inicio: sin datos nacionales", e); return; }
+    const from = 1991, to = CFG.period.last;
+    const idx = D0.years.map((y, i) => (y >= from && y <= to ? i : -1)).filter((i) => i >= 0);
+    const provs = Object.keys(D0.regions).filter((rid) => { const r = regionById(rid); return r && r.type === "provincia"; });
+    const N = provs.length;
+    const stat = (vid) => provs.map((rid) => {
+      const ser = D0.regions[rid][vid]; if (!ser) return null;
+      const t = idx.map((i) => D0.years[i]), y = idx.map((i) => ser[i]);
+      const mk = S.mannKendall(y, 0.05), sen = S.senSlope(t, y, 0.05);
+      return mk.valid && sen.valid ? { rid, sig: mk.significant, slope: sen.slope, mean: S.mean(y) } : null;
+    }).filter(Boolean);
+    const up = (a) => a.filter((x) => x.sig && x.slope > 0).length, down = (a) => a.filter((x) => x.sig && x.slope < 0).length;
+    const P = stat("precip"), T = stat("tair"), E = stat("eto"), B = stat("balance"), A = stat("aridity"),
+      SPI = stat("spi12"), SM = stat("gwetroot"), TX = stat("tmax"), SN = stat("snow"), GP = stat("gwetprof");
+    const noChange = P.filter((x) => !x.sig).length;
+    const tAvg = S.mean(T.map((x) => x.slope * 10));
+    const deficit = B.filter((x) => x.mean < 0).length;
+    const arid = A.filter((x) => x.mean < 0.5).length;
+    const of = (n) => `${n} de ${N}`;
+    setLive("precip", of(noChange)); setLive("precip-text", `${noChange} de las ${N}`);
+    setLive("tair", of(up(T))); setLive("tair-text", `${up(T)} de las ${N}`); setLive("tair-avg", `${signed1(tAvg)} °C`);
+    setLive("eto", of(up(E))); setLive("eto-text", `${up(E)} de las ${N}`);
+    setLive("eto-down", down(E) ? `y solo baja en ${down(E)}` : "y no baja en ninguna");
+    setLive("balance", of(deficit)); setLive("balance-text", `${deficit} de las ${N}`); setLive("arid-text", `${arid}`);
+    const line = (txt) => `<b>En España:</b> ${txt}`;
+    setLive("p-drought", line(`el índice de sequía empeora de forma comprobada en ${down(SPI)} provincias y mejora en ${up(SPI)}.`));
+    setLive("p-irrig", line(`la demanda de riego sube en ${up(E)} provincias; la humedad del suelo baja en ${down(SM)}.`));
+    setLive("p-desert", line(`${arid} provincias son áridas o semiáridas; la aridez avanza de forma comprobada en ${down(A)}.`));
+    setLive("p-heat", line(`la máxima extrema del año sube de forma comprobada en ${up(TX)} provincias.`));
+    setLive("p-reserve", line(`la nieve baja de forma comprobada en ${down(SN)} provincias y la humedad profunda en ${down(GP)}.`));
   }
 
   // ---------- Inicio: historia del depósito con datos reales de Almería ----------
@@ -756,7 +800,7 @@
     buildControls(); syncControls(); buildDashboard(); buildMap(); buildChoropleth();
     initStory(); showView();
     window.addEventListener("hashchange", showView);
-    renderDashboard(); renderLanding();
+    renderNational();
     if (fromHash) run();
   }
   window.addEventListener("hashchange", () => { if (CFG.regions.length && readHash()) { syncControls(); highlightMap(); run(); } });

@@ -1,7 +1,10 @@
 # Neoda · Detective de recursos hídricos 💧
 
-Herramienta web para **detectar tendencias** (no predecir) estadísticamente significativas en los recursos hídricos,
-con datos de **NASA POWER descargados en directo**. Proyecto para el **NASA Space Apps Challenge 2026** —
+Herramienta web para **detectar tendencias** (no predecir) estadísticamente significativas en los problemas del agua en España
+(sequía, demanda de riego, desertificación, calor extremo y reservas), con datos de **NASA POWER descargados en directo**.
+
+Tres pestañas: **Inicio** (el problema, qué medimos y el alcance, con cifras de las 52 provincias), **Mapa de España** y
+**Panel de análisis** (para el equipo científico: 19 indicadores con toda la estadística, se recalcula con cada cambio). Proyecto para el **NASA Space Apps Challenge 2026** —
 [Be an Earth System Trend Detective](https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/) (Granada).
 
 **👉 App en vivo:** https://fpanero.github.io/Neoda_Heeramienta_Medicion/
