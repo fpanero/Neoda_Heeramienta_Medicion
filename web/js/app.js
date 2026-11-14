@@ -493,7 +493,8 @@
     const nRed = res.filter((r) => r.st && r.st.status === "red").length, nGreen = res.filter((r) => r.st && r.st.status === "green").length;
     const cRed = dc ? res.filter((r) => r.sc && r.sc.status === "red").length : 0;
     let verdict;
-    if (nRed >= 2 && nRed > nGreen) verdict = { cls: "red", light: "🔴", title: "La presión sobre el agua está aumentando", answer: `Sí, ${name} va a peor: ${nRed} de 6 indicadores empeoran de forma comprobada desde ${from}.` };
+    if (nRed >= 2 && nRed > nGreen) verdict = { cls: "red", light: "🔴", title: "La presión sobre el agua está aumentando", answer: nRed >= 4 ? `Sí, ${name} va a peor: ${nRed} de 6 indicadores empeoran de forma comprobada desde ${from}.`
+      : `Cada vez hay más presión sobre el agua: ${nRed} de 6 indicadores empeoran de forma comprobada desde ${from}${nGreen ? ` y ${nGreen} mejora${nGreen > 1 ? "n" : ""}` : " y ninguno mejora"}.` };
     else if (nGreen > nRed && nGreen >= 2) verdict = { cls: "green", light: "🟢", title: "La situación del agua está mejorando", answer: `No: en ${name}, ${nGreen} de 6 indicadores mejoran de forma comprobada desde ${from}.` };
     else verdict = { cls: "amber", light: "🟡", title: "Sin un cambio claro todavía", answer: `Por ahora no: en ${name} la mayoría de indicadores no muestra un cambio comprobado desde ${from}${nRed ? `, aunque ${nRed === 1 ? "uno empeora" : nRed + " empeoran"}` : ""}.` };
     $("#d-answer").textContent = verdict.answer;
