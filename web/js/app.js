@@ -179,7 +179,6 @@
       t += ". ";
     } else t += T(`En ${esc(regionName)}, ninguna variable está reduciendo el agua disponible. `, `In ${esc(regionName)}, no variable is reducing available water. `);
     t += pos.length ? T(`A favor del agua juega ${item(pos[0])}.`, `Working in favour of water: ${item(pos[0])}.`) : T("Ninguna variable juega a favor del agua.", "No variable is working in favour of water.");
-    t += `<span class="how-read">${T("Cómo leerlo: hacia la izquierda (coral) la variable resta agua, hacia la derecha (azul) la suma; cuanto más larga la barra, más pesa en el cambio. Las barras pálidas no tienen un cambio comprobado.", "How to read it: bars to the left (coral) take water away, bars to the right (blue) add it; the longer the bar, the more it weighs in the change. Pale bars have no confirmed change.")}</span>`;
     return t;
   }
 
