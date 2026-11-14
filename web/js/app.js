@@ -312,7 +312,7 @@
   function buildMap() {
     if (!window.L) return;
     map = L.map("map", { zoomControl: false, attributionControl: true, scrollWheelZoom: false }).setView([38.5, -3.5], 5);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", { attribution: "© OpenStreetMap · © CARTO", maxZoom: 10 }).addTo(map);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 10 }).addTo(map);
     CFG.regions.forEach((r) => {
       const [w, s, e, n] = r.bbox;
       const rect = L.rectangle([[s, w], [n, e]], { weight: 1, color: "#1f6f8b", fillOpacity: 0.08 }).addTo(map);
