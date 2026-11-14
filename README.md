@@ -8,7 +8,7 @@ con datos de satélite de la NASA. Proyecto para el **NASA Space Apps Challenge 
 
 ## Qué hace
 
-1. **Eliges la región** (provincias de Andalucía y otras de España, o el Poniente almeriense) y, opcionalmente, otra para comparar.
+1. **Eliges la región** y, opcionalmente, otra para comparar. Para la demo del hackathon: **Almería** (semiárida, invernaderos) frente a **Galicia** (atlántica, húmeda).
 2. **Eliges las variables** del ciclo del agua (15 disponibles): precipitación, temperatura, evapotranspiración,
    humedad del suelo, nieve, agua subterránea (GRACE), vegetación…
 3. La app genera la **serie temporal** (anual, o mensual sin ciclo estacional) y calcula:

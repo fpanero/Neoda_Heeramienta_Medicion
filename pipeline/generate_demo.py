@@ -20,6 +20,7 @@ from common import load_regions, load_variables, write_manifest, write_series
 REGION_CLIMATE = {
     #                     lluvia anual (mm), T media (°C), nieve (sí/no)
     "almeria":             (230, 18.5, False),
+    "galicia":             (1300, 13.5, True),
     "poniente_almeriense": (220, 18.8, False),
     "granada":             (450, 15.0, True),
     "malaga":              (550, 18.0, False),
@@ -98,7 +99,7 @@ def simulate(region: str, var: str, n_years: int) -> np.ndarray:
             v = 25 * season[months] * np.exp(0.4 * dry_years) * (1 - 0.12 * t_dec) + rng.normal(0, 1, months.size)
     elif var == "tws":
         # Anomalía relativa: tendencia negativa fuerte en el sureste (acuíferos sobreexplotados)
-        se = region in ("almeria", "poniente_almeriense", "murcia", "alicante")
+        se = region in ("almeria", "poniente_almeriense", "murcia", "alicante")  # Galicia: descenso leve
         v = 4 * np.sin(2 * np.pi * (months - 2) / 12) + 3 * dry_years - (2.2 if se else 0.8) * t_dec \
             + rng.normal(0, 1, months.size)
         return np.round(v, 3)

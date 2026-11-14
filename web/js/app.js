@@ -7,7 +7,7 @@
   const COLORS = { main: "#1f6f8b", compare: "#c2622d", trend: "#12302f", trend2: "#8a3a12", grid: "#e9e1d2" };
   const PLOT_CFG = { displayModeBar: false, responsive: true };
 
-  const state = { region: "almeria", compare: "", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
+  const state = { region: "almeria", compare: "galicia", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
   let CFG = { variables: [], groups: [], regions: [], manifest: { series: {} } };
   const cache = new Map();
   let lastResults = null, map, rectLayers = {};
@@ -296,7 +296,7 @@
     $("#btn-run").addEventListener("click", run);
     $("#btn-csv").addEventListener("click", downloadCSV);
     $("#btn-demo").addEventListener("click", () => {
-      Object.assign(state, { region: "almeria", compare: "poniente_almeriense", vars: new Set([...RECOMMENDED, "lst", "tws"]), mode: "annual", alpha: 0.05 });
+      Object.assign(state, { region: "almeria", compare: "galicia", vars: new Set([...RECOMMENDED, "pet", "tws"]), mode: "annual", alpha: 0.05 });
       syncControls(); highlightMap(); run().then(() => $("#output").scrollIntoView({ behavior: "smooth" }));
     });
   }
@@ -328,7 +328,7 @@
       rect.setStyle({ color: sel ? "#1f6f8b" : cmp ? "#c2622d" : "#7a8a86", weight: sel || cmp ? 2.5 : 0.8, fillOpacity: sel || cmp ? 0.28 : 0.05, fillColor: cmp ? "#c2622d" : "#1f6f8b" });
       if (sel || cmp) rect.bringToFront();
     });
-    if (map && rectLayers[state.region]) map.fitBounds(rectLayers[state.region].getBounds().pad(1.6), { animate: true });
+    if (map && rectLayers[state.region]) map.fitBounds(L.featureGroup(Object.values(rectLayers)).getBounds().pad(0.15), { animate: true });
   }
 
   // ---------- URL compartible ----------
