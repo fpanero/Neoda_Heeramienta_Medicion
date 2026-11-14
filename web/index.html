@@ -3,106 +3,202 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neoda · Semáforo del agua</title>
-  <meta name="description" content="Herramienta para detectar tendencias significativas en los recursos hídricos de España con datos de la NASA. NASA Space Apps Challenge 2026 — Be an Earth System Trend Detective." />
+  <title>Neoda · ¿Cuánta agua le queda a tu provincia?</title>
+  <meta name="description" content="Neoda mide con datos de la NASA si la presión sobre el agua está aumentando en cada provincia de España. NASA Space Apps Challenge 2026 · Granada." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=11" />
+  <link rel="stylesheet" href="css/style.css?v=13" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z' fill='%2316A6B6'/%3E%3C/svg%3E" />
 </head>
-<body>
-  <header class="topbar">
-    <div class="brand">
-      <svg viewBox="0 0 32 32" class="logo" aria-hidden="true"><path d="M16 3 C16 3 6 15 6 21 a10 10 0 0 0 20 0 C26 15 16 3 16 3Z" fill="currentColor"/><path d="M10 22 l4 -3 l3 2 l5 -6" stroke="#f6f1e7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <div>
-        <h1>Neoda <span>· Semáforo del agua</span></h1>
-        <p class="tagline">¿Se está quedando tu provincia sin agua? Lo comprobamos con datos de la NASA de los últimos 45 años.</p>
-      </div>
-    </div>
-    <nav class="toplinks">
-      <a class="linkbtn primary" href="#inicio">Mi provincia</a>
-      <a class="linkbtn" href="#mapa">Mapa de España</a>
-      <a class="linkbtn" href="#porque">Por qué importa</a>
-      <a class="linkbtn" href="#experto">Para expertos</a>
+<body data-view="home">
+  <a class="skip" href="#main">Saltar al contenido</a>
+  <header class="nav">
+    <a class="brand" href="#" data-go="home" aria-label="Neoda, inicio">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z" fill="currentColor"/><path d="M11 21a5 5 0 0 0 5 5" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      <span>Neoda</span>
+    </a>
+    <nav aria-label="Secciones">
+      <a href="#" data-go="home">Inicio</a>
+      <a href="#mapa" data-go="mapa">Mapa de España</a>
+      <a href="#explorar" data-go="explorar" class="nav-cta">Mi provincia</a>
     </nav>
   </header>
 
-  <section id="inicio" class="dash">
-    <div class="dash-top">
-      <div class="dash-q">
-        <p class="eyebrow">Semáforo del agua · datos de la NASA</p>
-        <h2 id="d-question">¿Se está quedando Almería sin agua?</h2>
-        <p id="d-answer" class="answer">Cargando datos de la NASA…</p>
-      </div>
-      <div class="dash-pick card">
-        <label class="field">Mi provincia <select id="d-region"></select></label>
-        <label class="field">Comparar con <select id="d-compare"></select></label>
-        <div class="chips" role="group" aria-label="Periodo">
-          <button type="button" class="chip-btn on" data-from="1991">Últimos 35 años</button>
-          <button type="button" class="chip-btn" data-from="1981">Desde 1981</button>
+  <main id="main">
+  <!-- ======================= INICIO ======================= -->
+  <div class="view" data-view="home">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>¿Cuánta agua le queda a tu provincia?</h1>
+        <p class="hero-sub">Neoda revisa 45 años de datos de la NASA y te dice, en un vistazo, si la presión sobre el agua está creciendo donde vives.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#explorar" data-go="explorar">Ver mi provincia</a>
+          <a class="btn btn-ghost" href="#mapa" data-go="mapa">Abrir el mapa de España</a>
         </div>
       </div>
-    </div>
-    <div id="d-verdict" class="verdict"></div>
-    <div id="d-kpis" class="kpis"></div>
-    <p id="d-source" class="note center"></p>
-  </section>
+      <figure class="tap" aria-hidden="true">
+        <svg viewBox="0 0 420 540" class="tap-svg">
+          <defs>
+            <linearGradient id="g-drop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5FD3DF"/><stop offset="1" stop-color="#0A5F7E"/></linearGradient>
+            <linearGradient id="g-metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#DCEFF3"/></linearGradient>
+          </defs>
+          <rect x="18" y="70" width="52" height="132" rx="16" fill="url(#g-metal)" stroke="#06283D" stroke-width="5"/>
+          <rect x="66" y="112" width="206" height="48" rx="24" fill="url(#g-metal)" stroke="#06283D" stroke-width="5"/>
+          <rect x="152" y="70" width="24" height="44" fill="url(#g-metal)" stroke="#06283D" stroke-width="5"/>
+          <rect x="96" y="46" width="136" height="28" rx="14" fill="#fff" stroke="#06283D" stroke-width="5"/>
+          <circle cx="164" cy="60" r="9" fill="#16A6B6"/>
+          <path d="M240 112 h34 a54 54 0 0 1 54 54 v62 h-48 v-56 a12 12 0 0 0 -12 -12 h-28 z" fill="url(#g-metal)" stroke="#06283D" stroke-width="5" stroke-linejoin="round"/>
+          <rect x="276" y="226" width="56" height="16" rx="6" fill="#06283D"/>
+          <g class="drop"><path d="M304 252 C304 252 290 270 290 280 a14 14 0 0 0 28 0 C318 270 304 252 304 252Z" fill="url(#g-drop)"/></g>
+          <g class="ripples" transform="translate(304 500)">
+            <ellipse class="r1" rx="70" ry="12" fill="none" stroke="#16A6B6" stroke-width="3"/>
+            <ellipse class="r2" rx="70" ry="12" fill="none" stroke="#16A6B6" stroke-width="3"/>
+            <ellipse rx="26" ry="5" fill="#BDE9EF"/>
+          </g>
+        </svg>
+      </figure>
+      <a class="scroll-cue" href="#historia">Sigue bajando para ver qué le pasa al agua de Almería</a>
+    </section>
 
-  <section id="porque" class="why">
-    <h2>Por qué importa</h2>
-    <div class="why-grid">
-      <article class="why-card"><span class="why-ico">🧑‍🌾</span><h3>Para quién</h3><p>Agricultores y cooperativas que deciden qué cultivar y cuánto regar; ayuntamientos y gestores del agua que planifican embalses, desaladoras y acuíferos; y cualquier ciudadano que quiera saber qué está pasando en su provincia.</p></article>
-      <article class="why-card"><span class="why-ico">💡</span><h3>Qué tiene de nuevo</h3><p>No mira solo si llueve menos. Junta <b>calor, evaporación, humedad del suelo y lluvia</b> en un semáforo fácil de leer. A menudo la lluvia no cambia, pero el clima «pide» cada vez más agua: eso no se ve mirando solo la lluvia.</p></article>
-      <article class="why-card"><span class="why-ico">🛰️</span><h3>Datos de la NASA, en directo</h3><p>Cada consulta descarga al momento los datos de <b>NASA POWER</b> (satélites y modelos de la NASA), desde 1981 y para las 52 provincias. Solo marcamos un cambio como <b>«comprobado»</b> cuando la estadística lo confirma con un 95 % de confianza.</p></article>
-      <article class="why-card"><span class="why-ico">🔎</span><h3>Detecta, no adivina</h3><p>No hacemos predicciones: medimos lo que <b>ya ha pasado</b>. Es la base para decidir con datos y no con impresiones: dónde invertir en riego eficiente, qué cultivos aguantarán, dónde vigilar la sequía.</p></article>
-    </div>
-  </section>
-
-  <section id="mapa" class="mapsec">
-    <div class="mapsec-head">
-      <h2>Mapa de España: ¿dónde empeora más?</h2>
-      <p><span class="sw neg"></span> Rojo: el cambio va en contra del agua. <span class="sw pos"></span> Azul: va a favor. Las provincias pálidas y con borde discontinuo no tienen un cambio claro. Pulsa una provincia para ver su semáforo.</p>
-      <div class="chips" id="m-quick">
-        <button type="button" class="chip-btn" data-var="tair">🌡️ Calor</button>
-        <button type="button" class="chip-btn on" data-var="eto">☀️ Agua que pide el clima</button>
-        <button type="button" class="chip-btn" data-var="precip">🌧️ Lluvia</button>
-        <button type="button" class="chip-btn" data-var="balance">⚖️ Balance del agua</button>
-        <button type="button" class="chip-btn" data-var="gwetroot">🌱 Humedad del suelo</button>
-        <button type="button" class="chip-btn" data-var="aridity">🏜️ Aridez</button>
+    <section class="story" id="historia">
+      <div class="story-visual" aria-hidden="true">
+        <svg viewBox="0 0 300 440" class="tank" data-step="1">
+          <defs><clipPath id="tank-clip"><rect x="46" y="36" width="208" height="348" rx="24"/></clipPath>
+            <linearGradient id="g-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3CC3D2"/><stop offset="1" stop-color="#0A5F7E"/></linearGradient></defs>
+          <g class="sky">
+            <g class="rain"><path d="M80 8 l-6 14 M120 0 l-6 14 M160 10 l-6 14 M200 2 l-6 14 M235 12 l-6 14" stroke="#16A6B6" stroke-width="4" stroke-linecap="round"/></g>
+            <g class="sun"><circle cx="262" cy="22" r="16" fill="#FFC53D"/></g>
+          </g>
+          <g clip-path="url(#tank-clip)">
+            <rect x="46" y="36" width="208" height="348" fill="#F2FAFB"/>
+            <g class="water">
+              <path class="wave" d="M0 0 q26 -12 52 0 t52 0 t52 0 t52 0 t52 0 t52 0 t52 0 t52 0 V400 H0 Z" fill="url(#g-water)"/>
+            </g>
+            <g class="vapor"><path d="M100 140 q10 -14 0 -28 q-10 -14 0 -28 M150 150 q10 -14 0 -28 q-10 -14 0 -28 M200 140 q10 -14 0 -28 q-10 -14 0 -28" stroke="#9BD9E2" stroke-width="4" fill="none" stroke-linecap="round"/></g>
+          </g>
+          <rect class="glass" x="46" y="36" width="208" height="348" rx="24" fill="none" stroke="#06283D" stroke-width="6"/>
+          <g class="ticks" stroke="#06283D" stroke-width="3"><path d="M254 106 h-16 M254 176 h-16 M254 246 h-16 M254 316 h-16"/></g>
+          <text x="150" y="420" text-anchor="middle" class="tank-label">El agua disponible en Almería</text>
+        </svg>
       </div>
-    </div>
-    <div class="mapsec-grid">
-      <div class="mapctl card">
-        <fieldset class="field">
-          <legend>¿Qué quieres ver?</legend>
-          <label class="radio"><input type="radio" name="m-mode" value="trend" checked /> Cómo está cambiando</label>
-          <label class="radio"><input type="radio" name="m-mode" value="mean" /> Cómo es (media del periodo)</label>
-        </fieldset>
-        <label class="field">Otras variables <select id="m-var"></select></label>
-        <div class="row2">
-          <label class="field">Desde <select id="m-from"></select></label>
-          <label class="field">Hasta <select id="m-to"></select></label>
+      <div class="story-steps">
+        <article class="step-card" data-step="1">
+          <p class="step-num" data-live="precip">≈ 258 litros</p>
+          <h2>Llueve más o menos lo mismo que hace 35 años.</h2>
+          <p>Por cada metro cuadrado de Almería caen unos <span data-live="precip-text">258</span> litros al año. Si solo miráramos la lluvia, diríamos que no pasa nada.</p>
+        </article>
+        <article class="step-card" data-step="2">
+          <p class="step-num" data-live="tair">+1,6 °C</p>
+          <h2>Pero hace más calor que en 1991.</h2>
+          <p>La temperatura media ha subido de forma comprobada. Y con el calor, el agua se va antes.</p>
+        </article>
+        <article class="step-card" data-step="3">
+          <p class="step-num" data-live="eto">+66 litros</p>
+          <h2>El aire se bebe cada año más agua.</h2>
+          <p>Es la evaporación que «pide» el clima: cada metro cuadrado de campo pierde <span data-live="eto-text">66</span> litros más al año que en 1991. Para cultivar lo mismo hay que regar más.</p>
+        </article>
+        <article class="step-card" data-step="4">
+          <p class="step-num warn" data-live="balance">−1.100 litros</p>
+          <h2>La cuenta no sale: el clima gasta más agua de la que llueve.</h2>
+          <p>En Almería faltan unos <span data-live="balance-text">1.100</span> litros por m² cada año. Ese hueco lo tapan los acuíferos y las desaladoras, y cada vez es más grande la presión sobre ellos.</p>
+          <a class="btn btn-primary" href="#explorar" data-go="explorar">Comprobarlo en mi provincia</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="how">
+      <h2>Cómo funciona</h2>
+      <ol class="how-steps">
+        <li><span class="how-n">1</span><h3>Eliges tu provincia</h3><p>Cualquiera de las 52 provincias de España. Si quieres, otra para comparar.</p></li>
+        <li><span class="how-n">2</span><h3>Neoda consulta a la NASA</h3><p>Descarga en ese momento los datos de satélites y modelos de NASA POWER desde 1981.</p></li>
+        <li><span class="how-n">3</span><h3>Ves el semáforo</h3><p>Seis indicadores del agua, cada uno en verde, rojo o gris. Solo marcamos un cambio si la estadística lo confirma al 95 %.</p></li>
+      </ol>
+    </section>
+
+    <section class="who">
+      <div class="who-text">
+        <h2>Pensado para quien decide qué hacer con el agua</h2>
+        <p>Agricultores y cooperativas que eligen qué plantar y cuánto regar. Ayuntamientos y gestores que planifican embalses, acuíferos y desaladoras. Y cualquiera que quiera saber, con datos y no con impresiones, qué está pasando en su tierra.</p>
+        <p class="who-note">Neoda no hace predicciones: mide lo que ya ha pasado. Es la base para decidir antes de que falte el agua.</p>
+      </div>
+      <div class="who-tiles">
+        <a class="tile tile-map" href="#mapa" data-go="mapa"><span class="tile-title">Mapa de España</span><span class="tile-sub">Dónde empeora más el agua, provincia a provincia</span></a>
+        <a class="tile tile-me" href="#explorar" data-go="explorar"><span class="tile-title">Mi provincia</span><span class="tile-sub">El semáforo del agua y la comparación con otra provincia</span></a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ======================= MAPA ======================= -->
+  <div class="view" data-view="mapa" hidden>
+    <section id="mapa" class="mapview">
+      <div id="chmap" class="chmap" role="img" aria-label="Mapa de provincias coloreado según la variable elegida"></div>
+      <div class="map-panel">
+        <h1>¿Dónde empeora más?</h1>
+        <p class="map-help">En <span class="key worse">coral</span> las provincias donde el cambio va en contra del agua; en <span class="key better">azul</span>, a favor. Las pálidas no tienen un cambio claro. Pulsa una para ver su semáforo.</p>
+        <div class="chips" id="m-quick">
+          <button type="button" class="chip-btn" data-var="tair">Calor</button>
+          <button type="button" class="chip-btn on" data-var="eto">Agua que pide el clima</button>
+          <button type="button" class="chip-btn" data-var="precip">Lluvia</button>
+          <button type="button" class="chip-btn" data-var="balance">Balance del agua</button>
+          <button type="button" class="chip-btn" data-var="gwetroot">Humedad del suelo</button>
+          <button type="button" class="chip-btn" data-var="aridity">Aridez</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Qué mostrar">
+          <label><input type="radio" name="m-mode" value="trend" checked /><span>Cómo cambia</span></label>
+          <label><input type="radio" name="m-mode" value="mean" /><span>Cómo es hoy</span></label>
         </div>
         <div id="m-legend" class="legend"></div>
+        <details class="more">
+          <summary>Más opciones</summary>
+          <label class="field">Otra variable <select id="m-var"></select></label>
+          <div class="row2">
+            <label class="field">Desde <select id="m-from"></select></label>
+            <label class="field">Hasta <select id="m-to"></select></label>
+          </div>
+        </details>
+      </div>
+      <aside class="rank-panel">
         <div id="m-rank" class="rank"></div>
         <p id="m-info" class="note"></p>
+      </aside>
+    </section>
+  </div>
+
+  <!-- ======================= MI PROVINCIA ======================= -->
+  <div class="view" data-view="explorar" hidden>
+    <section id="inicio" class="dash">
+      <div class="dash-top">
+        <div class="dash-q">
+          <h1 id="d-question">¿Se está quedando Almería sin agua?</h1>
+          <p id="d-answer" class="answer">Consultando los datos de la NASA…</p>
+        </div>
+        <form class="dash-pick" onsubmit="return false">
+          <label class="field">Mi provincia <select id="d-region"></select></label>
+          <label class="field">Comparar con <select id="d-compare"></select></label>
+          <div class="seg" role="group" aria-label="Periodo">
+            <button type="button" class="chip-btn on" data-from="1991">Últimos 35 años</button>
+            <button type="button" class="chip-btn" data-from="1981">Desde 1981</button>
+          </div>
+        </form>
       </div>
-      <div id="chmap" class="chmap card" role="img" aria-label="Mapa de provincias coloreado"></div>
-    </div>
-  </section>
+      <div id="d-verdict" class="verdict"></div>
+      <div id="d-kpis" class="kpis"></div>
+      <p id="d-source" class="note center"></p>
+    </section>
 
-  <section id="experto" class="expert-head">
-    <h2>Análisis detallado <span>para expertos</span></h2>
-    <p>Las mismas series con toda la estadística: 19 variables, pendiente de Sen, test de Mann-Kendall, t-test e intervalos de confianza. Útil para comprobar cualquier cifra del semáforo.</p>
-  </section>
-  <div id="demo-banner" class="banner" hidden></div>
-
-  <main class="layout">
+    <details class="expert" id="experto">
+      <summary>
+        <span class="ex-title">Análisis detallado para expertos</span>
+        <span class="ex-sub">Las 19 variables con toda la estadística: pendiente de Sen, Mann-Kendall, t-test e intervalos de confianza.</span>
+      </summary>
+      <div id="demo-banner" class="banner" hidden></div>
+  <div class="layout">
     <!-- ===== Panel de control ===== -->
     <aside class="panel" aria-label="Parámetros del análisis">
       <section class="step">
-        <h2><span class="num">1</span> ¿Dónde?</h2>
+        <h3>Dónde</h3>
         <label class="field">Provincia
           <select id="sel-region"></select>
         </label>
@@ -113,7 +209,7 @@
       </section>
 
       <section class="step">
-        <h2><span class="num">2</span> ¿Qué variables?</h2>
+        <h3>Qué variables</h3>
         <div class="quick">
           <button type="button" data-preset="recomendadas">Recomendadas</button>
           <button type="button" data-preset="todas">Todas</button>
@@ -123,7 +219,7 @@
       </section>
 
       <section class="step">
-        <h2><span class="num">3</span> ¿Cómo?</h2>
+        <h3>Cómo</h3>
         <div class="row2">
           <label class="field">Desde <select id="sel-from"></select></label>
           <label class="field">Hasta <select id="sel-to"></select></label>
@@ -143,7 +239,7 @@
       </section>
 
       <button id="btn-run" class="run">Analizar tendencias</button>
-      <p class="hint" id="share-hint" hidden>🔗 La URL de esta página guarda tu análisis: compártela tal cual.</p>
+      <p class="hint" id="share-hint" hidden>La dirección de esta página guarda tu análisis: compártela tal cual.</p>
     </aside>
 
     <!-- ===== Resultados ===== -->
@@ -158,7 +254,7 @@
         <article class="card summary">
           <header class="card-head">
             <div>
-              <p class="eyebrow">Índice combinado de recursos hídricos</p>
+              <p class="kicker">Índice combinado de recursos hídricos</p>
               <h2 id="sum-title"></h2>
             </div>
             <div id="sum-badge" class="badge"></div>
@@ -174,7 +270,7 @@
             </div>
           </div>
           <div class="actions">
-            <button id="btn-csv" class="ghost">⬇ Descargar resultados (CSV)</button>
+            <button id="btn-csv" class="ghost">Descargar resultados en CSV</button>
           </div>
         </article>
 
@@ -182,10 +278,9 @@
         <div id="cards" class="cards"></div>
       </div>
     </section>
-  </main>
-
-  <section id="metodo" class="method">
-    <h2>Cómo funciona</h2>
+  </div>
+      <section class="method">
+        <h2>Método</h2>
     <div class="method-grid">
       <div><h3>1 · Variables</h3><p>Cada variable describe una parte del ciclo del agua: lo que <b>entra</b> (lluvia), lo que la atmósfera <b>demanda</b> (temperatura, evapotranspiración, viento, radiación), lo que queda <b>almacenado</b> (humedad del suelo, nieve, acuíferos) y cómo <b>responde</b> la superficie (vegetación).</p></div>
       <div><h3>2 · Región</h3><p>Descargamos en directo la API mensual de <b>NASA POWER</b> (reanálisis MERRA-2, lluvia corregida con GPM, humedad del suelo GEOS/GLDAS) en varios puntos repartidos por la región y hacemos la media, mes a mes, desde 1981.</p></div>
@@ -195,13 +290,23 @@
       <div><h3>Índice combinado</h3><p>Pasamos cada variable a anomalías estandarizadas (z), les damos signo según su efecto sobre el agua (+ lluvia, − temperatura…) y hacemos la media. Es una síntesis orientativa, inspirada en indicadores como el SPEI o el Combined Drought Indicator europeo.</p></div>
       <div><h3>Limitaciones</h3><p>Los satélites no ven las desaladoras ni el bombeo de pozos. La rejilla de NASA POWER es de ~50 km: describe el clima de la comarca, no de una finca. Correlación no es causalidad: que varias variables cambien a la vez no demuestra que una cause la otra.</p></div>
     </div>
-    <p class="foot">Proyecto para el <a href="https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/" target="_blank" rel="noopener">NASA Space Apps Challenge 2026 — Be an Earth System Trend Detective</a> · Granada. Código abierto en GitHub.</p>
-  </section>
+      </section>
+    </details>
+  </div>
+  </main>
+
+  <footer class="foot">
+    <svg class="foot-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C 240 0 480 80 720 40 S 1200 0 1440 40 V80 H0 Z" fill="#06283D"/></svg>
+    <div class="foot-in">
+      <p><b>Neoda</b> · Proyecto para el <a href="https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/" target="_blank" rel="noopener">NASA Space Apps Challenge 2026</a>, reto «Be an Earth System Trend Detective». Granada.</p>
+      <p>Datos: <a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a> (NASA Langley Research Center). Mapa base © OpenStreetMap. Código abierto en <a href="https://github.com/fpanero/Neoda_Heeramienta_Medicion" target="_blank" rel="noopener">GitHub</a>.</p>
+    </div>
+  </footer>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=11"></script>
-  <script src="js/power.js?v=11"></script>
-  <script src="js/app.js?v=11"></script>
+  <script src="js/stats.js?v=13"></script>
+  <script src="js/power.js?v=13"></script>
+  <script src="js/app.js?v=13"></script>
 </body>
 </html>

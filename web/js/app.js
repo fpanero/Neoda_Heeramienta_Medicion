@@ -4,7 +4,7 @@
   const S = window.Stats;
   const $ = (sel) => document.querySelector(sel);
   const RECOMMENDED = ["precip", "tair", "rh", "eto", "gwetroot", "aridity"];
-  const COLORS = { main: "#1f6f8b", compare: "#c2622d", trend: "#12302f", trend2: "#8a3a12", grid: "#e9e1d2" };
+  const COLORS = { main: "#0a5f7e", compare: "#f2a93b", trend: "#06283d", trend2: "#b8741a", grid: "#e3eff2", worse: "#ef4e5a", better: "#0a5f7e", green: "#0fa67b", neutral: "#9db4bc" };
   const PLOT_CFG = { displayModeBar: false, responsive: true };
 
   const state = { region: "almeria", compare: "galicia", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
@@ -174,8 +174,8 @@
   // ---------- Render ----------
   const baseLayout = (ytitle) => ({
     margin: { l: 55, r: 12, t: 34, b: 36 }, paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)",
-    font: { family: "IBM Plex Sans, sans-serif", size: 12, color: "#3d5654" },
-    xaxis: { gridcolor: COLORS.grid, zeroline: false }, yaxis: { title: { text: ytitle, font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#cdbfa6" },
+    font: { family: "Archivo, sans-serif", size: 12, color: "#4a6572" },
+    xaxis: { gridcolor: COLORS.grid, zeroline: false }, yaxis: { title: { text: ytitle, font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#b9d3da" },
     legend: { orientation: "h", y: 1.02, yanchor: "bottom", x: 0, font: { size: 11 } }, hovermode: "x unified",
   });
 
@@ -208,9 +208,9 @@
       const c = ix.contrib.filter((d) => S.isNum(d.perDecade));
       Plotly.react("chart-contrib", [{
         type: "bar", orientation: "h", y: c.map((d) => d.name), x: c.map((d) => d.perDecade),
-        marker: { color: c.map((d) => (d.perDecade < 0 ? COLORS.compare : COLORS.main)), opacity: c.map((d) => (d.significant ? 1 : 0.45)) },
+        marker: { color: c.map((d) => (d.perDecade < 0 ? COLORS.worse : COLORS.better)), opacity: c.map((d) => (d.significant ? 1 : 0.45)) },
         hovertemplate: "%{y}: %{x:.2f} σ/década<extra></extra>",
-      }], { ...baseLayout(""), margin: { l: 10, r: 10, t: 6, b: 32 }, hovermode: "closest", yaxis: { automargin: true }, xaxis: { title: { text: "σ por década", font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#12302f" } }, PLOT_CFG);
+      }], { ...baseLayout(""), margin: { l: 10, r: 10, t: 6, b: 32 }, hovermode: "closest", yaxis: { automargin: true }, xaxis: { title: { text: "σ por década", font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#06283d" } }, PLOT_CFG);
     } else {
       Plotly.purge("chart-index"); Plotly.purge("chart-contrib");
     }
@@ -347,7 +347,7 @@
     try { gj = await geo(); } catch (e) { console.warn("Sin límites para el mapa", e); return; }
     gj.features.forEach((f) => {
       const r = regionById(f.properties.id); if (!r) return;
-      const layer = L.geoJSON(f, { style: { weight: 0.7, color: "#7a8a86", fillOpacity: 0.04 } });
+      const layer = L.geoJSON(f, { style: { weight: 0.7, color: "#9db4bc", fillOpacity: 0.04 } });
       layer.bindTooltip(`${r.name}<br><small>clic: elegir · Mayús+clic: comparar</small>`, { sticky: true });
       layer.on("click", (ev) => {
         if (ev.originalEvent && ev.originalEvent.shiftKey) { if (r.id !== state.region) state.compare = r.id; }
@@ -367,11 +367,11 @@
       const r = regionById(id), sel = id === state.region, cmp = id === state.compare;
       // Las comunidades (p. ej. Galicia) solo se dibujan cuando están elegidas, para no tapar sus provincias
       if (r.type !== "provincia") { if (sel || cmp) layer.addTo(map); else map.removeLayer(layer); }
-      layer.setStyle({ color: sel ? "#1f6f8b" : cmp ? "#c2622d" : "#7a8a86", weight: sel || cmp ? 2.5 : 0.7, fillOpacity: sel || cmp ? 0.3 : 0.04, fillColor: cmp ? "#c2622d" : "#1f6f8b" });
+      layer.setStyle({ color: sel ? "#0a5f7e" : cmp ? "#f2a93b" : "#9db4bc", weight: sel || cmp ? 2.5 : 0.7, fillOpacity: sel || cmp ? 0.3 : 0.04, fillColor: cmp ? "#f2a93b" : "#0a5f7e" });
       if (sel || cmp) { layer.bringToFront(); focus.push(layer); }
     });
     [state.region, state.compare].filter(Boolean).forEach((rid) => (regionById(rid).points || []).forEach((p) =>
-      L.circleMarker([p.lonlat[1], p.lonlat[0]], { radius: 3, color: "#12302f", weight: 1, fillOpacity: 0.9 }).bindTooltip(`${regionById(rid).name}: punto de muestreo NASA POWER`).addTo(pointLayer)));
+      L.circleMarker([p.lonlat[1], p.lonlat[0]], { radius: 3, color: "#06283d", weight: 1, fillOpacity: 0.9 }).bindTooltip(`${regionById(rid).name}: punto de muestreo NASA POWER`).addTo(pointLayer)));
     if (focus.length) map.fitBounds(L.featureGroup(focus).getBounds().pad(0.25), { animate: true, maxZoom: 8 });
   }
 
@@ -379,13 +379,14 @@
 
   // ---------- Portada: semáforo del agua ----------
   const D = { from: 1991, token: 0 };
+  const ICON = (d) => `<svg class="ico" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const KPIS = [
-    { id: "tair", icon: "🌡️", title: "Temperatura" },
-    { id: "eto", icon: "☀️", title: "Agua que «pide» el clima" },
-    { id: "precip", icon: "🌧️", title: "Lluvia" },
-    { id: "balance", icon: "⚖️", title: "Balance del agua" },
-    { id: "gwetroot", icon: "🌱", title: "Humedad del suelo" },
-    { id: "aridity", icon: "🏜️", title: "Nivel de aridez" },
+    { id: "tair", title: "Temperatura", icon: ICON('<path d="M13 5a3 3 0 0 1 6 0v13a6 6 0 1 1-6 0Z"/><path d="M16 12v10"/>') },
+    { id: "eto", title: "Agua que «pide» el clima", icon: ICON('<circle cx="16" cy="18" r="5"/><path d="M16 6v3M6 18h3M23 18h3M9 11l2 2M23 11l-2 2"/><path d="M12 3c1 1 1 2 0 3M20 3c1 1 1 2 0 3"/>') },
+    { id: "precip", title: "Lluvia", icon: ICON('<path d="M9 17a5 5 0 0 1 1-10 7 7 0 0 1 13 2 4 4 0 0 1 0 8Z"/><path d="M11 21l-1 4M17 21l-1 4M23 21l-1 4"/>') },
+    { id: "balance", title: "Balance del agua", icon: ICON('<path d="M16 5v22M8 27h16M6 9h20"/><path d="M6 9l-3 8a3 3 0 0 0 6 0ZM26 9l-3 8a3 3 0 0 0 6 0Z"/>') },
+    { id: "gwetroot", title: "Humedad del suelo", icon: ICON('<path d="M4 20h24"/><path d="M16 20v-7M16 13c0-4 3-6 7-6 0 4-3 6-7 6ZM16 15c0-3-2-5-6-5 0 3 2 5 6 5Z"/><path d="M10 24h2M18 25h2M14 27h1"/>') },
+    { id: "aridity", title: "Nivel de aridez", icon: ICON('<path d="M3 26h26"/><path d="M16 26V8a2 2 0 0 1 4 0v18M20 14h3V11a2 2 0 0 1 4 0v4a3 3 0 0 1-3 3h-4M16 17h-3a3 3 0 0 1-3-3v-3a2 2 0 0 1 4 0v3h2"/>') },
   ];
   const STATUS = {
     red: { label: "Empeora", cls: "red" },
@@ -499,15 +500,15 @@
     else verdict = { cls: "amber", light: "🟡", title: "Sin un cambio claro todavía", answer: `Por ahora no: en ${name} la mayoría de indicadores no muestra un cambio comprobado desde ${from}${nRed ? `, aunque ${nRed === 1 ? "uno empeora" : nRed + " empeoran"}` : ""}.` };
     $("#d-answer").textContent = verdict.answer;
     $("#d-verdict").className = "verdict " + verdict.cls;
-    $("#d-verdict").innerHTML = `<span class="light">${verdict.light}</span><div><b>${esc(verdict.title)}</b><span>${nRed} empeoran · ${nGreen} mejoran · ${6 - nRed - nGreen} sin cambio claro${cmp ? ` &nbsp;|&nbsp; ${esc(cname)}: ${cRed} de 6 empeoran` : ""}</span></div>`;
+    $("#d-verdict").innerHTML = `<span class="light" aria-hidden="true"></span><div><b>${esc(verdict.title)}</b><span class="sub">${nRed} empeoran · ${nGreen} mejoran · ${6 - nRed - nGreen} sin cambio claro${cmp ? ` &nbsp;|&nbsp; ${esc(cname)}: ${cRed} de 6 empeoran` : ""}</span></div>`;
 
-    const colorOf = { red: COLORS.compare, green: "#2f7d4f", gray: "#7a8a86" };
+    const colorOf = { red: COLORS.worse, green: COLORS.green, gray: COLORS.neutral };
     $("#d-kpis").innerHTML = res.map(({ k, v, st, sc }) => {
       const t = kpiText(k, st, name, from), s = STATUS[st ? st.status : "gray"];
       let cmpLine = "";
       if (sc) { const tc = kpiText(k, sc, cname, from); cmpLine = `<p class="kpi-cmp">${esc(cname)}: <b>${tc.big}</b> <span class="dot ${STATUS[sc.status].cls}"></span> ${STATUS[sc.status].label.toLowerCase()}</p>`; }
       return `<article class="kpi ${s.cls}" title="${esc(v.question)}">
-        <div class="kpi-head"><span class="ico">${k.icon}</span><span class="kpi-title">${esc(k.title)}</span><span class="pill-st ${s.cls}">${s.label}</span></div>
+        <div class="kpi-head">${k.icon}<span class="kpi-title">${esc(k.title)}</span><span class="pill-st ${s.cls}">${s.label}</span></div>
         <div class="kpi-big">${t.big}</div>
         <p class="kpi-text">${t.text}</p>
         ${t.gauge !== undefined ? aridityGauge(t.gauge) : st ? sparkline(st.series, st, colorOf[st.status]) : ""}
@@ -540,10 +541,10 @@
   const M = { map: null, layers: {}, data: null, var: "eto", mode: "trend", from: null, to: null };
   const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
   const mix = (a, b, t) => { const A = hex(a), B = hex(b); return `rgb(${A.map((x, i) => Math.round(x + (B[i] - x) * t)).join(",")})`; };
-  const NEUTRAL = "#f3ece0";
+  const NEUTRAL = "#eef5f7";
   function diverging(t) { // t en [-1, 1]: -1 = en contra del agua, +1 = a favor
     t = Math.max(-1, Math.min(1, t));
-    return t < 0 ? mix(NEUTRAL, COLORS.compare, -t) : mix(NEUTRAL, COLORS.main, t);
+    return t < 0 ? mix(NEUTRAL, COLORS.worse, -t) : mix(NEUTRAL, COLORS.better, t);
   }
   function quantile(arr, q) { const s = [...arr].sort((a, b) => a - b); return s.length ? s[Math.min(s.length - 1, Math.floor(q * (s.length - 1)))] : 0; }
 
@@ -565,11 +566,11 @@
     if (!res || !S.isNum(res.value)) return { fillColor: "#ddd", fillOpacity: 0.4, color: "#999", weight: 0.5, dashArray: null };
     if (M.mode === "trend") {
       const eff = res.value * (v.water_sign || 1);
-      return { fillColor: diverging(eff / scale.max), fillOpacity: res.significant ? 0.9 : 0.35, color: res.significant ? "#12302f" : "#8a8a8a", weight: res.significant ? 0.8 : 0.6, dashArray: res.significant ? null : "3 3" };
+      return { fillColor: diverging(eff / scale.max), fillOpacity: res.significant ? 0.9 : 0.35, color: res.significant ? "#ffffff" : "#b9cdd3", weight: res.significant ? 1.2 : 0.8, dashArray: res.significant ? null : "3 3" };
     }
     let tt = scale.max > scale.min ? (res.value - scale.min) / (scale.max - scale.min) : 0.5;
     if (v.water_sign < 0) tt = 1 - tt;
-    return { fillColor: v.water_sign === 0 ? mix(NEUTRAL, "#12302f", tt) : diverging(tt * 2 - 1), fillOpacity: 0.85, color: "#12302f", weight: 0.6, dashArray: null };
+    return { fillColor: v.water_sign === 0 ? mix(NEUTRAL, "#06283d", tt) : diverging(tt * 2 - 1), fillOpacity: 0.9, color: "#ffffff", weight: 1.2, dashArray: null };
   }
 
   function renderMap() {
@@ -595,12 +596,12 @@
     if (M.mode === "trend") {
       const lo = v.water_sign >= 0 ? -scale.max : scale.max, hi = -lo;
       lg.innerHTML = `<b>${esc(v.name)}</b> · cuánto cambia cada 10 años (${esc(units)})
-        <div class="bar" style="background: linear-gradient(90deg, ${COLORS.compare}, ${NEUTRAL}, ${COLORS.main})"></div>
+        <div class="bar" style="background: linear-gradient(90deg, ${COLORS.worse}, ${NEUTRAL}, ${COLORS.better})"></div>
         <div class="ends"><span>${fmtSigned(lo, smart(lo))}</span><span>0</span><span>${fmtSigned(hi, smart(hi))}</span></div>
         <div class="ends"><span>${v.water_sign === 0 ? "baja" : "peor para el agua"}</span><span>${v.water_sign === 0 ? "sube" : "mejor para el agua"}</span></div>`;
     } else {
-      const lowCol = v.water_sign === 0 ? NEUTRAL : v.water_sign > 0 ? COLORS.compare : COLORS.main;
-      const highCol = v.water_sign === 0 ? "#12302f" : v.water_sign > 0 ? COLORS.main : COLORS.compare;
+      const lowCol = v.water_sign === 0 ? NEUTRAL : v.water_sign > 0 ? COLORS.worse : COLORS.better;
+      const highCol = v.water_sign === 0 ? "#06283d" : v.water_sign > 0 ? COLORS.better : COLORS.worse;
       lg.innerHTML = `<b>${esc(v.name)}</b> · media ${M.from}–${M.to} (${esc(units)})
         <div class="bar" style="background: linear-gradient(90deg, ${lowCol}, ${NEUTRAL}, ${highCol})"></div>
         <div class="ends"><span>${fmt(scale.min, smart(scale.min))}</span><span>${fmt(scale.max, smart(scale.max))}</span></div>`;
@@ -614,7 +615,7 @@
       const eff = ([, r]) => r.value * (v.water_sign || 1);
       const worse = sig.filter((x) => eff(x) < 0).sort((a, b) => eff(a) - eff(b)).slice(0, 5);
       const better = sig.filter((x) => eff(x) > 0).sort((a, b) => eff(b) - eff(a)).slice(0, 5);
-      const labels = v.water_sign === 0 ? ["Donde más baja", "Donde más sube"] : ["🔴 Donde más empeora", "🟢 Donde más mejora"];
+      const labels = v.water_sign === 0 ? ["Donde más baja", "Donde más sube"] : ['<span class="dot red"></span> Donde más empeora', '<span class="dot green"></span> Donde más mejora'];
       html = `<p class="note">El cambio está <b>comprobado</b> en ${sig.length} de ${Object.keys(res).length} provincias (${Math.round((1 - state.alpha) * 100)} % de confianza).</p>` + list(labels[0], worse) + list(labels[1], better);
     } else {
       const rows = Object.entries(res).filter(([, r]) => S.isNum(r.value)).sort((a, b) => a[1].value - b[1].value);
@@ -641,8 +642,9 @@
     $("#sel-alpha").addEventListener("change", () => renderMap());
     $("#m-rank").addEventListener("click", (e) => { const li = e.target.closest("li"); if (li) selectFromMap(li.dataset.rid); });
 
-    M.map = L.map("chmap", { scrollWheelZoom: false, zoomSnap: 0.25 }).setView([39.6, -3.7], 5.75);
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Datos: NASA POWER', maxZoom: 9, opacity: 0.5 }).addTo(M.map);
+    M.map = L.map("chmap", { scrollWheelZoom: false, zoomSnap: 0.25, zoomControl: false }).setView([39.6, -3.7], 5.75);
+    L.control.zoom({ position: "bottomright" }).addTo(M.map);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Datos: NASA POWER', maxZoom: 9, opacity: 0.35 }).addTo(M.map);
     let gj;
     try { [gj, M.data] = await Promise.all([geo(), getJSON("data/map/annual.json")]); }
     catch (e) { $("#m-info").textContent = "El mapa aún no tiene datos (se generan en el despliegue)."; return; }
@@ -654,7 +656,7 @@
       M.layers[r.id] = layer;
     });
     // Canarias más cerca de la península no hace falta: se ve al hacer zoom; ajustamos a todo
-    M.map.fitBounds(L.featureGroup(Object.values(M.layers)).getBounds(), { padding: [10, 10] });
+    fitChoropleth();
     $("#m-info").textContent = `Datos de NASA POWER (copia del ${new Date(M.data.fetched).toLocaleDateString("es-ES")}). Las cifras son el cambio cada 10 años.`;
     renderMap();
   }
@@ -664,7 +666,62 @@
     syncControls(); highlightMap();
     $("#d-region").value = state.region; $("#d-compare").value = state.compare;
     renderDashboard();
-    $("#inicio").scrollIntoView({ behavior: "smooth" });
+    location.hash = "#explorar";
+  }
+
+
+  // ---------- Pestañas: Inicio · Mapa · Mi provincia ----------
+  function fitChoropleth() {
+    if (!M.map || !Object.keys(M.layers).length) return;
+    const wide = window.innerWidth > 860;
+    // Deja sitio al panel flotante de la izquierda y al ranking de la derecha
+    M.map.fitBounds(L.featureGroup(Object.values(M.layers)).getBounds(), wide ? { paddingTopLeft: [430, 30], paddingBottomRight: [window.innerWidth > 1100 ? 330 : 30, 30] } : { padding: [10, 10] });
+  }
+  function currentView() {
+    const h = location.hash;
+    if (h.includes("=")) return "explorar";
+    const v = h.slice(1);
+    return v === "mapa" || v === "explorar" ? v : "home";
+  }
+  function showView() {
+    const v = currentView();
+    const changed = document.body.dataset.view !== v;
+    document.body.dataset.view = v;
+    document.querySelectorAll(".view").forEach((el) => (el.hidden = el.dataset.view !== v));
+    document.querySelectorAll(".nav nav a").forEach((a) => a.classList.toggle("active", a.dataset.go === v));
+    if (changed) window.scrollTo({ top: 0 });
+    if (v === "mapa" && M.map) setTimeout(() => { M.map.invalidateSize(); fitChoropleth(); }, 30);
+    if (v === "explorar" && map) setTimeout(() => { map.invalidateSize(); highlightMap(); }, 30);
+  }
+
+  // ---------- Inicio: historia del depósito con datos reales de Almería ----------
+  function setLive(key, html) { document.querySelectorAll(`[data-live="${key}"]`).forEach((el) => (el.innerHTML = html)); }
+  async function renderLanding() {
+    try {
+      const d = await regionData("almeria");
+      const from = 1991, to = CFG.period.last;
+      const g = (id) => kpiStats(annualSeries(d, varById(id), from, to), varById(id), from, to);
+      const p = g("precip"), t = g("tair"), e = g("eto"), b = g("balance");
+      if (p) { setLive("precip", `≈ ${int(p.mean)} litros`); setLive("precip-text", int(p.mean)); }
+      if (t) setLive("tair", `${signed1(t.change)} °C`);
+      if (e) { setLive("eto", `${signedInt(e.change)} litros`); setLive("eto-text", int(Math.abs(e.change))); }
+      if (b) { setLive("balance", `${signedInt(b.recent)} litros`); setLive("balance-text", int(Math.abs(b.recent))); }
+    } catch (err) { console.warn("Inicio: se mantienen las cifras de referencia", err); }
+  }
+  function initStory() {
+    const tank = $(".tank"), cards = document.querySelectorAll(".step-card");
+    if (!tank || !cards.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        cards.forEach((c) => c.classList.toggle("on", c === en.target));
+        tank.dataset.step = en.target.dataset.step;
+      });
+    }, { rootMargin: "-45% 0px -45% 0px" });
+    cards.forEach((c) => io.observe(c));
+    cards[0].classList.add("on");
+    const nav = $(".nav");
+    window.addEventListener("scroll", () => nav.classList.toggle("scrolled", window.scrollY > 10), { passive: true });
   }
 
   // ---------- URL compartible ----------
@@ -697,7 +754,9 @@
     }
     const fromHash = readHash();
     buildControls(); syncControls(); buildDashboard(); buildMap(); buildChoropleth();
-    renderDashboard();
+    initStory(); showView();
+    window.addEventListener("hashchange", showView);
+    renderDashboard(); renderLanding();
     if (fromHash) run();
   }
   window.addEventListener("hashchange", () => { if (CFG.regions.length && readHash()) { syncControls(); highlightMap(); run(); } });
