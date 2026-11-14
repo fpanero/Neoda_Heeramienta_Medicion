@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=16" />
+  <link rel="stylesheet" href="css/style.css?v=18" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z' fill='%2316A6B6'/%3E%3C/svg%3E" />
 </head>
 <body data-view="home">
@@ -33,10 +33,6 @@
       <div class="hero-text">
         <h1>¿Se está quedando España sin agua?</h1>
         <p class="hero-sub">Sequías más largas, cultivos que piden más riego, suelos que se secan. Neoda mide con 45 años de datos de la NASA qué está cambiando de verdad en cada provincia.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#mapa" data-go="mapa">Ver el mapa de España</a>
-          <a class="btn btn-ghost" href="#explorar" data-go="explorar">Abrir el panel de análisis</a>
-        </div>
       </div>
       <figure class="tap" aria-hidden="true">
         <svg viewBox="0 0 420 540" class="tap-svg">
@@ -103,90 +99,14 @@
           <p class="step-num warn" data-live="balance">40 de 52</p>
           <h2>Y en buena parte del país la cuenta ya no sale.</h2>
           <p>En <span data-live="balance-text">muchas</span> provincias el clima evapora más agua de la que llueve, y <span data-live="arid-text">varias</span> son ya zonas áridas o semiáridas según la ONU. Ese hueco lo cubren embalses, acuíferos y desaladoras, cada vez con más presión.</p>
-          <a class="btn btn-primary" href="#mapa" data-go="mapa">Ver dónde pasa en el mapa</a>
         </article>
       </div>
     </section>
 
-    <section class="problems" id="problemas">
-      <div class="problems-head">
-        <h2>Los problemas que medimos</h2>
-        <p>El agua no falta por una sola causa. Neoda vigila las tendencias que hay detrás de cada problema, para que los equipos que deciden sepan qué está cambiando y dónde.</p>
-      </div>
-      <div class="problem-list">
-        <article class="problem">
-          <h3>Sequía</h3>
-          <p>Periodos largos con menos agua de la normal, que vacían embalses y ríos.</p>
-          <p class="measures">Lo medimos con: índice de sequía SPI-12, lluvia y balance del agua.</p>
-          <p class="stat" data-live="p-drought"></p>
-        </article>
-        <article class="problem">
-          <h3>Riego y cultivos</h3>
-          <p>Si el clima evapora más, cada hectárea necesita más agua para dar la misma cosecha.</p>
-          <p class="measures">Lo medimos con: evapotranspiración de referencia (FAO-56) y humedad del suelo en las raíces.</p>
-          <p class="stat" data-live="p-irrig"></p>
-        </article>
-        <article class="problem">
-          <h3>Desertificación</h3>
-          <p>Tierras que pasan de húmedas a secas y pierden su capacidad de producir.</p>
-          <p class="measures">Lo medimos con: índice de aridez de la ONU (lluvia entre evaporación).</p>
-          <p class="stat" data-live="p-desert"></p>
-        </article>
-        <article class="problem">
-          <h3>Calor extremo</h3>
-          <p>Veranos más duros que disparan la demanda de agua y estresan a personas y cultivos.</p>
-          <p class="measures">Lo medimos con: temperatura media y temperatura máxima extrema.</p>
-          <p class="stat" data-live="p-heat"></p>
-        </article>
-        <article class="problem">
-          <h3>Reservas de agua</h3>
-          <p>La nieve y la humedad profunda del suelo son el agua guardada para los meses secos.</p>
-          <p class="measures">Lo medimos con: precipitación en forma de nieve y humedad de todo el perfil del suelo.</p>
-          <p class="stat" data-live="p-reserve"></p>
-        </article>
-      </div>
-    </section>
-
-    <section class="scope">
-      <h2>Qué hace Neoda y qué no</h2>
-      <div class="scope-grid">
-        <div class="scope-col yes">
-          <h3>Hace</h3>
-          <ul>
-            <li>Detecta tendencias en 19 indicadores del agua, de 1981 a hoy.</li>
-            <li>Cubre las 52 provincias de España, con datos de NASA POWER descargados al momento.</li>
-            <li>Solo da un cambio por bueno cuando la estadística lo confirma (Mann-Kendall y pendiente de Sen, 95 % de confianza).</li>
-            <li>Compara provincias entre sí para ver dónde el problema avanza más rápido.</li>
-          </ul>
-        </div>
-        <div class="scope-col no">
-          <h3>No hace</h3>
-          <ul>
-            <li>No predice el futuro: mide lo que ya ha pasado.</li>
-            <li>No mide directamente embalses, acuíferos ni desaladoras: mide el clima y el suelo que los alimentan.</li>
-            <li>No baja al nivel de una finca: los datos de la NASA tienen una rejilla de unos 50 km.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section class="how">
-      <h2>Cómo funciona</h2>
-      <ol class="how-steps">
-        <li><span class="how-n">1</span><h3>Eliges provincia e indicadores</h3><p>Cualquiera de las 52 provincias, otra para comparar y los indicadores del problema que quieres estudiar.</p></li>
-        <li><span class="how-n">2</span><h3>Neoda consulta a la NASA</h3><p>Descarga en ese momento los datos de satélites y modelos de NASA POWER desde 1981.</p></li>
-        <li><span class="how-n">3</span><h3>Ves qué cambia y cuánto</h3><p>Para cada indicador: cuánto cambia por década, si el cambio está comprobado y qué variables empujan la pérdida de agua.</p></li>
-      </ol>
-    </section>
-
-    <section class="who">
-      <div class="who-text">
-        <h2>Pensado para los equipos que deciden sobre el agua</h2>
-        <p>Equipos científicos y técnicos de confederaciones hidrográficas, administraciones, universidades y cooperativas agrarias. Neoda les da las tendencias ya calculadas y comprobadas para que saquen conclusiones y prioricen dónde actuar.</p>
-        <p class="who-note">Neoda no hace predicciones: mide lo que ya ha pasado. Es la base para decidir antes de que falte el agua.</p>
-      </div>
-      <div class="who-tiles">
-        <a class="tile tile-map" href="#mapa" data-go="mapa"><span class="tile-title">Mapa de España</span><span class="tile-sub">Dónde empeora más el agua, provincia a provincia</span></a>
+    <section class="cta-end">
+      <h2>Mira dónde está pasando</h2>
+      <div class="cta-tiles">
+        <a class="tile tile-map" href="#mapa" data-go="mapa"><span class="tile-title">Mapa de España</span><span class="tile-sub">Las 52 provincias, coloreadas según cómo cambia cada indicador del agua</span></a>
         <a class="tile tile-me" href="#explorar" data-go="explorar"><span class="tile-title">Panel de análisis</span><span class="tile-sub">Las 19 variables con toda la estadística, provincia a provincia</span></a>
       </div>
     </section>
@@ -345,8 +265,8 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=16"></script>
-  <script src="js/power.js?v=16"></script>
-  <script src="js/app.js?v=16"></script>
+  <script src="js/stats.js?v=18"></script>
+  <script src="js/power.js?v=18"></script>
+  <script src="js/app.js?v=18"></script>
 </body>
 </html>

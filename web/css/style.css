@@ -362,3 +362,18 @@ body[data-view="mapa"] .foot { display: none; }
 .panel-head .method { padding: 2rem 0 0; }
 @media (max-width: 1100px) { .problem-list { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 860px) { .problems-head, .scope-grid { grid-template-columns: 1fr; gap: 1rem; } .problem-list { grid-template-columns: 1fr; } }
+
+/* ---------- Cierre de la portada: dos accesos ---------- */
+.cta-end { position: relative; padding: 7rem clamp(1rem, 6vw, 6rem) 8rem; background: var(--mist); text-align: center; overflow: hidden; }
+.cta-end::before { content: ""; position: absolute; left: 50%; top: 0; width: 2px; height: 5rem; background: linear-gradient(transparent, var(--teal)); }
+.cta-end h2 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 900; margin-bottom: 2.5rem; }
+.cta-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; max-width: 1100px; margin: 0 auto; text-align: left; }
+.cta-tiles .tile { min-height: 260px; padding: 2rem; transition: transform .25s; }
+.cta-tiles .tile:hover { transform: translateY(-4px); }
+.cta-tiles .tile-title { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.cta-tiles .tile-sub { font-size: 1.05rem; max-width: 32ch; }
+.story-steps { padding-bottom: 0; }
+@media (max-width: 860px) { .cta-tiles { grid-template-columns: 1fr; } .cta-tiles .tile { min-height: 180px; } }
+@media (prefers-reduced-motion: reduce) { .cta-tiles .tile { transition: none; } }
+body[data-view="home"] .foot { margin-top: 0; }
+body[data-view="home"] .foot-wave { background: var(--mist); }
