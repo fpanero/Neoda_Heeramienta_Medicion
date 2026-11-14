@@ -377,3 +377,26 @@ body[data-view="mapa"] .foot { display: none; }
 @media (prefers-reduced-motion: reduce) { .cta-tiles .tile { transition: none; } }
 body[data-view="home"] .foot { margin-top: 0; }
 body[data-view="home"] .foot-wave { background: var(--mist); }
+
+/* ---------- Panel del mapa: preguntas ---------- */
+.map-panel h1 { font-size: 1.7rem; margin-bottom: 1rem; }
+.m-step { font-size: .85rem; font-weight: 600; color: var(--slate); margin: 1rem 0 .45rem; }
+.qlist { display: grid; gap: .35rem; }
+.q-btn { display: flex; align-items: center; gap: .7rem; width: 100%; text-align: left; padding: .55rem .75rem; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--abyss); font-size: .95rem; line-height: 1.25; }
+.q-btn .ico { width: 24px; height: 24px; flex: none; color: var(--teal); }
+.q-btn:hover { border-color: var(--teal); }
+.q-btn.on { background: var(--abyss); border-color: var(--abyss); color: #fff; }
+.q-btn.on .ico { color: #7fdbe6; }
+.m-answer { margin: 1.1rem 0 .2rem; padding: .9rem 1rem; border-radius: 12px; background: var(--foam); font-size: .95rem; color: var(--abyss); }
+.m-answer:empty { display: none; }
+.m-answer b { font-variation-settings: var(--wide); font-weight: 800; }
+.swatches { list-style: none; margin: .4rem 0 .3rem; padding: 0; display: grid; gap: .35rem; }
+.swatches li { display: flex; align-items: center; gap: .55rem; color: var(--abyss); }
+.swatches small { color: var(--slate); }
+.sw3 { width: 26px; height: 14px; border-radius: 4px; }
+.sw3.pale { background: #eef5f7; border: 1.5px dashed #b9cdd3; }
+.rank li { display: flex; justify-content: space-between; gap: .6rem; }
+.rank li span { float: none; text-align: right; font-size: .8rem; }
+.map-panel .seg { display: grid; grid-template-columns: 1fr 1fr; width: 100%; border-radius: 14px; }
+.map-panel .seg span { text-align: center; border-radius: 10px; font-size: .85rem; padding: .5rem .4rem; line-height: 1.2; height: 100%; display: grid; place-items: center; }
+.q-btn { padding: .5rem .7rem; font-size: .92rem; }

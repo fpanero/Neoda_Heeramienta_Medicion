@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=18" />
+  <link rel="stylesheet" href="css/style.css?v=20" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z' fill='%2316A6B6'/%3E%3C/svg%3E" />
 </head>
 <body data-view="home">
@@ -117,29 +117,19 @@
     <section id="mapa" class="mapview">
       <div id="chmap" class="chmap" role="img" aria-label="Mapa de provincias coloreado según la variable elegida"></div>
       <div class="map-panel">
-        <h1>¿Dónde empeora más?</h1>
-        <p class="map-help">En <span class="key worse">coral</span> las provincias donde el cambio va en contra del agua; en <span class="key better">azul</span>, a favor. Las pálidas no tienen un cambio claro. Pulsa una para analizarla en el panel.</p>
-        <div class="chips" id="m-quick">
-          <button type="button" class="chip-btn" data-var="tair">Calor</button>
-          <button type="button" class="chip-btn on" data-var="eto">Agua que pide el clima</button>
-          <button type="button" class="chip-btn" data-var="precip">Lluvia</button>
-          <button type="button" class="chip-btn" data-var="balance">Balance del agua</button>
-          <button type="button" class="chip-btn" data-var="gwetroot">Humedad del suelo</button>
-          <button type="button" class="chip-btn" data-var="aridity">Aridez</button>
-        </div>
+        <h1>El agua en España, provincia a provincia</h1>
+        <p class="m-step">¿Qué quieres saber?</p>
+        <div class="qlist" id="m-quick"></div>
+        <p class="m-step">Ver</p>
         <div class="seg" role="radiogroup" aria-label="Qué mostrar">
-          <label><input type="radio" name="m-mode" value="trend" checked /><span>Cómo cambia</span></label>
-          <label><input type="radio" name="m-mode" value="mean" /><span>Cómo es hoy</span></label>
+          <label><input type="radio" name="m-mode" value="trend" checked /><span>Cómo ha cambiado desde 1991</span></label>
+          <label><input type="radio" name="m-mode" value="mean" /><span>Cómo está ahora</span></label>
         </div>
+        <p id="m-answer" class="m-answer"></p>
         <div id="m-legend" class="legend"></div>
-        <details class="more">
-          <summary>Más opciones</summary>
-          <label class="field">Otra variable <select id="m-var"></select></label>
-          <div class="row2">
-            <label class="field">Desde <select id="m-from"></select></label>
-            <label class="field">Hasta <select id="m-to"></select></label>
-          </div>
-        </details>
+        <div hidden>
+          <select id="m-var"></select><select id="m-from"></select><select id="m-to"></select>
+        </div>
       </div>
       <aside class="rank-panel">
         <div id="m-rank" class="rank"></div>
@@ -265,8 +255,8 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=18"></script>
-  <script src="js/power.js?v=18"></script>
-  <script src="js/app.js?v=18"></script>
+  <script src="js/stats.js?v=20"></script>
+  <script src="js/power.js?v=20"></script>
+  <script src="js/app.js?v=20"></script>
 </body>
 </html>
