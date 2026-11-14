@@ -430,3 +430,12 @@ body[data-view="home"] .foot-wave { background: var(--mist); }
 .nav nav a:not(.nav-cta) { position: relative; }
 .nav nav a.active:not(.nav-cta) { color: var(--abyss); font-weight: 700; }
 .nav nav a.active:not(.nav-cta)::after { content: ""; position: absolute; left: .9rem; right: .9rem; bottom: .2rem; height: 2px; border-radius: 2px; background: var(--abyss); }
+/* Método: desplegable */
+.panel-head details.method { margin-top: 2rem; padding: 0; border: 1.5px solid var(--line); border-radius: var(--r-md); background: #fff; }
+details.method > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.4rem; }
+details.method > summary::-webkit-details-marker { display: none; }
+details.method > summary h2 { margin: 0; }
+details.method > summary::after { content: "+"; font-size: 1.8rem; line-height: 1; color: var(--atlantic); }
+details.method[open] > summary::after { content: "−"; }
+details.method > summary:hover h2 { color: var(--atlantic); }
+details.method .method-grid { padding: 0 1.4rem 1.4rem; }

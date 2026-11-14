@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=36" />
+  <link rel="stylesheet" href="css/style.css?v=37" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z' fill='%2316A6B6'/%3E%3C/svg%3E" />
 </head>
 <body data-view="home">
@@ -215,8 +215,8 @@
         </section>
       </div>
 
-      <section class="method" id="metodo">
-        <h2 data-i18n="m.title">Método</h2>
+      <details class="method" id="metodo">
+        <summary><h2 data-i18n="m.title">Método</h2></summary>
         <div class="method-grid">
           <div><h3 data-i18n="m.1h">1 · Variables</h3><p data-i18n="m.1p">Cada variable describe una parte del ciclo del agua: lo que <b>entra</b> (lluvia), lo que la atmósfera <b>demanda</b> (temperatura, evapotranspiración, viento, radiación), lo que queda <b>almacenado</b> en el suelo y los <b>indicadores</b> derivados (balance, aridez, sequía).</p></div>
           <div><h3 data-i18n="m.2h">2 · Región</h3><p data-i18n="m.2p">Descargamos en directo la API mensual de <b>NASA POWER</b> (reanálisis MERRA-2, lluvia corregida con GPM, humedad del suelo GEOS) en varios puntos repartidos por la provincia y hacemos la media, mes a mes, desde 1981.</p></div>
@@ -225,7 +225,7 @@
           <div><h3 data-i18n="m.5h">Variables calculadas</h3><p data-i18n="m.5p"><b>ETo</b>: FAO-56 Penman-Monteith. <b>Balance</b> = P − ETo. <b>Aridez</b> = P / ETo anual (clases UNEP). <b>SPI-12</b>: ajuste gamma de la lluvia acumulada en 12 meses. <b>Índice combinado</b>: media de anomalías estandarizadas con el signo de su efecto sobre el agua.</p></div>
           <div><h3 data-i18n="m.6h">Limitaciones</h3><p data-i18n="m.6p">Los satélites no ven embalses, acuíferos ni desaladoras. La rejilla de NASA POWER es de ~50 km: describe el clima de la comarca, no de una finca. Que dos variables cambien a la vez no demuestra que una cause la otra.</p></div>
         </div>
-      </section>
+      </details>
     </section>
   </div>
   </main>
@@ -240,9 +240,9 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=36"></script>
-  <script src="js/power.js?v=36"></script>
-  <script src="js/i18n.js?v=36"></script>
-  <script src="js/app.js?v=36"></script>
+  <script src="js/stats.js?v=37"></script>
+  <script src="js/power.js?v=37"></script>
+  <script src="js/i18n.js?v=37"></script>
+  <script src="js/app.js?v=37"></script>
 </body>
 </html>
