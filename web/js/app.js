@@ -390,6 +390,7 @@
     const v = varById(M.var), D = M.data, out = {};
     const idx = D.years.map((y, i) => (y >= M.from && y <= M.to ? i : -1)).filter((i) => i >= 0);
     Object.entries(D.regions).forEach(([rid, vals]) => {
+      const reg = regionById(rid); if (!reg || reg.type !== "provincia") return; // el mapa es por provincias
       const series = vals[M.var]; if (!series) return;
       const t = idx.map((i) => D.years[i]), y = idx.map((i) => series[i]);
       if (M.mode === "mean") { out[rid] = { value: S.mean(y) }; return; }
@@ -444,13 +445,21 @@
         <div class="ends"><span>${fmt(scale.min, smart(scale.min))}</span><span>${fmt(scale.max, smart(scale.max))}</span></div>`;
     }
     // Ranking
-    const rows = Object.entries(res).filter(([, r]) => S.isNum(r.value) && (M.mode === "mean" || r.significant));
-    const key = ([, r]) => (M.mode === "trend" ? r.value * (v.water_sign || 1) : r.value);
-    rows.sort((a, b) => key(a) - key(b));
     const li = ([rid, r]) => `<li data-rid="${rid}">${esc(regionById(rid).name)} <span>${M.mode === "trend" ? fmtSigned(r.value, smart(r.value)) : fmt(r.value, smart(r.value))}</span></li>`;
-    const labels = M.mode === "trend" ? (v.water_sign === 0 ? ["Más bajada", "Más subida"] : ["Peor evolución para el agua", "Mejor evolución para el agua"]) : ["Valores más bajos", "Valores más altos"];
-    const nSig = M.mode === "trend" ? `<p class="note">${rows.length} de ${Object.keys(res).length} provincias con tendencia significativa (α = ${fmt(state.alpha, 2)}).</p>` : "";
-    $("#m-rank").innerHTML = rows.length ? `${nSig}<h4>${labels[0]}</h4><ol>${rows.slice(0, 5).map(li).join("")}</ol><h4>${labels[1]}</h4><ol>${rows.slice(-5).reverse().map(li).join("")}</ol>` : `${nSig}<p class="note">Ninguna provincia con tendencia significativa en este periodo.</p>`;
+    const list = (title, rows) => `<h4>${title}</h4>` + (rows.length ? `<ol>${rows.map(li).join("")}</ol>` : '<p class="note">Ninguna.</p>');
+    let html;
+    if (M.mode === "trend") {
+      const sig = Object.entries(res).filter(([, r]) => S.isNum(r.value) && r.significant);
+      const eff = ([, r]) => r.value * (v.water_sign || 1);
+      const worse = sig.filter((x) => eff(x) < 0).sort((a, b) => eff(a) - eff(b)).slice(0, 5);
+      const better = sig.filter((x) => eff(x) > 0).sort((a, b) => eff(b) - eff(a)).slice(0, 5);
+      const labels = v.water_sign === 0 ? ["Bajan más (significativo)", "Suben más (significativo)"] : ["Empeoran para el agua (significativo)", "Mejoran para el agua (significativo)"];
+      html = `<p class="note">${sig.length} de ${Object.keys(res).length} provincias con tendencia significativa (α = ${fmt(state.alpha, 2)}).</p>` + list(labels[0], worse) + list(labels[1], better);
+    } else {
+      const rows = Object.entries(res).filter(([, r]) => S.isNum(r.value)).sort((a, b) => a[1].value - b[1].value);
+      html = list("Valores más bajos", rows.slice(0, 5)) + list("Valores más altos", rows.slice(-5).reverse());
+    }
+    $("#m-rank").innerHTML = html;
   }
 
   async function buildChoropleth() {
