@@ -20,7 +20,7 @@
   const smart = (v) => { const a = Math.abs(v); return a === 0 ? 2 : a < 0.01 ? 4 : a < 1 ? 3 : a < 100 ? 2 : 1; };
   const varById = (id) => CFG.variables.find((v) => v.id === id);
   const regionById = (id) => CFG.regions.find((r) => r.id === id);
-  const lc = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+  const lc = (s) => (/^[A-ZÁÉÍÓÚ]{2}/.test(s) ? s : s.charAt(0).toLowerCase() + s.slice(1));
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   // ---------- Carga de datos ----------
