@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=6" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
 </head>
 <body>
   <header class="topbar">
@@ -22,6 +22,7 @@
     </div>
     <nav class="toplinks">
       <button class="linkbtn" id="btn-demo" title="Carga un análisis de ejemplo">▶ Ejemplo: Almería vs Galicia</button>
+      <a class="linkbtn" href="#mapa">Mapa de España</a>
       <a class="linkbtn" href="#metodo">Cómo funciona</a>
     </nav>
   </header>
@@ -114,6 +115,31 @@
     </section>
   </main>
 
+  <section id="mapa" class="mapsec">
+    <div class="mapsec-head">
+      <h2>Mapa de España</h2>
+      <p>Cada provincia coloreada según la variable elegida. En modo <b>tendencia</b>: <span class="sw neg"></span> cambia en contra del agua, <span class="sw pos"></span> a favor; las provincias con tendencia <b>no significativa</b> salen tenues y con borde discontinuo. Haz clic en una provincia para analizarla en detalle.</p>
+    </div>
+    <div class="mapsec-grid">
+      <div class="mapctl card">
+        <label class="field">Variable <select id="m-var"></select></label>
+        <fieldset class="field">
+          <legend>Mostrar</legend>
+          <label class="radio"><input type="radio" name="m-mode" value="trend" checked /> Tendencia por década</label>
+          <label class="radio"><input type="radio" name="m-mode" value="mean" /> Valor medio del periodo</label>
+        </fieldset>
+        <div class="row2">
+          <label class="field">Desde <select id="m-from"></select></label>
+          <label class="field">Hasta <select id="m-to"></select></label>
+        </div>
+        <div id="m-legend" class="legend"></div>
+        <div id="m-rank" class="rank"></div>
+        <p id="m-info" class="note"></p>
+      </div>
+      <div id="chmap" class="chmap card" role="img" aria-label="Mapa de provincias coloreado"></div>
+    </div>
+  </section>
+
   <section id="metodo" class="method">
     <h2>Cómo funciona</h2>
     <div class="method-grid">
@@ -130,8 +156,8 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=6"></script>
-  <script src="js/power.js?v=6"></script>
-  <script src="js/app.js?v=6"></script>
+  <script src="js/stats.js?v=7"></script>
+  <script src="js/power.js?v=7"></script>
+  <script src="js/app.js?v=7"></script>
 </body>
 </html>

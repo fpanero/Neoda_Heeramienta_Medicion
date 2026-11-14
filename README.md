@@ -19,6 +19,10 @@ con datos de **NASA POWER descargados en directo**. Proyecto para el **NASA Spac
 
 Los resultados se pueden descargar en CSV y la URL guarda el análisis para compartirlo.
 
+5. **Mapa de España**: todas las provincias coloreadas según la variable elegida, por **tendencia por década**
+   (rojo = peor para el agua, azul = mejor; tenue = no significativa) o por **valor medio** del periodo, con ranking.
+   Las series anuales se precalculan en el despliegue (`pipeline/build_map_data.js`) y la estadística se hace en el navegador.
+
 ## Estado
 
 | Parte | Estado |

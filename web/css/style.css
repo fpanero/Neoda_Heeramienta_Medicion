@@ -129,3 +129,20 @@ legend { margin-bottom: .2rem; }
 .calc { font-family: var(--mono); font-size: .62rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 .25rem; }
 .src code { font-family: var(--mono); font-size: .72rem; }
 #data-info { margin-top: -.4rem; }
+
+/* ---- Mapa de España ---- */
+.mapsec { margin: 0 2rem 1.5rem; }
+.mapsec-head h2 { font-size: 1.5rem; margin-bottom: .3rem; }
+.mapsec-head p { color: var(--ink-2); max-width: 90ch; margin: 0 0 1rem; font-size: .95rem; }
+.mapsec-grid { display: grid; grid-template-columns: 320px 1fr; gap: 1.2rem; align-items: start; }
+.chmap { height: 620px; padding: 0; overflow: hidden; }
+.legend { margin: .8rem 0; font-size: .78rem; color: var(--ink-2); }
+.legend .bar { height: 12px; border-radius: 6px; border: 1px solid var(--line); margin: .3rem 0; }
+.legend .ends { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .72rem; }
+.rank h4 { margin: .8rem 0 .3rem; font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.rank ol { margin: 0; padding-left: 1.2rem; font-size: .85rem; }
+.rank li { cursor: pointer; padding: .1rem 0; }
+.rank li:hover { color: var(--water); }
+.rank li span { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
+@media (max-width: 1000px) { .mapsec { margin: 0 1rem 1rem; } .mapsec-grid { grid-template-columns: 1fr; } .chmap { height: 460px; } }
+#mapa, #metodo { scroll-margin-top: 110px; }

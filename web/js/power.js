@@ -207,6 +207,6 @@
     }
   }
 
-  const Power = { loadRegion, eto, extraterrestrialRadiation, spi, gammaP, processPoint, PARAMS, API };
+  const Power = { loadRegion, build, eto, extraterrestrialRadiation, spi, gammaP, processPoint, PARAMS, API };
   if (typeof module !== "undefined" && module.exports) module.exports = Power; else root.Power = Power;
 })(typeof window !== "undefined" ? window : globalThis);

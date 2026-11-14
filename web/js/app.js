@@ -335,14 +335,15 @@
   }
 
   // ---------- Mapa ----------
-  let geoLayers = {}, pointLayer = null;
+  let geoLayers = {}, pointLayer = null, geoPromise = null;
+  const geo = () => (geoPromise = geoPromise || getJSON("config/regions.geojson"));
   async function buildMap() {
     if (!window.L) return;
     map = L.map("map", { zoomControl: true, attributionControl: true, scrollWheelZoom: false }).setView([39.5, -4], 5);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 10 }).addTo(map);
     pointLayer = L.layerGroup().addTo(map);
     let gj;
-    try { gj = await getJSON("config/regions.geojson"); } catch (e) { console.warn("Sin límites para el mapa", e); return; }
+    try { gj = await geo(); } catch (e) { console.warn("Sin límites para el mapa", e); return; }
     gj.features.forEach((f) => {
       const r = regionById(f.properties.id); if (!r) return;
       const layer = L.geoJSON(f, { style: { weight: 0.7, color: "#7a8a86", fillOpacity: 0.04 } });
@@ -371,6 +372,126 @@
     [state.region, state.compare].filter(Boolean).forEach((rid) => (regionById(rid).points || []).forEach((p) =>
       L.circleMarker([p.lonlat[1], p.lonlat[0]], { radius: 3, color: "#12302f", weight: 1, fillOpacity: 0.9 }).bindTooltip(`${regionById(rid).name}: punto de muestreo NASA POWER`).addTo(pointLayer)));
     if (focus.length) map.fitBounds(L.featureGroup(focus).getBounds().pad(0.25), { animate: true, maxZoom: 8 });
+  }
+
+
+  // ---------- Mapa de España (coropletas) ----------
+  const M = { map: null, layers: {}, data: null, var: "eto", mode: "trend", from: null, to: null };
+  const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const mix = (a, b, t) => { const A = hex(a), B = hex(b); return `rgb(${A.map((x, i) => Math.round(x + (B[i] - x) * t)).join(",")})`; };
+  const NEUTRAL = "#f3ece0";
+  function diverging(t) { // t en [-1, 1]: -1 = en contra del agua, +1 = a favor
+    t = Math.max(-1, Math.min(1, t));
+    return t < 0 ? mix(NEUTRAL, COLORS.compare, -t) : mix(NEUTRAL, COLORS.main, t);
+  }
+  function quantile(arr, q) { const s = [...arr].sort((a, b) => a - b); return s.length ? s[Math.min(s.length - 1, Math.floor(q * (s.length - 1)))] : 0; }
+
+  function computeMap() {
+    const v = varById(M.var), D = M.data, out = {};
+    const idx = D.years.map((y, i) => (y >= M.from && y <= M.to ? i : -1)).filter((i) => i >= 0);
+    Object.entries(D.regions).forEach(([rid, vals]) => {
+      const series = vals[M.var]; if (!series) return;
+      const t = idx.map((i) => D.years[i]), y = idx.map((i) => series[i]);
+      if (M.mode === "mean") { out[rid] = { value: S.mean(y) }; return; }
+      const mk = S.mannKendall(y, state.alpha), sen = S.senSlope(t, y, state.alpha);
+      out[rid] = mk.valid && sen.valid ? { value: sen.slope * 10, p: mk.p, significant: mk.significant } : { value: null };
+    });
+    return out;
+  }
+
+  function styleFor(res, v, scale) {
+    if (!res || !S.isNum(res.value)) return { fillColor: "#ddd", fillOpacity: 0.4, color: "#999", weight: 0.5, dashArray: null };
+    if (M.mode === "trend") {
+      const eff = res.value * (v.water_sign || 1);
+      return { fillColor: diverging(eff / scale.max), fillOpacity: res.significant ? 0.9 : 0.35, color: res.significant ? "#12302f" : "#8a8a8a", weight: res.significant ? 0.8 : 0.6, dashArray: res.significant ? null : "3 3" };
+    }
+    let tt = scale.max > scale.min ? (res.value - scale.min) / (scale.max - scale.min) : 0.5;
+    if (v.water_sign < 0) tt = 1 - tt;
+    return { fillColor: v.water_sign === 0 ? mix(NEUTRAL, "#12302f", tt) : diverging(tt * 2 - 1), fillOpacity: 0.85, color: "#12302f", weight: 0.6, dashArray: null };
+  }
+
+  function renderMap() {
+    if (!M.data || !M.map) return;
+    const v = varById(M.var), res = computeMap();
+    const vals = Object.values(res).map((r) => r.value).filter(S.isNum);
+    const units = v.units_annual || v.units;
+    let scale;
+    if (M.mode === "trend") {
+      const effs = Object.values(res).filter((r) => S.isNum(r.value)).map((r) => Math.abs(r.value));
+      scale = { max: quantile(effs, 0.95) || 1 };
+    } else scale = { min: quantile(vals, 0.02), max: quantile(vals, 0.98) };
+    Object.entries(M.layers).forEach(([rid, layer]) => {
+      const r = res[rid], name = regionById(rid).name;
+      layer.setStyle(styleFor(r, v, scale));
+      const txt = !r || !S.isNum(r.value) ? "sin datos" : M.mode === "trend"
+        ? `${fmtSigned(r.value, smart(r.value))} ${units}/década<br>${r.significant ? "<b>significativa</b>" : "no significativa"} (${pTxt(r.p)})`
+        : `${fmt(r.value, smart(r.value))} ${units}${v.id === "aridity" ? ` · ${aridityClass(r.value)}` : ""}`;
+      layer.setTooltipContent(`<b>${esc(name)}</b><br>${esc(v.name)}: ${txt}`);
+    });
+    // Leyenda
+    const lg = $("#m-legend");
+    if (M.mode === "trend") {
+      const lo = v.water_sign >= 0 ? -scale.max : scale.max, hi = -lo;
+      lg.innerHTML = `<b>${esc(v.name)}</b> · tendencia (${esc(units)} por década)
+        <div class="bar" style="background: linear-gradient(90deg, ${COLORS.compare}, ${NEUTRAL}, ${COLORS.main})"></div>
+        <div class="ends"><span>${fmtSigned(lo, smart(lo))}</span><span>0</span><span>${fmtSigned(hi, smart(hi))}</span></div>
+        <div class="ends"><span>${v.water_sign === 0 ? "baja" : "peor para el agua"}</span><span>${v.water_sign === 0 ? "sube" : "mejor para el agua"}</span></div>`;
+    } else {
+      const lowCol = v.water_sign === 0 ? NEUTRAL : v.water_sign > 0 ? COLORS.compare : COLORS.main;
+      const highCol = v.water_sign === 0 ? "#12302f" : v.water_sign > 0 ? COLORS.main : COLORS.compare;
+      lg.innerHTML = `<b>${esc(v.name)}</b> · media ${M.from}–${M.to} (${esc(units)})
+        <div class="bar" style="background: linear-gradient(90deg, ${lowCol}, ${NEUTRAL}, ${highCol})"></div>
+        <div class="ends"><span>${fmt(scale.min, smart(scale.min))}</span><span>${fmt(scale.max, smart(scale.max))}</span></div>`;
+    }
+    // Ranking
+    const rows = Object.entries(res).filter(([, r]) => S.isNum(r.value) && (M.mode === "mean" || r.significant));
+    const key = ([, r]) => (M.mode === "trend" ? r.value * (v.water_sign || 1) : r.value);
+    rows.sort((a, b) => key(a) - key(b));
+    const li = ([rid, r]) => `<li data-rid="${rid}">${esc(regionById(rid).name)} <span>${M.mode === "trend" ? fmtSigned(r.value, smart(r.value)) : fmt(r.value, smart(r.value))}</span></li>`;
+    const labels = M.mode === "trend" ? (v.water_sign === 0 ? ["Más bajada", "Más subida"] : ["Peor evolución para el agua", "Mejor evolución para el agua"]) : ["Valores más bajos", "Valores más altos"];
+    const nSig = M.mode === "trend" ? `<p class="note">${rows.length} de ${Object.keys(res).length} provincias con tendencia significativa (α = ${fmt(state.alpha, 2)}).</p>` : "";
+    $("#m-rank").innerHTML = rows.length ? `${nSig}<h4>${labels[0]}</h4><ol>${rows.slice(0, 5).map(li).join("")}</ol><h4>${labels[1]}</h4><ol>${rows.slice(-5).reverse().map(li).join("")}</ol>` : `${nSig}<p class="note">Ninguna provincia con tendencia significativa en este periodo.</p>`;
+  }
+
+  async function buildChoropleth() {
+    if (!window.L || !$("#chmap")) return;
+    // Controles
+    const groups = CFG.groups.map((g) => `<optgroup label="${esc(g.name)}">${CFG.variables.filter((v) => v.group === g.id).map((v) => `<option value="${v.id}">${esc(v.name)}</option>`).join("")}</optgroup>`).join("");
+    $("#m-var").innerHTML = groups; $("#m-var").value = M.var;
+    const yrs = []; for (let y = CFG.period.first; y <= CFG.period.last; y++) yrs.push(`<option>${y}</option>`);
+    $("#m-from").innerHTML = yrs.join(""); $("#m-to").innerHTML = yrs.join("");
+    M.from = CFG.period.default_from; M.to = CFG.period.last;
+    $("#m-from").value = M.from; $("#m-to").value = M.to;
+    $("#m-var").addEventListener("change", (e) => { M.var = e.target.value; renderMap(); });
+    $("#m-from").addEventListener("change", (e) => { M.from = +e.target.value; renderMap(); });
+    $("#m-to").addEventListener("change", (e) => { M.to = +e.target.value; renderMap(); });
+    document.querySelectorAll('input[name="m-mode"]').forEach((r) => r.addEventListener("change", (e) => { M.mode = e.target.value; renderMap(); }));
+    $("#sel-alpha").addEventListener("change", () => renderMap());
+    $("#m-rank").addEventListener("click", (e) => { const li = e.target.closest("li"); if (li) selectFromMap(li.dataset.rid); });
+
+    M.map = L.map("chmap", { scrollWheelZoom: false, zoomSnap: 0.25 }).setView([39.6, -3.7], 5.75);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · Datos: NASA POWER', maxZoom: 9, opacity: 0.5 }).addTo(M.map);
+    let gj;
+    try { [gj, M.data] = await Promise.all([geo(), getJSON("data/map/annual.json")]); }
+    catch (e) { $("#m-info").textContent = "El mapa aún no tiene datos (se generan en el despliegue)."; return; }
+    gj.features.forEach((f) => {
+      const r = regionById(f.properties.id); if (!r || r.type !== "provincia") return;
+      const layer = L.geoJSON(f).addTo(M.map);
+      layer.bindTooltip("", { sticky: true });
+      layer.on("click", () => selectFromMap(r.id));
+      M.layers[r.id] = layer;
+    });
+    // Canarias más cerca de la península no hace falta: se ve al hacer zoom; ajustamos a todo
+    M.map.fitBounds(L.featureGroup(Object.values(M.layers)).getBounds(), { padding: [10, 10] });
+    $("#m-info").textContent = `Copia de NASA POWER del ${new Date(M.data.fetched).toLocaleDateString("es-ES")}. Tendencias: pendiente de Sen + Mann-Kendall sobre series anuales, calculadas en tu navegador.`;
+    renderMap();
+  }
+
+  function selectFromMap(rid) {
+    state.region = rid; if (state.compare === rid) state.compare = "";
+    syncControls(); highlightMap();
+    if (!state.vars.has(M.var)) state.vars.add(M.var), syncControls();
+    run().then(() => $("#output").scrollIntoView({ behavior: "smooth" }));
   }
 
   // ---------- URL compartible ----------
@@ -402,7 +523,7 @@
       return;
     }
     const fromHash = readHash();
-    buildControls(); syncControls(); buildMap();
+    buildControls(); syncControls(); buildMap(); buildChoropleth();
     if (fromHash) run();
   }
   window.addEventListener("hashchange", () => { if (CFG.regions.length && readHash()) { syncControls(); highlightMap(); run(); } });

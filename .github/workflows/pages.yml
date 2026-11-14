@@ -57,6 +57,11 @@ jobs:
         with:
           path: web/data/power
           key: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-${{ github.run_id }}
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Precalcular series anuales para el mapa de España
+        continue-on-error: true
+        run: node pipeline/build_map_data.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: web }

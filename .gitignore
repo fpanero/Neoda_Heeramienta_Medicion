@@ -7,3 +7,5 @@ __pycache__/
 *.nc4
 *.HDF5
 .env
+web/data/power/
+web/data/map/
