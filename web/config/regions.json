@@ -1,0 +1,18 @@
+{
+  "_doc": "Regiones disponibles. bbox = [oeste, sur, este, norte] en grados (WGS84). Los límites son rectángulos aproximados; ver docs/DATA_CONTRACT.md para usar polígonos reales.",
+  "regions": [
+    { "id": "almeria", "name": "Almería", "type": "provincia", "bbox": [-3.15, 36.65, -1.62, 37.92] },
+    { "id": "poniente_almeriense", "name": "Poniente almeriense (Campo de Dalías)", "type": "comarca", "bbox": [-2.95, 36.68, -2.55, 36.85] },
+    { "id": "granada", "name": "Granada", "type": "provincia", "bbox": [-4.33, 36.68, -2.21, 38.08] },
+    { "id": "malaga", "name": "Málaga", "type": "provincia", "bbox": [-5.62, 36.29, -3.76, 37.29] },
+    { "id": "jaen", "name": "Jaén", "type": "provincia", "bbox": [-4.27, 37.37, -2.49, 38.53] },
+    { "id": "cordoba", "name": "Córdoba", "type": "provincia", "bbox": [-5.60, 37.18, -4.00, 38.73] },
+    { "id": "sevilla", "name": "Sevilla", "type": "provincia", "bbox": [-6.55, 36.85, -4.65, 38.20] },
+    { "id": "cadiz", "name": "Cádiz", "type": "provincia", "bbox": [-6.47, 36.00, -5.10, 36.95] },
+    { "id": "huelva", "name": "Huelva", "type": "provincia", "bbox": [-7.53, 36.95, -6.15, 38.22] },
+    { "id": "murcia", "name": "Murcia", "type": "provincia", "bbox": [-2.35, 37.37, -0.64, 38.76] },
+    { "id": "alicante", "name": "Alicante", "type": "provincia", "bbox": [-1.10, 37.84, 0.24, 38.92] },
+    { "id": "madrid", "name": "Madrid", "type": "provincia", "bbox": [-4.58, 39.88, -3.05, 41.17] },
+    { "id": "zaragoza", "name": "Zaragoza", "type": "provincia", "bbox": [-2.18, 40.95, 0.05, 42.92] }
+  ]
+}

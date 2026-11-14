@@ -1,0 +1,1201 @@
+{
+ "generated": "2026-11-14T10:59:11Z",
+ "series": {
+  "alicante": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "almeria": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "cadiz": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "cordoba": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "granada": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "huelva": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "jaen": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "madrid": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "malaga": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "murcia": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "poniente_almeriense": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "sevilla": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  },
+  "zaragoza": {
+   "et": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "lst": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "ndvi": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "pet": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "precip_extreme": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "qair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "runoff": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_root": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "sm_surface": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swe": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "swrad": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tair": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "tws": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   },
+   "wind": {
+    "start": "2001-01",
+    "end": "2025-12",
+    "source_type": "demo",
+    "source_name": "Datos simulados (DEMO)"
+   }
+  }
+ }
+}

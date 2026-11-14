@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Neoda · Detective de recursos hídricos</title>
+  <meta name="description" content="Herramienta para detectar tendencias significativas en los recursos hídricos de España con datos de la NASA. NASA Space Apps Challenge 2026 — Be an Earth System Trend Detective." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" class="logo" aria-hidden="true"><path d="M16 3 C16 3 6 15 6 21 a10 10 0 0 0 20 0 C26 15 16 3 16 3Z" fill="currentColor"/><path d="M10 22 l4 -3 l3 2 l5 -6" stroke="#f6f1e7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>
+        <h1>Neoda <span>· Detective de recursos hídricos</span></h1>
+        <p class="tagline">¿Están cambiando de verdad los recursos hídricos de tu región? Datos de satélite de la NASA + estadística.</p>
+      </div>
+    </div>
+    <nav class="toplinks">
+      <button class="linkbtn" id="btn-demo" title="Carga un análisis de ejemplo">▶ Ejemplo guiado: Almería</button>
+      <a class="linkbtn" href="#metodo">Cómo funciona</a>
+    </nav>
+  </header>
+
+  <div id="demo-banner" class="banner" hidden>
+    <strong>Datos de demostración.</strong> Algunas series son <em>simuladas</em> mientras se integran los datos reales de la NASA. Las marcadas con <span class="pill demo">DEMO</span> no deben usarse para sacar conclusiones.
+  </div>
+
+  <main class="layout">
+    <!-- ===== Panel de control ===== -->
+    <aside class="panel" aria-label="Parámetros del análisis">
+      <section class="step">
+        <h2><span class="num">1</span> ¿Dónde?</h2>
+        <label class="field">Región
+          <select id="sel-region"></select>
+        </label>
+        <div id="map" class="map" role="img" aria-label="Mapa de regiones"></div>
+        <label class="field">Comparar con <small>(opcional)</small>
+          <select id="sel-compare"><option value="">— Ninguna —</option></select>
+        </label>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">2</span> ¿Qué variables?</h2>
+        <div class="quick">
+          <button type="button" data-preset="recomendadas">Recomendadas</button>
+          <button type="button" data-preset="todas">Todas</button>
+          <button type="button" data-preset="ninguna">Ninguna</button>
+        </div>
+        <div id="var-list" class="var-list"></div>
+      </section>
+
+      <section class="step">
+        <h2><span class="num">3</span> ¿Cómo?</h2>
+        <div class="row2">
+          <label class="field">Desde <select id="sel-from"></select></label>
+          <label class="field">Hasta <select id="sel-to"></select></label>
+        </div>
+        <fieldset class="field">
+          <legend>Resolución del análisis</legend>
+          <label class="radio"><input type="radio" name="mode" value="annual" checked /> Anual <small>(recomendado)</small></label>
+          <label class="radio"><input type="radio" name="mode" value="monthly" /> Mensual sin ciclo estacional</label>
+        </fieldset>
+        <label class="field">Nivel de confianza
+          <select id="sel-alpha">
+            <option value="0.10">90 % (α = 0,10)</option>
+            <option value="0.05" selected>95 % (α = 0,05)</option>
+            <option value="0.01">99 % (α = 0,01)</option>
+          </select>
+        </label>
+      </section>
+
+      <button id="btn-run" class="run">Analizar tendencias</button>
+      <p class="hint" id="share-hint" hidden>🔗 La URL de esta página guarda tu análisis: compártela tal cual.</p>
+    </aside>
+
+    <!-- ===== Resultados ===== -->
+    <section class="results" aria-live="polite">
+      <div id="empty" class="empty">
+        <h2>Elige una región y unas variables</h2>
+        <p>La herramienta descarga las series mensuales de satélite, calcula la <strong>tasa de cambio</strong> (pendiente de Sen) y comprueba si la tendencia es <strong>estadísticamente significativa</strong> (Mann-Kendall, t-test e intervalos de confianza).</p>
+        <p>Además, combina las variables elegidas en un <strong>índice de recursos hídricos</strong> para ver la tendencia global del agua disponible.</p>
+      </div>
+
+      <div id="output" hidden>
+        <article class="card summary">
+          <header class="card-head">
+            <div>
+              <p class="eyebrow">Índice combinado de recursos hídricos</p>
+              <h2 id="sum-title"></h2>
+            </div>
+            <div id="sum-badge" class="badge"></div>
+          </header>
+          <p id="sum-text" class="lead"></p>
+          <div class="summary-grid">
+            <div id="chart-index" class="chart"></div>
+            <div>
+              <h3 class="mini">¿Qué variable empuja el cambio?</h3>
+              <div id="chart-contrib" class="chart"></div>
+              <p class="note">Tendencia de cada variable en desviaciones típicas por década, con el signo de su efecto sobre el agua: <span class="sw pos"></span> más agua, <span class="sw neg"></span> menos agua.</p>
+            </div>
+          </div>
+          <div class="actions">
+            <button id="btn-csv" class="ghost">⬇ Descargar resultados (CSV)</button>
+          </div>
+        </article>
+
+        <h2 class="section-title">Detalle por variable</h2>
+        <div id="cards" class="cards"></div>
+      </div>
+    </section>
+  </main>
+
+  <section id="metodo" class="method">
+    <h2>Cómo funciona</h2>
+    <div class="method-grid">
+      <div><h3>1 · Variables</h3><p>Cada variable describe una parte del ciclo del agua: lo que <b>entra</b> (lluvia), lo que la atmósfera <b>demanda</b> (temperatura, evapotranspiración, viento, radiación), lo que queda <b>almacenado</b> (humedad del suelo, nieve, acuíferos) y cómo <b>responde</b> la superficie (vegetación).</p></div>
+      <div><h3>2 · Región</h3><p>Promediamos los datos de satélite y modelos de la NASA (GPM, GLDAS, MODIS, GRACE) dentro del recuadro de la región elegida, mes a mes.</p></div>
+      <div><h3>3 · Serie temporal</h3><p>En modo <b>anual</b> sumamos o promediamos los 12 meses de cada año. En modo <b>mensual</b> restamos a cada mes su media histórica para quitar el ciclo de las estaciones, que si no taparía la tendencia.</p></div>
+      <div><h3>4 · Estadística</h3><p><b>Pendiente de Sen</b>: tasa de cambio robusta a valores extremos. <b>Mann-Kendall</b>: ¿la serie sube o baja de forma consistente? <b>t-test</b> sobre la recta de regresión e <b>intervalos de confianza</b>. Una tendencia es <i>significativa</i> si p &lt; α: es poco probable que sea casualidad.</p></div>
+      <div><h3>Índice combinado</h3><p>Pasamos cada variable a anomalías estandarizadas (z), les damos signo según su efecto sobre el agua (+ lluvia, − temperatura…) y hacemos la media. Es una síntesis orientativa, inspirada en indicadores como el SPEI o el Combined Drought Indicator europeo.</p></div>
+      <div><h3>Limitaciones</h3><p>Los satélites no ven las desaladoras ni el bombeo de pozos. La resolución va de ~5 km (MODIS) a ~300 km (GRACE). Correlación no es causalidad: que varias variables cambien a la vez no demuestra que una cause la otra.</p></div>
+    </div>
+    <p class="foot">Proyecto para el <a href="https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/" target="_blank" rel="noopener">NASA Space Apps Challenge 2026 — Be an Earth System Trend Detective</a> · Granada. Código abierto en GitHub.</p>
+  </section>
+
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="js/stats.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
