@@ -44,8 +44,8 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: web/data/power
-          key: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-${{ github.run_id }}
-          restore-keys: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-
+          key: power-${{ hashFiles('web/config/regions.json') }}-${{ github.run_id }}
+          restore-keys: power-${{ hashFiles('web/config/regions.json') }}-
       - name: Regenerar copia de respaldo (si falla, la web sigue usando la API en directo)
         if: github.event_name != 'push' || steps.snap.outputs.cache-matched-key == ''
         continue-on-error: true
@@ -56,7 +56,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: web/data/power
-          key: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-${{ github.run_id }}
+          key: power-${{ hashFiles('web/config/regions.json') }}-${{ github.run_id }}
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: Precalcular series anuales para el mapa de España

@@ -20,7 +20,7 @@ Tres pestañas: **Inicio** (el problema, qué medimos y el alcance, con cifras d
    - **intervalos de confianza**.
 4. Combina las variables en un **índice de recursos hídricos** y muestra **qué variable empuja el cambio**.
 
-Los resultados se pueden descargar en CSV y la URL guarda el análisis para compartirlo.
+Cada análisis se puede descargar como **informe PDF** (conclusión, gráfico del índice, tabla de indicadores e interpretación). Toda la web está en **español e inglés** (interruptor ES/EN arriba a la derecha).
 
 5. **Mapa de España**: todas las provincias coloreadas según la variable elegida, por **tendencia por década**
    (rojo = peor para el agua, azul = mejor; tenue = no significativa) o por **valor medio** del periodo, con ranking.
