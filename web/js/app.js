@@ -731,11 +731,12 @@
     setLive("eto-down", down(E) ? `y solo baja en ${down(E)}` : "y no baja en ninguna");
     setLive("balance", of(deficit)); setLive("balance-text", `${deficit} de las ${N}`); setLive("arid-text", `${arid}`);
     const line = (txt) => `<b>En España:</b> ${txt}`;
-    setLive("p-drought", line(`el índice de sequía empeora de forma comprobada en ${down(SPI)} provincias y mejora en ${up(SPI)}.`));
-    setLive("p-irrig", line(`la demanda de riego sube en ${up(E)} provincias; la humedad del suelo baja en ${down(SM)}.`));
-    setLive("p-desert", line(`${arid} provincias son áridas o semiáridas; la aridez avanza de forma comprobada en ${down(A)}.`));
-    setLive("p-heat", line(`la máxima extrema del año sube de forma comprobada en ${up(TX)} provincias.`));
-    setLive("p-reserve", line(`la nieve baja de forma comprobada en ${down(SN)} provincias y la humedad profunda en ${down(GP)}.`));
+    const pv = (n) => `${n} ${n === 1 ? "provincia" : "provincias"}`;
+    setLive("p-drought", line(`el índice de sequía empeora de forma comprobada en ${pv(down(SPI))} y mejora en ${up(SPI)}.`));
+    setLive("p-irrig", line(`la demanda de riego sube en ${pv(up(E))}; la humedad del suelo baja en ${down(SM)}.`));
+    setLive("p-desert", line(`${pv(arid)} ${arid === 1 ? "es árida o semiárida" : "son áridas o semiáridas"}; la aridez avanza de forma comprobada en ${down(A)}.`));
+    setLive("p-heat", line(`la máxima extrema del año sube de forma comprobada en ${pv(up(TX))}.`));
+    setLive("p-reserve", line(`la nieve baja de forma comprobada en ${pv(down(SN))} y la humedad profunda en ${down(GP)}.`));
   }
 
   // ---------- Inicio: historia del depósito con datos reales de Almería ----------
