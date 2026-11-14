@@ -422,6 +422,6 @@ body[data-view="home"] .foot-wave { background: var(--mist); }
 /* Interpretación del gráfico de contribuciones */
 .contrib-note { margin-top: .4rem; font-size: .92rem; color: var(--abyss); line-height: 1.5; }
 .contrib-note .how-read { display: block; margin-top: .5rem; font-size: .82rem; color: var(--slate); }
-/* Barra de navegación: degradado muy suave coral (izq.) → blanco → celeste (der.) */
-.nav { background: linear-gradient(90deg, rgba(254, 236, 238, .94) 0%, rgba(255, 255, 255, .94) 50%, rgba(226, 245, 248, .94) 100%); }
+/* Barra de navegación: degradado celeste (izq.) → blanco → coral (der.) */
+.nav { background: linear-gradient(90deg, rgba(190, 232, 240, .96) 0%, rgba(255, 255, 255, .96) 50%, rgba(250, 200, 205, .96) 100%); }
 .nav nav a.active { background: rgba(255, 255, 255, .85); }
