@@ -38,10 +38,25 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: "3.12" }
-      - name: Copia de respaldo de NASA POWER (si falla, la web sigue usando la API en directo)
+      # La copia de respaldo se reutiliza entre despliegues; se regenera los lunes, a mano o si cambian las regiones
+      - name: Recuperar copia de respaldo de NASA POWER
+        id: snap
+        uses: actions/cache/restore@v4
+        with:
+          path: web/data/power
+          key: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-${{ github.run_id }}
+          restore-keys: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-
+      - name: Regenerar copia de respaldo (si falla, la web sigue usando la API en directo)
+        if: github.event_name != 'push' || steps.snap.outputs.cache-matched-key == ''
         continue-on-error: true
         timeout-minutes: 40
         run: python pipeline/fetch_power.py
+      - name: Guardar copia de respaldo
+        if: github.event_name != 'push' || steps.snap.outputs.cache-matched-key == ''
+        uses: actions/cache/save@v4
+        with:
+          path: web/data/power
+          key: power-${{ hashFiles('web/config/regions.json', 'web/config/variables.json') }}-${{ github.run_id }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: web }
