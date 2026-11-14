@@ -627,8 +627,12 @@
       const eff = ([, r]) => r.value * (v.water_sign || 1);
       const worse = entries.filter((x) => x[1].significant && eff(x) < 0), better = entries.filter((x) => x[1].significant && eff(x) > 0);
       const none = N - worse.length - better.length;
-      const head = !Q ? v.name : Math.max(worse.length, better.length) < N * 0.2 ? Q.none : worse.length >= better.length ? Q.worse : Q.better;
-      ans.innerHTML = `<b>${esc(head)}.</b> Desde ${M.from}, empeora de forma comprobada en ${pv(worse.length)} y mejora en ${pv(better.length)}. En ${none === 1 ? "la otra" : "las otras " + none} no hay un cambio claro.`;
+      const main = worse.length >= better.length ? worse.length : better.length, other = N - none - main;
+      const [mainTxt, otherTxt] = worse.length >= better.length ? [Q && Q.worse, Q && Q.better] : [Q && Q.better, Q && Q.worse];
+      const rest = none === 0 ? "" : ` En ${none === 1 ? "la otra" : "las otras " + none} no hay un cambio claro.`;
+      ans.innerHTML = !Q ? "" : main === 0
+        ? `<b>${esc(Q.none)}.</b> Desde ${M.from} no hay un cambio comprobado en ninguna provincia.`
+        : `<b>${esc(mainTxt)} en ${main === N ? "todas las provincias" : pv(main)}.</b> Desde ${M.from}.${other ? ` ${esc(otherTxt)} en ${pv(other)}.` : ""}${rest}`;
       lg.innerHTML = `<ul class="swatches">
         <li><span class="sw3" style="background:${COLORS.worse}"></span>Empeora <small>(comprobado)</small></li>
         <li><span class="sw3" style="background:${COLORS.better}"></span>Mejora <small>(comprobado)</small></li>
