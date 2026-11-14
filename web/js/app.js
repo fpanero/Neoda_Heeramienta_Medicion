@@ -632,7 +632,7 @@
       const rest = none === 0 ? "" : ` En ${none === 1 ? "la otra" : "las otras " + none} no hay un cambio claro.`;
       ans.innerHTML = !Q ? "" : main === 0
         ? `<b>${esc(Q.none)}.</b> Desde ${M.from} no hay un cambio comprobado en ninguna provincia.`
-        : `<b>${esc(mainTxt)} en ${main === N ? "todas las provincias" : pv(main)}.</b> Desde ${M.from}.${other ? ` ${esc(otherTxt)} en ${pv(other)}.` : ""}${rest}`;
+        : `<b>Desde ${M.from}, ${esc(lc(mainTxt))} en ${main === N ? "todas las provincias" : pv(main)}.</b>${other ? ` ${esc(otherTxt)} en ${pv(other)}.` : ""}${rest}`;
       lg.innerHTML = `<ul class="swatches">
         <li><span class="sw3" style="background:${COLORS.worse}"></span>Empeora <small>(comprobado)</small></li>
         <li><span class="sw3" style="background:${COLORS.better}"></span>Mejora <small>(comprobado)</small></li>
