@@ -1,27 +1,2497 @@
 {
-  "_doc": "Regiones. NASA POWER da datos por punto (rejilla de ~0,5° × 0,625°). Cada región se representa con varios puntos en tierra repartidos por su territorio; la serie regional es la media de los puntos. lonlat = [longitud, latitud]. bbox = [oeste, sur, este, norte], solo para el mapa.",
-  "regions": [
+ "_doc": "Regiones: todas las provincias de España + Galicia como comunidad. Generado por pipeline/build_regions.py. points = puntos de muestreo de NASA POWER (lon, lat) dentro de la provincia y alejados de la costa; la serie regional es su media. bbox = [oeste, sur, este, norte].",
+ "regions": [
+  {
+   "id": "almeria",
+   "name": "Almería",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -3.14,
+    35.938,
+    -1.63,
+    37.917
+   ],
+   "points": [
     {
-      "id": "almeria", "name": "Almería", "type": "provincia", "bbox": [-3.15, 36.65, -1.62, 37.92],
-      "points": [
-        { "name": "Poniente (Campo de Dalías)", "lonlat": [-2.75, 36.78] },
-        { "name": "Almería capital", "lonlat": [-2.45, 36.90] },
-        { "name": "Níjar", "lonlat": [-2.10, 36.95] },
-        { "name": "Tabernas", "lonlat": [-2.40, 37.10] },
-        { "name": "Valle del Almanzora", "lonlat": [-2.20, 37.35] },
-        { "name": "Vélez / Huércal-Overa", "lonlat": [-1.90, 37.55] }
-      ]
+     "name": "Punto 1",
+     "lonlat": [
+      -2.34,
+      37.2
+     ]
     },
     {
-      "id": "galicia", "name": "Galicia", "type": "comunidad autónoma", "bbox": [-9.30, 41.80, -6.73, 43.80],
-      "points": [
-        { "name": "A Coruña", "lonlat": [-8.40, 43.30] },
-        { "name": "Santiago", "lonlat": [-8.55, 42.88] },
-        { "name": "Pontevedra / Vigo", "lonlat": [-8.60, 42.35] },
-        { "name": "Lugo", "lonlat": [-7.55, 43.00] },
-        { "name": "Ourense", "lonlat": [-7.85, 42.35] },
-        { "name": "Montaña de Lugo", "lonlat": [-7.10, 42.75] }
-      ]
+     "name": "Punto 2",
+     "lonlat": [
+      -2.92,
+      36.83
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.12,
+      37.78
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -1.79,
+      37.35
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -2.16,
+      36.83
+     ]
     }
-  ]
+   ]
+  },
+  {
+   "id": "cadiz",
+   "name": "Cádiz",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -6.472,
+    36.0,
+    -5.087,
+    37.05
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -5.81,
+      36.53
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -6.31,
+      36.72
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -5.53,
+      36.13
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.44,
+      36.84
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cordoba",
+   "name": "Córdoba",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -5.586,
+    37.184,
+    -4.001,
+    38.726
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.79,
+      37.99
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.2,
+      37.45
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -5.43,
+      38.39
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.89,
+      38.54
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -4.3,
+      38.24
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -4.74,
+      37.45
+     ]
+    }
+   ]
+  },
+  {
+   "id": "granada",
+   "name": "Granada",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -4.328,
+    36.694,
+    -2.208,
+    38.083
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -3.31,
+      37.27
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -2.41,
+      37.95
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.17,
+      37.09
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -2.72,
+      37.41
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -3.67,
+      36.87
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -3.77,
+      37.32
+     ]
+    }
+   ]
+  },
+  {
+   "id": "huelva",
+   "name": "Huelva",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -7.523,
+    36.799,
+    -6.122,
+    38.204
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -6.86,
+      37.58
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -6.26,
+      37.86
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -6.5,
+      37.06
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -7.34,
+      37.3
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -6.9,
+      38.07
+     ]
+    }
+   ]
+  },
+  {
+   "id": "jaen",
+   "name": "Jaén",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -4.287,
+    37.378,
+    -2.437,
+    38.533
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -3.46,
+      38.0
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -2.58,
+      38.29
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.05,
+      37.61
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.09,
+      38.29
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -3.02,
+      37.7
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -3.07,
+      38.34
+     ]
+    }
+   ]
+  },
+  {
+   "id": "malaga",
+   "name": "Málaga",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -5.608,
+    36.31,
+    -3.768,
+    37.278
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.75,
+      36.81
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -5.32,
+      36.53
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.13,
+      36.85
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.44,
+      37.16
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sevilla",
+   "name": "Sevilla",
+   "type": "provincia",
+   "ccaa": "Andalucía",
+   "bbox": [
+    -6.536,
+    36.842,
+    -4.653,
+    38.196
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -5.71,
+      37.41
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.89,
+      37.31
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -6.25,
+      37.02
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.81,
+      38.04
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -6.29,
+      37.65
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -5.33,
+      37.12
+     ]
+    }
+   ]
+  },
+  {
+   "id": "huesca",
+   "name": "Huesca",
+   "type": "provincia",
+   "ccaa": "Aragón",
+   "bbox": [
+    -0.934,
+    41.348,
+    0.771,
+    42.922
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -0.05,
+      42.21
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -0.77,
+      42.76
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      0.61,
+      42.59
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      0.17,
+      41.49
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -0.66,
+      42.04
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      0.5,
+      42.04
+     ]
+    }
+   ]
+  },
+  {
+   "id": "teruel",
+   "name": "Teruel",
+   "type": "provincia",
+   "ccaa": "Aragón",
+   "bbox": [
+    -1.806,
+    39.847,
+    0.294,
+    41.354
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -0.86,
+      40.65
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      0.17,
+      40.96
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -1.62,
+      40.4
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -0.45,
+      41.16
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -1.37,
+      40.96
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -0.96,
+      40.09
+     ]
+    }
+   ]
+  },
+  {
+   "id": "zaragoza",
+   "name": "Zaragoza",
+   "type": "provincia",
+   "ccaa": "Aragón",
+   "bbox": [
+    -2.17,
+    40.939,
+    0.386,
+    42.744
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -1.14,
+      41.6
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      0.23,
+      41.23
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -1.03,
+      42.55
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -2.03,
+      41.28
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -0.4,
+      41.55
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -1.72,
+      41.86
+     ]
+    }
+   ]
+  },
+  {
+   "id": "asturias",
+   "name": "Asturias",
+   "type": "provincia",
+   "ccaa": "Asturias",
+   "bbox": [
+    -7.182,
+    42.883,
+    -4.511,
+    43.666
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -6.05,
+      43.31
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.83,
+      43.31
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -7.0,
+      43.4
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.44,
+      43.15
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -6.59,
+      43.03
+     ]
+    }
+   ]
+  },
+  {
+   "id": "las_palmas",
+   "name": "Las Palmas",
+   "type": "provincia",
+   "ccaa": "Canarias",
+   "bbox": [
+    -15.835,
+    27.735,
+    -13.334,
+    29.416
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -14.01,
+      28.42
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -15.6,
+      27.94
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -13.65,
+      29.02
+     ]
+    }
+   ]
+  },
+  {
+   "id": "santa_cruz_de_tenerife",
+   "name": "Santa Cruz de Tenerife",
+   "type": "provincia",
+   "ccaa": "Canarias",
+   "bbox": [
+    -18.161,
+    27.64,
+    -16.119,
+    28.858
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -16.62,
+      28.25
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -17.86,
+      28.7
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -17.24,
+      28.13
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -17.99,
+      27.75
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cantabria",
+   "name": "Cantabria",
+   "type": "provincia",
+   "ccaa": "Cantabria",
+   "bbox": [
+    -4.851,
+    42.758,
+    -3.152,
+    43.514
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.07,
+      43.21
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.67,
+      43.12
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -3.5,
+      43.3
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.4,
+      43.3
+     ]
+    }
+   ]
+  },
+  {
+   "id": "burgos",
+   "name": "Burgos",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -4.335,
+    41.451,
+    -2.517,
+    43.196
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -3.6,
+      42.35
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -3.3,
+      43.09
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -3.9,
+      41.65
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -3.05,
+      42.0
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -4.15,
+      42.64
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -2.71,
+      42.74
+     ]
+    }
+   ]
+  },
+  {
+   "id": "leon",
+   "name": "León",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -7.077,
+    42.032,
+    -4.734,
+    43.238
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -5.85,
+      42.63
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -6.88,
+      42.63
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.92,
+      43.07
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.19,
+      42.36
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -6.39,
+      42.31
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -6.34,
+      42.91
+     ]
+    }
+   ]
+  },
+  {
+   "id": "palencia",
+   "name": "Palencia",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -5.032,
+    41.759,
+    -3.891,
+    43.057
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.56,
+      42.39
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.2,
+      41.89
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.45,
+      42.96
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.77,
+      41.96
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -4.81,
+      42.78
+     ]
+    }
+   ]
+  },
+  {
+   "id": "salamanca",
+   "name": "Salamanca",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -6.93,
+    40.239,
+    -5.09,
+    41.289
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -6.08,
+      40.81
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -5.24,
+      41.04
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -6.73,
+      40.44
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -6.64,
+      41.09
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -5.61,
+      40.58
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -5.71,
+      41.14
+     ]
+    }
+   ]
+  },
+  {
+   "id": "segovia",
+   "name": "Segovia",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -4.721,
+    40.633,
+    -3.207,
+    41.586
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.07,
+      41.16
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -3.45,
+      41.39
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.56,
+      41.07
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.24,
+      40.77
+     ]
+    }
+   ]
+  },
+  {
+   "id": "soria",
+   "name": "Soria",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -3.541,
+    41.057,
+    -1.775,
+    42.146
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.57,
+      41.61
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -3.33,
+      41.56
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -1.94,
+      41.82
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -2.24,
+      41.19
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -2.36,
+      42.03
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valladolid",
+   "name": "Valladolid",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -5.517,
+    41.094,
+    -3.984,
+    42.312
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.85,
+      41.6
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.13,
+      41.67
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -5.26,
+      42.11
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.2,
+      41.29
+     ]
+    }
+   ]
+  },
+  {
+   "id": "zamora",
+   "name": "Zamora",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -7.034,
+    41.117,
+    -5.229,
+    42.252
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -5.95,
+      41.71
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -6.85,
+      42.08
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -5.41,
+      41.3
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.41,
+      41.88
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -6.32,
+      42.08
+     ]
+    }
+   ]
+  },
+  {
+   "id": "avila",
+   "name": "Ávila",
+   "type": "provincia",
+   "ccaa": "Castilla y León",
+   "bbox": [
+    -5.737,
+    40.082,
+    -4.16,
+    41.164
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.93,
+      40.59
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -5.56,
+      40.31
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.4,
+      40.49
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -5.0,
+      41.05
+     ]
+    }
+   ]
+  },
+  {
+   "id": "albacete",
+   "name": "Albacete",
+   "type": "provincia",
+   "ccaa": "Castilla-La Mancha",
+   "bbox": [
+    -2.883,
+    38.026,
+    -0.916,
+    39.418
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -1.99,
+      38.83
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -1.07,
+      38.83
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.7,
+      39.13
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -2.35,
+      38.16
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -1.53,
+      39.28
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -1.58,
+      38.42
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ciudad_real",
+   "name": "Ciudad Real",
+   "type": "provincia",
+   "ccaa": "Castilla-La Mancha",
+   "bbox": [
+    -5.047,
+    38.343,
+    -2.641,
+    39.577
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -3.81,
+      38.93
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -2.84,
+      38.63
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -4.77,
+      38.69
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -3.15,
+      39.35
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -4.41,
+      39.41
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -4.83,
+      39.47
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cuenca",
+   "name": "Cuenca",
+   "type": "provincia",
+   "ccaa": "Castilla-La Mancha",
+   "bbox": [
+    -3.165,
+    39.227,
+    -1.142,
+    40.658
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.22,
+      39.91
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -1.29,
+      39.85
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.97,
+      40.08
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -1.81,
+      39.39
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -2.68,
+      39.44
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -2.1,
+      40.54
+     ]
+    }
+   ]
+  },
+  {
+   "id": "guadalajara",
+   "name": "Guadalajara",
+   "type": "provincia",
+   "ccaa": "Castilla-La Mancha",
+   "bbox": [
+    -3.541,
+    40.153,
+    -1.536,
+    41.326
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.66,
+      40.84
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -1.67,
+      40.7
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -3.34,
+      41.16
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -3.03,
+      40.3
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -2.12,
+      40.98
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -3.25,
+      40.7
+     ]
+    }
+   ]
+  },
+  {
+   "id": "toledo",
+   "name": "Toledo",
+   "type": "provincia",
+   "ccaa": "Castilla-La Mancha",
+   "bbox": [
+    -5.406,
+    39.258,
+    -2.908,
+    40.314
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -4.13,
+      39.8
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -3.03,
+      39.55
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -5.24,
+      40.0
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.74,
+      39.6
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -3.63,
+      39.4
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -3.48,
+      39.95
+     ]
+    }
+   ]
+  },
+  {
+   "id": "barcelona",
+   "name": "Barcelona",
+   "type": "provincia",
+   "ccaa": "Cataluña",
+   "bbox": [
+    1.36,
+    41.193,
+    2.778,
+    42.318
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      1.96,
+      41.69
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      1.82,
+      42.2
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      2.46,
+      41.63
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      1.59,
+      41.46
+     ]
+    }
+   ]
+  },
+  {
+   "id": "girona",
+   "name": "Girona",
+   "type": "provincia",
+   "ccaa": "Cataluña",
+   "bbox": [
+    1.724,
+    41.65,
+    3.333,
+    42.495
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      2.76,
+      42.11
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      2.16,
+      42.32
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      3.09,
+      42.32
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      3.09,
+      41.93
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lleida",
+   "name": "Lleida",
+   "type": "provincia",
+   "ccaa": "Cataluña",
+   "bbox": [
+    0.32,
+    41.276,
+    1.855,
+    42.858
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      1.07,
+      42.06
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      0.47,
+      41.42
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      0.79,
+      42.75
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      1.67,
+      42.39
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      0.98,
+      41.56
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      1.25,
+      42.62
+     ]
+    }
+   ]
+  },
+  {
+   "id": "tarragona",
+   "name": "Tarragona",
+   "type": "provincia",
+   "ccaa": "Cataluña",
+   "bbox": [
+    0.159,
+    40.523,
+    1.645,
+    41.577
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      0.8,
+      41.09
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      1.46,
+      41.3
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      0.38,
+      40.7
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      0.38,
+      41.15
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ceuta",
+   "name": "Ceuta",
+   "type": "provincia",
+   "ccaa": "Ceuta",
+   "bbox": [
+    -5.42,
+    35.168,
+    -4.295,
+    35.917
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -5.35,
+      35.89
+     ]
+    }
+   ]
+  },
+  {
+   "id": "madrid",
+   "name": "Madrid",
+   "type": "provincia",
+   "ccaa": "Comunidad de Madrid",
+   "bbox": [
+    -4.575,
+    39.885,
+    -3.056,
+    41.161
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -3.72,
+      40.5
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -3.24,
+      40.15
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -3.58,
+      41.05
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -4.23,
+      40.39
+     ]
+    }
+   ]
+  },
+  {
+   "id": "alicante",
+   "name": "Alacant/Alicante",
+   "type": "provincia",
+   "ccaa": "Comunitat Valenciana",
+   "bbox": [
+    -1.094,
+    37.847,
+    0.234,
+    38.887
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -0.61,
+      38.46
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      0.08,
+      38.76
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -0.82,
+      37.98
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -0.34,
+      38.76
+     ]
+    }
+   ]
+  },
+  {
+   "id": "castellon",
+   "name": "Castelló/Castellón",
+   "type": "provincia",
+   "ccaa": "Comunitat Valenciana",
+   "bbox": [
+    -0.846,
+    39.715,
+    0.691,
+    40.789
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -0.13,
+      40.26
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -0.7,
+      39.95
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      0.37,
+      40.51
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -0.23,
+      39.85
+     ]
+    }
+   ]
+  },
+  {
+   "id": "valencia",
+   "name": "València/Valencia",
+   "type": "provincia",
+   "ccaa": "Comunitat Valenciana",
+   "bbox": [
+    -1.529,
+    38.687,
+    -0.027,
+    40.207
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -0.8,
+      39.35
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -0.25,
+      38.98
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -1.38,
+      39.52
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -0.34,
+      39.69
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -1.28,
+      40.07
+     ]
+    }
+   ]
+  },
+  {
+   "id": "badajoz",
+   "name": "Badajoz",
+   "type": "provincia",
+   "ccaa": "Extremadura",
+   "bbox": [
+    -7.336,
+    37.941,
+    -4.649,
+    39.452
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -6.16,
+      38.66
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -4.85,
+      39.29
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -7.04,
+      39.23
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -7.04,
+      38.29
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -5.41,
+      38.73
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -6.29,
+      38.1
+     ]
+    }
+   ]
+  },
+  {
+   "id": "caceres",
+   "name": "Cáceres",
+   "type": "provincia",
+   "ccaa": "Extremadura",
+   "bbox": [
+    -7.545,
+    39.032,
+    -4.953,
+    40.487
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -6.11,
+      39.74
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -7.26,
+      39.56
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -5.2,
+      39.44
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -6.83,
+      40.16
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -5.5,
+      40.1
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -6.65,
+      39.32
+     ]
+    }
+   ]
+  },
+  {
+   "id": "galicia",
+   "name": "Galicia (comunidad)",
+   "type": "comunidad autónoma",
+   "ccaa": "Galicia",
+   "bbox": [
+    -9.301,
+    41.807,
+    -6.734,
+    43.792
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -7.88,
+      42.74
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -9.08,
+      43.09
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -8.8,
+      42.03
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -6.9,
+      42.31
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -7.39,
+      43.58
+     ]
+    },
+    {
+     "name": "Punto 6",
+     "lonlat": [
+      -7.6,
+      41.96
+     ]
+    }
+   ]
+  },
+  {
+   "id": "a_coruna",
+   "name": "A Coruña",
+   "type": "provincia",
+   "ccaa": "Galicia",
+   "bbox": [
+    -9.301,
+    42.459,
+    -7.662,
+    43.792
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -8.47,
+      43.1
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -7.85,
+      43.56
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -9.12,
+      43.01
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -8.01,
+      42.97
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -8.76,
+      42.78
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lugo",
+   "name": "Lugo",
+   "type": "provincia",
+   "ccaa": "Galicia",
+   "bbox": [
+    -8.0,
+    42.326,
+    -6.815,
+    43.761
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -7.46,
+      43.02
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -7.5,
+      43.61
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -7.21,
+      42.51
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -7.8,
+      42.59
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -6.95,
+      42.89
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ourense",
+   "name": "Ourense",
+   "type": "provincia",
+   "ccaa": "Galicia",
+   "bbox": [
+    -8.366,
+    41.807,
+    -6.734,
+    42.579
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -7.6,
+      42.18
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -6.86,
+      42.31
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -8.21,
+      42.44
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -8.09,
+      41.92
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pontevedra",
+   "name": "Pontevedra",
+   "type": "provincia",
+   "ccaa": "Galicia",
+   "bbox": [
+    -8.949,
+    41.865,
+    -7.861,
+    42.858
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -8.44,
+      42.44
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -8.77,
+      42.05
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -7.99,
+      42.68
+     ]
+    }
+   ]
+  },
+  {
+   "id": "illes_balears",
+   "name": "Illes Balears",
+   "type": "provincia",
+   "ccaa": "Illes Balears",
+   "bbox": [
+    1.157,
+    38.641,
+    4.328,
+    40.095
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      2.99,
+      39.61
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      2.66,
+      39.67
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      4.08,
+      39.96
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      1.42,
+      38.99
+     ]
+    }
+   ]
+  },
+  {
+   "id": "la_rioja",
+   "name": "La Rioja",
+   "type": "provincia",
+   "ccaa": "La Rioja",
+   "bbox": [
+    -3.134,
+    41.919,
+    -1.68,
+    42.642
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.54,
+      42.29
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -1.94,
+      42.17
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.96,
+      42.5
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -2.87,
+      42.17
+     ]
+    }
+   ]
+  },
+  {
+   "id": "melilla",
+   "name": "Melilla",
+   "type": "provincia",
+   "ccaa": "Melilla",
+   "bbox": [
+    -2.97,
+    35.265,
+    -2.923,
+    35.32
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.95,
+      35.31
+     ]
+    }
+   ]
+  },
+  {
+   "id": "navarra",
+   "name": "Navarra",
+   "type": "provincia",
+   "ccaa": "Navarra",
+   "bbox": [
+    -2.499,
+    41.914,
+    -0.724,
+    43.31
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -1.65,
+      42.7
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -0.95,
+      42.86
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -1.45,
+      42.04
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -2.27,
+      42.58
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -1.49,
+      43.19
+     ]
+    }
+   ]
+  },
+  {
+   "id": "alava",
+   "name": "Araba/Álava",
+   "type": "provincia",
+   "ccaa": "País Vasco",
+   "bbox": [
+    -3.283,
+    42.473,
+    -2.235,
+    43.217
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.64,
+      42.85
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -2.97,
+      42.82
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.34,
+      42.85
+     ]
+    }
+   ]
+  },
+  {
+   "id": "vizcaya",
+   "name": "Bizkaia/Vizcaya",
+   "type": "provincia",
+   "ccaa": "País Vasco",
+   "bbox": [
+    -3.449,
+    42.982,
+    -2.413,
+    43.457
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.75,
+      43.23
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -2.93,
+      43.32
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.57,
+      43.29
+     ]
+    }
+   ]
+  },
+  {
+   "id": "guipuzcoa",
+   "name": "Gipuzkoa/Guipúzcoa",
+   "type": "provincia",
+   "ccaa": "País Vasco",
+   "bbox": [
+    -2.603,
+    42.895,
+    -1.729,
+    43.395
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -2.23,
+      43.12
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -2.02,
+      43.21
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.41,
+      43.06
+     ]
+    }
+   ]
+  },
+  {
+   "id": "murcia",
+   "name": "Murcia",
+   "type": "provincia",
+   "ccaa": "Región de Murcia",
+   "bbox": [
+    -2.342,
+    37.374,
+    -0.648,
+    38.755
+   ],
+   "points": [
+    {
+     "name": "Punto 1",
+     "lonlat": [
+      -1.49,
+      37.99
+     ]
+    },
+    {
+     "name": "Punto 2",
+     "lonlat": [
+      -1.1,
+      38.59
+     ]
+    },
+    {
+     "name": "Punto 3",
+     "lonlat": [
+      -2.18,
+      38.07
+     ]
+    },
+    {
+     "name": "Punto 4",
+     "lonlat": [
+      -0.93,
+      37.77
+     ]
+    },
+    {
+     "name": "Punto 5",
+     "lonlat": [
+      -1.79,
+      37.55
+     ]
+    }
+   ]
+  }
+ ]
 }

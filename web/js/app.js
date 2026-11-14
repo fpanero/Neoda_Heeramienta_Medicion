@@ -10,7 +10,7 @@
   const state = { region: "almeria", compare: "galicia", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
   let CFG = { variables: [], groups: [], regions: [], period: { first: 1981, last: 2025, default_from: 1991 } };
   const regionCache = new Map();
-  let lastResults = null, map, rectLayers = {};
+  let lastResults = null, map;
 
   // ---------- Formato ----------
   const fmt = (v, d = 2) => (S.isNum(v) ? v.toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d }) : "—");
@@ -210,7 +210,7 @@
         type: "bar", orientation: "h", y: c.map((d) => d.name), x: c.map((d) => d.perDecade),
         marker: { color: c.map((d) => (d.perDecade < 0 ? COLORS.compare : COLORS.main)), opacity: c.map((d) => (d.significant ? 1 : 0.45)) },
         hovertemplate: "%{y}: %{x:.2f} σ/década<extra></extra>",
-      }], { ...baseLayout(""), margin: { l: 175, r: 10, t: 6, b: 32 }, hovermode: "closest", xaxis: { title: { text: "σ por década", font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#12302f" } }, PLOT_CFG);
+      }], { ...baseLayout(""), margin: { l: 10, r: 10, t: 6, b: 32 }, hovermode: "closest", yaxis: { automargin: true }, xaxis: { title: { text: "σ por década", font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#12302f" } }, PLOT_CFG);
     } else {
       Plotly.purge("chart-index"); Plotly.purge("chart-contrib");
     }
@@ -281,7 +281,10 @@
 
   // ---------- Controles ----------
   function buildControls() {
-    const regOpts = CFG.regions.map((r) => `<option value="${r.id}">${esc(r.name)}</option>`).join("");
+    const byCcaa = new Map();
+    CFG.regions.forEach((r) => { const k = r.ccaa || "Otras"; if (!byCcaa.has(k)) byCcaa.set(k, []); byCcaa.get(k).push(r); });
+    const regOpts = [...byCcaa.keys()].sort((a, b) => a.localeCompare(b, "es")).map((k) =>
+      `<optgroup label="${esc(k)}">${byCcaa.get(k).map((r) => `<option value="${r.id}">${esc(r.name)}</option>`).join("")}</optgroup>`).join("");
     $("#sel-region").innerHTML = regOpts;
     $("#sel-compare").innerHTML = '<option value="">— Ninguna —</option>' + regOpts;
 
@@ -332,27 +335,42 @@
   }
 
   // ---------- Mapa ----------
-  function buildMap() {
+  let geoLayers = {}, pointLayer = null;
+  async function buildMap() {
     if (!window.L) return;
-    map = L.map("map", { zoomControl: false, attributionControl: true, scrollWheelZoom: false }).setView([38.5, -3.5], 5);
+    map = L.map("map", { zoomControl: true, attributionControl: true, scrollWheelZoom: false }).setView([39.5, -4], 5);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 10 }).addTo(map);
-    CFG.regions.forEach((r) => {
-      const [w, s, e, n] = r.bbox;
-      const rect = L.rectangle([[s, w], [n, e]], { weight: 1, color: "#1f6f8b", fillOpacity: 0.08 }).addTo(map);
-      rect.bindTooltip(r.name);
-      (r.points || []).forEach((p) => L.circleMarker([p.lonlat[1], p.lonlat[0]], { radius: 3, color: "#12302f", weight: 1, fillOpacity: 0.9 }).bindTooltip(`${r.name}: ${p.name}`).addTo(map));
-      rect.on("click", () => { state.region = r.id; if (state.compare === r.id) state.compare = ""; syncControls(); highlightMap(); });
-      rectLayers[r.id] = rect;
+    pointLayer = L.layerGroup().addTo(map);
+    let gj;
+    try { gj = await getJSON("config/regions.geojson"); } catch (e) { console.warn("Sin límites para el mapa", e); return; }
+    gj.features.forEach((f) => {
+      const r = regionById(f.properties.id); if (!r) return;
+      const layer = L.geoJSON(f, { style: { weight: 0.7, color: "#7a8a86", fillOpacity: 0.04 } });
+      layer.bindTooltip(`${r.name}<br><small>clic: elegir · Mayús+clic: comparar</small>`, { sticky: true });
+      layer.on("click", (ev) => {
+        if (ev.originalEvent && ev.originalEvent.shiftKey) { if (r.id !== state.region) state.compare = r.id; }
+        else { state.region = r.id; if (state.compare === r.id) state.compare = ""; }
+        syncControls(); highlightMap();
+      });
+      geoLayers[r.id] = layer;
+      if (r.type === "provincia") layer.addTo(map);
     });
     highlightMap();
   }
   function highlightMap() {
-    Object.entries(rectLayers).forEach(([id, rect]) => {
-      const sel = id === state.region, cmp = id === state.compare;
-      rect.setStyle({ color: sel ? "#1f6f8b" : cmp ? "#c2622d" : "#7a8a86", weight: sel || cmp ? 2.5 : 0.8, fillOpacity: sel || cmp ? 0.28 : 0.05, fillColor: cmp ? "#c2622d" : "#1f6f8b" });
-      if (sel || cmp) rect.bringToFront();
+    if (!map) return;
+    pointLayer && pointLayer.clearLayers();
+    const focus = [];
+    Object.entries(geoLayers).forEach(([id, layer]) => {
+      const r = regionById(id), sel = id === state.region, cmp = id === state.compare;
+      // Las comunidades (p. ej. Galicia) solo se dibujan cuando están elegidas, para no tapar sus provincias
+      if (r.type !== "provincia") { if (sel || cmp) layer.addTo(map); else map.removeLayer(layer); }
+      layer.setStyle({ color: sel ? "#1f6f8b" : cmp ? "#c2622d" : "#7a8a86", weight: sel || cmp ? 2.5 : 0.7, fillOpacity: sel || cmp ? 0.3 : 0.04, fillColor: cmp ? "#c2622d" : "#1f6f8b" });
+      if (sel || cmp) { layer.bringToFront(); focus.push(layer); }
     });
-    if (map && rectLayers[state.region]) map.fitBounds(L.featureGroup(Object.values(rectLayers)).getBounds().pad(0.15), { animate: true });
+    [state.region, state.compare].filter(Boolean).forEach((rid) => (regionById(rid).points || []).forEach((p) =>
+      L.circleMarker([p.lonlat[1], p.lonlat[0]], { radius: 3, color: "#12302f", weight: 1, fillOpacity: 0.9 }).bindTooltip(`${regionById(rid).name}: punto de muestreo NASA POWER`).addTo(pointLayer)));
+    if (focus.length) map.fitBounds(L.featureGroup(focus).getBounds().pad(0.25), { animate: true, maxZoom: 8 });
   }
 
   // ---------- URL compartible ----------

@@ -48,6 +48,7 @@ def main() -> int:
                 pt = fetch_point(p["lonlat"][0], p["lonlat"][1], period["first"], period["last"])
                 pt["name"] = p["name"]
                 pts.append(pt)
+                time.sleep(0.5)  # ser amables con la API
             snap = {"region": reg["id"], "fetched": datetime.now(timezone.utc).isoformat(timespec="seconds"),
                     "start": period["first"], "end": period["last"], "points": pts}
             (OUT / f"{reg['id']}.json").write_text(json.dumps(snap, separators=(",", ":")), encoding="utf-8")

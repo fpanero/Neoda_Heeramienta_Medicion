@@ -8,7 +8,9 @@ Al pulsar **Analizar**, la web (`web/js/power.js`) llama a la API mensual de NAS
 https://power.larc.nasa.gov/api/temporal/monthly/point?parameters=...&community=AG&longitude=..&latitude=..&start=1981&end=2025&format=JSON
 ```
 
-- Cada región se representa con **6 puntos en tierra** (`web/config/regions.json`); la serie regional es la media de los puntos.
+- Hay **52 provincias + Galicia (comunidad)**. Cada una se representa con **1 a 6 puntos** generados por `pipeline/build_regions.py`:
+  dentro de la provincia, a ~8 km o más de la costa cuando cabe, lo más repartidos posible y con al menos uno por isla grande.
+  La serie regional es la media de los puntos (Ceuta y Melilla: 1 punto).
 - Se piden 16 parámetros en una sola llamada por punto (el límite es 20).
 - Los datos de cada región se descargan una vez por sesión (~2 s).
 - Si la API falla, se usa la copia `web/data/power/<region>.json`, que GitHub Actions regenera en cada despliegue y cada lunes (`pipeline/fetch_power.py`).
@@ -44,4 +46,5 @@ Pendiente de Sen + IC (Gilbert 1987), Mann-Kendall con empates, OLS con t-test e
 
 ## Añadir una región
 
-Añadirla a `web/config/regions.json` con su `bbox` (para el mapa) y entre 3 y 8 `points` en tierra.
+Las provincias se generan con `python pipeline/build_regions.py spain-provinces.geojson` (necesita `shapely`).
+Para una región a medida, añadirla a mano a `web/config/regions.json` con su `bbox` y entre 3 y 8 `points` en tierra.

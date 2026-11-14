@@ -8,7 +8,7 @@ con datos de **NASA POWER descargados en directo**. Proyecto para el **NASA Spac
 
 ## Qué hace
 
-1. **Eliges la región** y, opcionalmente, otra para comparar. Para la demo del hackathon: **Almería** (semiárida, invernaderos) frente a **Galicia** (atlántica, húmeda).
+1. **Eliges cualquier provincia de España** (52, más Galicia como comunidad) en el desplegable o en el mapa y, opcionalmente, otra para comparar. Ejemplo de la demo: **Almería** (semiárida, invernaderos) frente a **Galicia** (atlántica, húmeda).
 2. **Eliges las variables** del ciclo del agua (19: 15 de NASA POWER y 4 calculadas): precipitación, temperatura, ETo, balance, aridez, SPI-12,
    humedad del suelo, nieve, viento, radiación…
 3. La app genera la **serie temporal** (anual, o mensual sin ciclo estacional) y calcula:
@@ -33,12 +33,14 @@ Los resultados se pueden descargar en CSV y la URL guarda el análisis para comp
 ```
 web/                   → la app (se publica tal cual en GitHub Pages)
   config/variables.json → catálogo de 19 variables (Tier 1 NASA POWER + Tier 2 calculadas)
-  config/regions.json   → regiones y puntos de muestreo
+  config/regions.json   → 53 regiones y sus puntos de muestreo (generado por pipeline/build_regions.py)
+  config/regions.geojson → límites provinciales para el mapa
   js/power.js          → descarga NASA POWER + ETo FAO-56, balance, aridez, SPI-12
   js/stats.js          → Mann-Kendall, Sen, OLS, anomalías, z-scores
   js/app.js            → interfaz
 pipeline/
   fetch_power.py       → copia de respaldo de NASA POWER (la ejecuta GitHub Actions)
+  build_regions.py     → genera regiones y puntos a partir de los límites provinciales
   tests/               → validación de la estadística y de FAO-56/SPI
 docs/DATA_CONTRACT.md  → de dónde sale cada variable y cómo se calcula
 ```
@@ -64,3 +66,8 @@ pip install numpy scipy pymannkendall pytest && pytest pipeline/tests
 
 Los satélites no ven las desaladoras ni el bombeo de pozos; la rejilla de NASA POWER es de ~50 km;
 y correlación no implica causalidad.
+
+## Créditos
+
+Datos: [NASA POWER](https://power.larc.nasa.gov/) (NASA Langley Research Center). Límites provinciales:
+[click_that_hood](https://github.com/codeforgermany/click_that_hood) (spain-provinces.geojson). Mapa base © OpenStreetMap.

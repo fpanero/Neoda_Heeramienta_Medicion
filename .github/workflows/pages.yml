@@ -40,7 +40,7 @@ jobs:
         with: { python-version: "3.12" }
       - name: Copia de respaldo de NASA POWER (si falla, la web sigue usando la API en directo)
         continue-on-error: true
-        timeout-minutes: 20
+        timeout-minutes: 40
         run: python pipeline/fetch_power.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
