@@ -313,15 +313,15 @@
       state.vars = new Set(p === "todas" ? CFG.variables.map((v) => v.id) : p === "ninguna" ? [] : RECOMMENDED);
       syncControls();
     }));
-    $("#sel-region").addEventListener("change", (e) => { state.region = e.target.value; highlightMap(); });
-    $("#sel-compare").addEventListener("change", (e) => { state.compare = e.target.value === state.region ? "" : e.target.value; highlightMap(); });
+    $("#sel-region").addEventListener("change", (e) => { state.region = e.target.value; highlightMap(); syncControls(); renderDashboard(); });
+    $("#sel-compare").addEventListener("change", (e) => { state.compare = e.target.value === state.region ? "" : e.target.value; highlightMap(); syncControls(); renderDashboard(); });
     $("#sel-from").addEventListener("change", (e) => (state.from = +e.target.value));
     $("#sel-to").addEventListener("change", (e) => (state.to = +e.target.value));
     $("#sel-alpha").addEventListener("change", (e) => (state.alpha = +e.target.value));
     document.querySelectorAll('input[name="mode"]').forEach((r) => r.addEventListener("change", (e) => (state.mode = e.target.value)));
     $("#btn-run").addEventListener("click", run);
     $("#btn-csv").addEventListener("click", downloadCSV);
-    $("#btn-demo").addEventListener("click", () => {
+    $("#btn-demo") && $("#btn-demo").addEventListener("click", () => {
       Object.assign(state, { region: "almeria", compare: "galicia", vars: new Set([...RECOMMENDED, "balance", "spi12"]), mode: "annual", alpha: 0.05, from: CFG.period.default_from, to: CFG.period.last });
       syncControls(); highlightMap(); run().then(() => $("#output").scrollIntoView({ behavior: "smooth" }));
     });
@@ -329,6 +329,7 @@
 
   function syncControls() {
     $("#sel-region").value = state.region; $("#sel-compare").value = state.compare;
+    if ($("#d-region")) { $("#d-region").value = state.region; $("#d-compare").value = state.compare; }
     $("#sel-from").value = state.from; $("#sel-to").value = state.to; $("#sel-alpha").value = String(state.alpha);
     document.querySelectorAll('input[name="mode"]').forEach((r) => (r.checked = r.value === state.mode));
     document.querySelectorAll("#var-list input").forEach((c) => (c.checked = state.vars.has(c.value)));
@@ -374,6 +375,165 @@
     if (focus.length) map.fitBounds(L.featureGroup(focus).getBounds().pad(0.25), { animate: true, maxZoom: 8 });
   }
 
+
+
+  // ---------- Portada: semáforo del agua ----------
+  const D = { from: 1991, token: 0 };
+  const KPIS = [
+    { id: "tair", icon: "🌡️", title: "Temperatura" },
+    { id: "eto", icon: "☀️", title: "Agua que «pide» el clima" },
+    { id: "precip", icon: "🌧️", title: "Lluvia" },
+    { id: "balance", icon: "⚖️", title: "Balance del agua" },
+    { id: "gwetroot", icon: "🌱", title: "Humedad del suelo" },
+    { id: "aridity", icon: "🏜️", title: "Nivel de aridez" },
+  ];
+  const STATUS = {
+    red: { label: "Empeora", cls: "red" },
+    green: { label: "Mejora", cls: "green" },
+    gray: { label: "Sin cambio claro", cls: "gray" },
+  };
+  const L_M2 = "litros/m²";
+  const NF0 = (() => { try { return new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0, useGrouping: "always" }); } catch (e) { return new Intl.NumberFormat("es-ES", { maximumFractionDigits: 0 }); } })();
+  const int = (v) => (S.isNum(v) ? NF0.format(Math.round(v)) : "—");
+  const signedInt = (v) => (S.isNum(v) ? (v > 0 ? "+" : v < 0 ? "−" : "") + NF0.format(Math.abs(Math.round(v))) : "—");
+  const aridityZone = (x) => (x < 0.05 ? "hiperárida" : x < 0.2 ? "árida" : x < 0.5 ? "semiárida" : x < 0.65 ? "subhúmeda seca" : "húmeda");
+  const signed1 = (v) => (S.isNum(v) ? (v > 0 ? "+" : v < 0 ? "−" : "") + fmt(Math.abs(v), 1) : "—");
+
+  function annualSeries(data, v, from, to) {
+    const rowsOf = (arr) => S.filterYears(S.toMonthly(data.start, arr), from, to);
+    let rows;
+    if (v.aggregation === "ratio") {
+      const num = S.annual(rowsOf(data.vars[v.ratio_of[0]]), "sum"), den = S.annual(rowsOf(data.vars[v.ratio_of[1]]), "sum");
+      rows = num.map((r, i) => ({ ...r, v: S.isNum(r.v) && S.isNum(den[i].v) && den[i].v > 0 ? r.v / den[i].v : null }));
+    } else rows = S.annual(rowsOf(data.vars[v.id]), v.aggregation);
+    return { t: rows.map((r) => r.t), v: rows.map((r) => r.v) };
+  }
+
+  function kpiStats(series, v, from, to) {
+    const mk = S.mannKendall(series.v, 0.05), sen = S.senSlope(series.t, series.v, 0.05);
+    if (!mk.valid || !sen.valid) return null;
+    const years = to - from;
+    const startFit = sen.intercept + sen.slope * from;
+    const change = sen.slope * years;
+    const status = !mk.significant ? "gray" : sen.slope * (v.water_sign || 1) < 0 ? "red" : "green";
+    return { mk, sen, change, pct: Math.abs(startFit) > 1e-9 ? (change / Math.abs(startFit)) * 100 : null,
+      mean: S.mean(series.v), recent: S.mean(series.v.slice(-10)), status, series };
+  }
+
+  /** Texto llano de cada indicador. */
+  function kpiText(k, st, name, from) {
+    if (!st) return { big: "—", text: "Sin datos suficientes." };
+    const sure = st.status !== "gray";
+    switch (k.id) {
+      case "tair":
+        return sure ? { big: `${signed1(st.change)} °C`, text: `Desde ${from}, la temperatura media en ${name} ha ${st.change > 0 ? "subido" : "bajado"} ${fmt(Math.abs(st.change), 1)} °C.` }
+          : { big: `${signed1(st.change)} °C`, text: `La temperatura de ${name} no muestra un cambio claro desde ${from}.` };
+      case "eto":
+        return { big: `${signedInt(st.change)} ${L_M2}`, text: sure
+          ? `Cada año, el clima de ${name} evapora ${int(Math.abs(st.change))} litros más por m² que en ${from} (${signed1(st.pct)} %). El campo necesita más riego para lo mismo.`
+          : `La evaporación que «pide» el clima en ${name} no ha cambiado de forma clara desde ${from}.` };
+      case "precip":
+        return sure ? { big: `${signedInt(st.pct)} %`, text: `Llueve ${st.change < 0 ? "menos" : "más"} que en ${from}: unos ${int(Math.abs(st.change))} litros/m² al año ${st.change < 0 ? "menos" : "más"}. Hoy caen de media ${int(st.recent)} litros/m² al año.` }
+          : { big: "≈ igual", text: `La lluvia en ${name} no ha cambiado de forma clara desde ${from}. Caen de media unos ${int(st.mean)} litros por m² al año.` };
+      case "balance":
+        return { big: `${signedInt(st.recent)} ${L_M2}`, text: (st.recent < 0
+          ? `Cada año el clima de ${name} «gasta» ${int(Math.abs(st.recent))} litros por m² más de los que llueven (media de los últimos 10 años).`
+          : `En ${name} llueve más de lo que el clima evapora: sobran ${int(st.recent)} litros por m² al año (últimos 10 años).`)
+          + (sure ? ` Y la cuenta ${st.status === "red" ? "va a peor" : "va a mejor"}.` : " No hay un cambio claro en el tiempo.") };
+      case "gwetroot":
+        return { big: sure ? `${signedInt(st.pct)} %` : "≈ igual", text: sure
+          ? `El agua disponible para las raíces de los cultivos ha ${st.change < 0 ? "bajado" : "subido"} un ${int(Math.abs(st.pct))} % desde ${from}.`
+          : `La humedad del suelo donde crecen las raíces no ha cambiado de forma clara desde ${from}.` };
+      case "aridity": {
+        const cls = aridityZone(st.recent);
+        return { big: cls.charAt(0).toUpperCase() + cls.slice(1), text: `Según la clasificación de la ONU, ${name} es una zona <b>${cls}</b>` + (sure ? ` y se está volviendo ${st.status === "red" ? "más seca" : "más húmeda"}.` : "; no se ve un cambio claro desde " + from + "."), gauge: st.recent };
+      }
+    }
+    return { big: "—", text: "" };
+  }
+
+  function sparkline(series, st, color) {
+    const W = 220, H = 46, P = 3, xs = series.t, ys = series.v;
+    const vals = ys.filter(S.isNum); if (vals.length < 2) return "";
+    const x0 = xs[0], x1 = xs[xs.length - 1], lo = Math.min(...vals), hi = Math.max(...vals), rng = hi - lo || 1;
+    const X = (x) => P + ((x - x0) / (x1 - x0 || 1)) * (W - 2 * P), Y = (y) => H - P - ((y - lo) / rng) * (H - 2 * P);
+    let d = ""; ys.forEach((y, i) => { if (S.isNum(y)) d += `${d && S.isNum(ys[i - 1]) ? "L" : "M"}${X(xs[i]).toFixed(1)},${Y(y).toFixed(1)}`; });
+    const tl = `M${X(x0).toFixed(1)},${Y(st.sen.intercept + st.sen.slope * x0).toFixed(1)}L${X(x1).toFixed(1)},${Y(st.sen.intercept + st.sen.slope * x1).toFixed(1)}`;
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="#9fb3b0" stroke-width="1.4"/><path d="${tl}" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/></svg>
+      <div class="spark-x"><span>${x0}</span><span>${x1}</span></div>`;
+  }
+
+  function aridityGauge(x) {
+    const classes = [["Hiperárido", 0, 0.05], ["Árido", 0.05, 0.2], ["Semiárido", 0.2, 0.5], ["Subhúmedo seco", 0.5, 0.65], ["Húmedo", 0.65, 1.5]];
+    // escala no lineal: cada clase ocupa el mismo ancho
+    const i = classes.findIndex(([, a, b]) => x >= a && x < b), ci = i < 0 ? 4 : i;
+    const [, a, b] = classes[ci], pos = ((ci + Math.min(1, Math.max(0, (x - a) / (b - a)))) / classes.length) * 100;
+    return `<div class="gauge"><div class="gauge-bar">${classes.map(([n]) => `<span title="${n}"></span>`).join("")}</div><div class="gauge-mark" style="left:${pos}%"></div>
+      <div class="gauge-lbl"><span>Desierto</span><span>Húmedo</span></div></div>`;
+  }
+
+  async function renderDashboard() {
+    const tok = ++D.token, from = D.from, to = CFG.period.last;
+    const main = state.region, cmp = state.compare && state.compare !== main ? state.compare : "";
+    const name = regionById(main).name, cname = cmp ? regionById(cmp).name : "";
+    $("#d-question").textContent = `¿Se está quedando ${name} sin agua?`;
+    $("#d-answer").textContent = "Descargando los datos de la NASA…";
+    $("#d-verdict").innerHTML = ""; $("#d-kpis").innerHTML = '<div class="loading">🛰️ Consultando los datos de la NASA de ' + esc(name) + (cmp ? " y " + esc(cname) : "") + "…</div>";
+    let dm, dc;
+    try { [dm, dc] = await Promise.all([regionData(main), cmp ? regionData(cmp) : null]); }
+    catch (e) { $("#d-kpis").innerHTML = `<div class="loading">No se pudieron cargar los datos: ${esc(e.message)}</div>`; return; }
+    if (tok !== D.token) return; // el usuario cambió de provincia mientras cargaba
+
+    const res = KPIS.map((k) => {
+      const v = varById(k.id);
+      const st = kpiStats(annualSeries(dm, v, from, to), v, from, to);
+      const sc = dc ? kpiStats(annualSeries(dc, v, from, to), v, from, to) : null;
+      return { k, v, st, sc };
+    });
+    const nRed = res.filter((r) => r.st && r.st.status === "red").length, nGreen = res.filter((r) => r.st && r.st.status === "green").length;
+    const cRed = dc ? res.filter((r) => r.sc && r.sc.status === "red").length : 0;
+    let verdict;
+    if (nRed >= 2 && nRed > nGreen) verdict = { cls: "red", light: "🔴", title: "La presión sobre el agua está aumentando", answer: `Sí, ${name} va a peor: ${nRed} de 6 indicadores empeoran de forma comprobada desde ${from}.` };
+    else if (nGreen > nRed && nGreen >= 2) verdict = { cls: "green", light: "🟢", title: "La situación del agua está mejorando", answer: `No: en ${name}, ${nGreen} de 6 indicadores mejoran de forma comprobada desde ${from}.` };
+    else verdict = { cls: "amber", light: "🟡", title: "Sin un cambio claro todavía", answer: `Por ahora no: en ${name} la mayoría de indicadores no muestra un cambio comprobado desde ${from}${nRed ? `, aunque ${nRed === 1 ? "uno empeora" : nRed + " empeoran"}` : ""}.` };
+    $("#d-answer").textContent = verdict.answer;
+    $("#d-verdict").className = "verdict " + verdict.cls;
+    $("#d-verdict").innerHTML = `<span class="light">${verdict.light}</span><div><b>${esc(verdict.title)}</b><span>${nRed} empeoran · ${nGreen} mejoran · ${6 - nRed - nGreen} sin cambio claro${cmp ? ` &nbsp;|&nbsp; ${esc(cname)}: ${cRed} de 6 empeoran` : ""}</span></div>`;
+
+    const colorOf = { red: COLORS.compare, green: "#2f7d4f", gray: "#7a8a86" };
+    $("#d-kpis").innerHTML = res.map(({ k, v, st, sc }) => {
+      const t = kpiText(k, st, name, from), s = STATUS[st ? st.status : "gray"];
+      let cmpLine = "";
+      if (sc) { const tc = kpiText(k, sc, cname, from); cmpLine = `<p class="kpi-cmp">${esc(cname)}: <b>${tc.big}</b> <span class="dot ${STATUS[sc.status].cls}"></span> ${STATUS[sc.status].label.toLowerCase()}</p>`; }
+      return `<article class="kpi ${s.cls}" title="${esc(v.question)}">
+        <div class="kpi-head"><span class="ico">${k.icon}</span><span class="kpi-title">${esc(k.title)}</span><span class="pill-st ${s.cls}">${s.label}</span></div>
+        <div class="kpi-big">${t.big}</div>
+        <p class="kpi-text">${t.text}</p>
+        ${t.gauge !== undefined ? aridityGauge(t.gauge) : st ? sparkline(st.series, st, colorOf[st.status]) : ""}
+        ${cmpLine}
+        <p class="kpi-conf">${st && st.status !== "gray" ? "✔ Cambio comprobado (95 % de confianza)" : "Los datos no muestran una tendencia clara"}</p>
+      </article>`;
+    }).join("");
+    const src = dm.meta;
+    $("#d-source").innerHTML = `Fuente: <b>NASA POWER</b> (satélites y modelos de la NASA) · ${from}–${to} · media de ${regionById(main).points.length} puntos de la provincia · ${src.mode === "live" ? "descargado en directo" : "copia guardada"} el ${new Date(src.fetched).toLocaleString("es-ES")}. 1 mm de agua = 1 litro por m².`;
+  }
+
+  function buildDashboard() {
+    $("#d-region").innerHTML = $("#sel-region").innerHTML;
+    $("#d-compare").innerHTML = $("#sel-compare").innerHTML;
+    $("#d-region").value = state.region; $("#d-compare").value = state.compare;
+    const onChange = () => {
+      state.region = $("#d-region").value;
+      state.compare = $("#d-compare").value === state.region ? "" : $("#d-compare").value;
+      syncControls(); highlightMap(); renderDashboard();
+    };
+    $("#d-region").addEventListener("change", onChange);
+    $("#d-compare").addEventListener("change", onChange);
+    document.querySelectorAll("#inicio .chip-btn").forEach((b) => b.addEventListener("click", () => {
+      document.querySelectorAll("#inicio .chip-btn").forEach((x) => x.classList.toggle("on", x === b));
+      D.from = +b.dataset.from; renderDashboard();
+    }));
+  }
 
   // ---------- Mapa de España (coropletas) ----------
   const M = { map: null, layers: {}, data: null, var: "eto", mode: "trend", from: null, to: null };
@@ -433,7 +593,7 @@
     const lg = $("#m-legend");
     if (M.mode === "trend") {
       const lo = v.water_sign >= 0 ? -scale.max : scale.max, hi = -lo;
-      lg.innerHTML = `<b>${esc(v.name)}</b> · tendencia (${esc(units)} por década)
+      lg.innerHTML = `<b>${esc(v.name)}</b> · cuánto cambia cada 10 años (${esc(units)})
         <div class="bar" style="background: linear-gradient(90deg, ${COLORS.compare}, ${NEUTRAL}, ${COLORS.main})"></div>
         <div class="ends"><span>${fmtSigned(lo, smart(lo))}</span><span>0</span><span>${fmtSigned(hi, smart(hi))}</span></div>
         <div class="ends"><span>${v.water_sign === 0 ? "baja" : "peor para el agua"}</span><span>${v.water_sign === 0 ? "sube" : "mejor para el agua"}</span></div>`;
@@ -453,8 +613,8 @@
       const eff = ([, r]) => r.value * (v.water_sign || 1);
       const worse = sig.filter((x) => eff(x) < 0).sort((a, b) => eff(a) - eff(b)).slice(0, 5);
       const better = sig.filter((x) => eff(x) > 0).sort((a, b) => eff(b) - eff(a)).slice(0, 5);
-      const labels = v.water_sign === 0 ? ["Bajan más (significativo)", "Suben más (significativo)"] : ["Empeoran para el agua (significativo)", "Mejoran para el agua (significativo)"];
-      html = `<p class="note">${sig.length} de ${Object.keys(res).length} provincias con tendencia significativa (α = ${fmt(state.alpha, 2)}).</p>` + list(labels[0], worse) + list(labels[1], better);
+      const labels = v.water_sign === 0 ? ["Donde más baja", "Donde más sube"] : ["🔴 Donde más empeora", "🟢 Donde más mejora"];
+      html = `<p class="note">El cambio está <b>comprobado</b> en ${sig.length} de ${Object.keys(res).length} provincias (${Math.round((1 - state.alpha) * 100)} % de confianza).</p>` + list(labels[0], worse) + list(labels[1], better);
     } else {
       const rows = Object.entries(res).filter(([, r]) => S.isNum(r.value)).sort((a, b) => a[1].value - b[1].value);
       html = list("Valores más bajos", rows.slice(0, 5)) + list("Valores más altos", rows.slice(-5).reverse());
@@ -471,7 +631,9 @@
     $("#m-from").innerHTML = yrs.join(""); $("#m-to").innerHTML = yrs.join("");
     M.from = CFG.period.default_from; M.to = CFG.period.last;
     $("#m-from").value = M.from; $("#m-to").value = M.to;
-    $("#m-var").addEventListener("change", (e) => { M.var = e.target.value; renderMap(); });
+    const setVar = (id) => { M.var = id; $("#m-var").value = id; document.querySelectorAll("#m-quick .chip-btn").forEach((b) => b.classList.toggle("on", b.dataset.var === id)); renderMap(); };
+    $("#m-var").addEventListener("change", (e) => setVar(e.target.value));
+    document.querySelectorAll("#m-quick .chip-btn").forEach((b) => b.addEventListener("click", () => setVar(b.dataset.var)));
     $("#m-from").addEventListener("change", (e) => { M.from = +e.target.value; renderMap(); });
     $("#m-to").addEventListener("change", (e) => { M.to = +e.target.value; renderMap(); });
     document.querySelectorAll('input[name="m-mode"]').forEach((r) => r.addEventListener("change", (e) => { M.mode = e.target.value; renderMap(); }));
@@ -492,15 +654,16 @@
     });
     // Canarias más cerca de la península no hace falta: se ve al hacer zoom; ajustamos a todo
     M.map.fitBounds(L.featureGroup(Object.values(M.layers)).getBounds(), { padding: [10, 10] });
-    $("#m-info").textContent = `Copia de NASA POWER del ${new Date(M.data.fetched).toLocaleDateString("es-ES")}. Tendencias: pendiente de Sen + Mann-Kendall sobre series anuales, calculadas en tu navegador.`;
+    $("#m-info").textContent = `Datos de NASA POWER (copia del ${new Date(M.data.fetched).toLocaleDateString("es-ES")}). Las cifras son el cambio cada 10 años.`;
     renderMap();
   }
 
   function selectFromMap(rid) {
     state.region = rid; if (state.compare === rid) state.compare = "";
     syncControls(); highlightMap();
-    if (!state.vars.has(M.var)) state.vars.add(M.var), syncControls();
-    run().then(() => $("#output").scrollIntoView({ behavior: "smooth" }));
+    $("#d-region").value = state.region; $("#d-compare").value = state.compare;
+    renderDashboard();
+    $("#inicio").scrollIntoView({ behavior: "smooth" });
   }
 
   // ---------- URL compartible ----------
@@ -532,7 +695,8 @@
       return;
     }
     const fromHash = readHash();
-    buildControls(); syncControls(); buildMap(); buildChoropleth();
+    buildControls(); syncControls(); buildDashboard(); buildMap(); buildChoropleth();
+    renderDashboard();
     if (fromHash) run();
   }
   window.addEventListener("hashchange", () => { if (CFG.regions.length && readHash()) { syncControls(); highlightMap(); run(); } });

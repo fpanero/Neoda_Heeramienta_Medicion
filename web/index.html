@@ -3,30 +3,99 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Neoda · Detective de recursos hídricos</title>
+  <title>Neoda · Semáforo del agua</title>
   <meta name="description" content="Herramienta para detectar tendencias significativas en los recursos hídricos de España con datos de la NASA. NASA Space Apps Challenge 2026 — Be an Earth System Trend Detective." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=8" />
+  <link rel="stylesheet" href="css/style.css?v=10" />
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
       <svg viewBox="0 0 32 32" class="logo" aria-hidden="true"><path d="M16 3 C16 3 6 15 6 21 a10 10 0 0 0 20 0 C26 15 16 3 16 3Z" fill="currentColor"/><path d="M10 22 l4 -3 l3 2 l5 -6" stroke="#f6f1e7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div>
-        <h1>Neoda <span>· Detective de recursos hídricos</span></h1>
-        <p class="tagline">¿Están cambiando de verdad los recursos hídricos de tu región? Datos de NASA POWER en directo + estadística. Detectamos tendencias, no predecimos.</p>
+        <h1>Neoda <span>· Semáforo del agua</span></h1>
+        <p class="tagline">¿Se está quedando tu provincia sin agua? Lo comprobamos con datos de la NASA de los últimos 45 años.</p>
       </div>
     </div>
     <nav class="toplinks">
-      <button class="linkbtn" id="btn-demo" title="Carga un análisis de ejemplo">▶ Ejemplo: Almería vs Galicia</button>
+      <a class="linkbtn primary" href="#inicio">Mi provincia</a>
       <a class="linkbtn" href="#mapa">Mapa de España</a>
-      <a class="linkbtn" href="#metodo">Cómo funciona</a>
+      <a class="linkbtn" href="#porque">Por qué importa</a>
+      <a class="linkbtn" href="#experto">Para expertos</a>
     </nav>
   </header>
 
+  <section id="inicio" class="dash">
+    <div class="dash-top">
+      <div class="dash-q">
+        <p class="eyebrow">Semáforo del agua · datos de la NASA</p>
+        <h2 id="d-question">¿Se está quedando Almería sin agua?</h2>
+        <p id="d-answer" class="answer">Cargando datos de la NASA…</p>
+      </div>
+      <div class="dash-pick card">
+        <label class="field">Mi provincia <select id="d-region"></select></label>
+        <label class="field">Comparar con <select id="d-compare"></select></label>
+        <div class="chips" role="group" aria-label="Periodo">
+          <button type="button" class="chip-btn on" data-from="1991">Últimos 35 años</button>
+          <button type="button" class="chip-btn" data-from="1981">Desde 1981</button>
+        </div>
+      </div>
+    </div>
+    <div id="d-verdict" class="verdict"></div>
+    <div id="d-kpis" class="kpis"></div>
+    <p id="d-source" class="note center"></p>
+  </section>
+
+  <section id="porque" class="why">
+    <h2>Por qué importa</h2>
+    <div class="why-grid">
+      <article class="why-card"><span class="why-ico">🧑‍🌾</span><h3>Para quién</h3><p>Agricultores y cooperativas que deciden qué cultivar y cuánto regar; ayuntamientos y gestores del agua que planifican embalses, desaladoras y acuíferos; y cualquier ciudadano que quiera saber qué está pasando en su provincia.</p></article>
+      <article class="why-card"><span class="why-ico">💡</span><h3>Qué tiene de nuevo</h3><p>No mira solo si llueve menos. Junta <b>calor, evaporación, humedad del suelo y lluvia</b> en un semáforo fácil de leer. A menudo la lluvia no cambia, pero el clima «pide» cada vez más agua: eso no se ve mirando solo la lluvia.</p></article>
+      <article class="why-card"><span class="why-ico">🛰️</span><h3>Datos de la NASA, en directo</h3><p>Cada consulta descarga al momento los datos de <b>NASA POWER</b> (satélites y modelos de la NASA), desde 1981 y para las 52 provincias. Solo marcamos un cambio como <b>«comprobado»</b> cuando la estadística lo confirma con un 95 % de confianza.</p></article>
+      <article class="why-card"><span class="why-ico">🔎</span><h3>Detecta, no adivina</h3><p>No hacemos predicciones: medimos lo que <b>ya ha pasado</b>. Es la base para decidir con datos y no con impresiones: dónde invertir en riego eficiente, qué cultivos aguantarán, dónde vigilar la sequía.</p></article>
+    </div>
+  </section>
+
+  <section id="mapa" class="mapsec">
+    <div class="mapsec-head">
+      <h2>Mapa de España: ¿dónde empeora más?</h2>
+      <p><span class="sw neg"></span> Rojo: el cambio va en contra del agua. <span class="sw pos"></span> Azul: va a favor. Las provincias pálidas y con borde discontinuo no tienen un cambio claro. Pulsa una provincia para ver su semáforo.</p>
+      <div class="chips" id="m-quick">
+        <button type="button" class="chip-btn" data-var="tair">🌡️ Calor</button>
+        <button type="button" class="chip-btn on" data-var="eto">☀️ Agua que pide el clima</button>
+        <button type="button" class="chip-btn" data-var="precip">🌧️ Lluvia</button>
+        <button type="button" class="chip-btn" data-var="balance">⚖️ Balance del agua</button>
+        <button type="button" class="chip-btn" data-var="gwetroot">🌱 Humedad del suelo</button>
+        <button type="button" class="chip-btn" data-var="aridity">🏜️ Aridez</button>
+      </div>
+    </div>
+    <div class="mapsec-grid">
+      <div class="mapctl card">
+        <fieldset class="field">
+          <legend>¿Qué quieres ver?</legend>
+          <label class="radio"><input type="radio" name="m-mode" value="trend" checked /> Cómo está cambiando</label>
+          <label class="radio"><input type="radio" name="m-mode" value="mean" /> Cómo es (media del periodo)</label>
+        </fieldset>
+        <label class="field">Otras variables <select id="m-var"></select></label>
+        <div class="row2">
+          <label class="field">Desde <select id="m-from"></select></label>
+          <label class="field">Hasta <select id="m-to"></select></label>
+        </div>
+        <div id="m-legend" class="legend"></div>
+        <div id="m-rank" class="rank"></div>
+        <p id="m-info" class="note"></p>
+      </div>
+      <div id="chmap" class="chmap card" role="img" aria-label="Mapa de provincias coloreado"></div>
+    </div>
+  </section>
+
+  <section id="experto" class="expert-head">
+    <h2>Análisis detallado <span>para expertos</span></h2>
+    <p>Las mismas series con toda la estadística: 19 variables, pendiente de Sen, test de Mann-Kendall, t-test e intervalos de confianza. Útil para comprobar cualquier cifra del semáforo.</p>
+  </section>
   <div id="demo-banner" class="banner" hidden></div>
 
   <main class="layout">
@@ -115,31 +184,6 @@
     </section>
   </main>
 
-  <section id="mapa" class="mapsec">
-    <div class="mapsec-head">
-      <h2>Mapa de España</h2>
-      <p>Cada provincia coloreada según la variable elegida. En modo <b>tendencia</b>: <span class="sw neg"></span> cambia en contra del agua, <span class="sw pos"></span> a favor; las provincias con tendencia <b>no significativa</b> salen tenues y con borde discontinuo. Haz clic en una provincia para analizarla en detalle.</p>
-    </div>
-    <div class="mapsec-grid">
-      <div class="mapctl card">
-        <label class="field">Variable <select id="m-var"></select></label>
-        <fieldset class="field">
-          <legend>Mostrar</legend>
-          <label class="radio"><input type="radio" name="m-mode" value="trend" checked /> Tendencia por década</label>
-          <label class="radio"><input type="radio" name="m-mode" value="mean" /> Valor medio del periodo</label>
-        </fieldset>
-        <div class="row2">
-          <label class="field">Desde <select id="m-from"></select></label>
-          <label class="field">Hasta <select id="m-to"></select></label>
-        </div>
-        <div id="m-legend" class="legend"></div>
-        <div id="m-rank" class="rank"></div>
-        <p id="m-info" class="note"></p>
-      </div>
-      <div id="chmap" class="chmap card" role="img" aria-label="Mapa de provincias coloreado"></div>
-    </div>
-  </section>
-
   <section id="metodo" class="method">
     <h2>Cómo funciona</h2>
     <div class="method-grid">
@@ -156,8 +200,8 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=8"></script>
-  <script src="js/power.js?v=8"></script>
-  <script src="js/app.js?v=8"></script>
+  <script src="js/stats.js?v=10"></script>
+  <script src="js/power.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
 </body>
 </html>

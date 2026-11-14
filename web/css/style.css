@@ -146,3 +146,73 @@ legend { margin-bottom: .2rem; }
 .rank li span { font-family: var(--mono); font-size: .75rem; color: var(--muted); }
 @media (max-width: 1000px) { .mapsec { margin: 0 1rem 1rem; } .mapsec-grid { grid-template-columns: 1fr; } .chmap { height: 460px; } }
 #mapa, #metodo { scroll-margin-top: 110px; }
+
+/* ================= Portada: semáforo del agua ================= */
+.linkbtn.primary { background: var(--water); color: #fff; border-color: var(--water); }
+.linkbtn.primary:hover { background: var(--ink); border-color: var(--ink); color: #fff; }
+#inicio, #porque, #experto { scroll-margin-top: 110px; }
+.dash { margin: 1.5rem 2rem 2.5rem; }
+.dash-top { display: grid; grid-template-columns: 1fr 340px; gap: 1.5rem; align-items: end; }
+.dash-q h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.05; margin: .3rem 0 .6rem; }
+.answer { font-size: 1.25rem; color: var(--ink-2); margin: 0; max-width: 60ch; }
+.dash-pick .field { margin: .3rem 0 .6rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .3rem; }
+.chip-btn { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: .4rem .85rem; font-size: .88rem; color: var(--ink-2); }
+.chip-btn:hover { border-color: var(--water); color: var(--water); }
+.chip-btn.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.verdict { display: flex; gap: 1rem; align-items: center; margin: 1.4rem 0 1rem; padding: 1rem 1.3rem; border-radius: 16px; border: 1px solid var(--line); background: var(--card); }
+.verdict:empty { display: none; }
+.verdict .light { font-size: 2.4rem; line-height: 1; }
+.verdict b { display: block; font-family: var(--serif); font-size: 1.45rem; }
+.verdict span:not(.light) { color: var(--ink-2); font-size: .95rem; }
+.verdict.red { background: #fbe7dc; border-color: #eab79a; }
+.verdict.green { background: #e1f1e6; border-color: #a9d3b6; }
+.verdict.amber { background: #fdf3d4; border-color: #ecd48a; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-top: 6px solid #9aa7a4; border-radius: 16px; padding: 1.1rem 1.2rem 1rem; display: flex; flex-direction: column; }
+.kpi.red { border-top-color: var(--dry); } .kpi.green { border-top-color: #2f7d4f; } .kpi.gray { border-top-color: #b9c2bf; }
+.kpi-head { display: flex; align-items: center; gap: .5rem; }
+.kpi-head .ico { font-size: 1.5rem; }
+.kpi-title { font-weight: 600; flex: 1; }
+.pill-st { font-size: .75rem; font-weight: 600; padding: .2rem .6rem; border-radius: 999px; white-space: nowrap; }
+.pill-st.red { background: #f8dfcc; color: #8a3a12; } .pill-st.green { background: #d8eedf; color: #1e5c37; } .pill-st.gray { background: var(--paper-2); color: var(--muted); }
+.kpi-big { font-family: var(--serif); font-weight: 700; font-size: 2.3rem; line-height: 1.1; margin: .5rem 0 .3rem; }
+.kpi.red .kpi-big { color: #a4471c; } .kpi.green .kpi-big { color: #22663f; } .kpi.gray .kpi-big { color: var(--ink-2); }
+.kpi-text { margin: 0 0 .6rem; color: var(--ink-2); font-size: .95rem; flex: 1; }
+.spark { width: 100%; height: 46px; display: block; }
+.spark-x { display: flex; justify-content: space-between; font-size: .7rem; color: var(--muted); font-family: var(--mono); }
+.kpi-cmp { margin: .6rem 0 0; padding-top: .5rem; border-top: 1px dashed var(--line); font-size: .88rem; color: var(--ink-2); }
+.dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; vertical-align: 0; margin-left: .2rem; }
+.dot.red { background: var(--dry); } .dot.green { background: #2f7d4f; } .dot.gray { background: #b9c2bf; }
+.kpi-conf { margin: .5rem 0 0; font-size: .78rem; color: var(--muted); }
+.kpi.red .kpi-conf, .kpi.green .kpi-conf { color: var(--ink-2); font-weight: 500; }
+.gauge { position: relative; margin: .3rem 0 .2rem; }
+.gauge-bar { display: grid; grid-template-columns: repeat(5, 1fr); height: 14px; border-radius: 8px; overflow: hidden; }
+.gauge-bar span:nth-child(1) { background: #b5441b; } .gauge-bar span:nth-child(2) { background: #d9824a; } .gauge-bar span:nth-child(3) { background: #ecc58c; } .gauge-bar span:nth-child(4) { background: #9cc7cf; } .gauge-bar span:nth-child(5) { background: #1f6f8b; }
+.gauge-mark { position: absolute; top: -5px; width: 4px; height: 24px; background: var(--ink); border-radius: 2px; transform: translateX(-2px); box-shadow: 0 0 0 2px #fff; }
+.gauge-lbl { display: flex; justify-content: space-between; font-size: .72rem; color: var(--muted); margin-top: .3rem; }
+.loading { grid-column: 1 / -1; padding: 2.5rem; text-align: center; color: var(--ink-2); background: var(--card); border: 1px dashed var(--line); border-radius: 16px; font-size: 1.05rem; }
+.note.center { text-align: center; margin-top: 1rem; }
+
+/* ================= Por qué importa ================= */
+.why { margin: 0 2rem 2.5rem; padding: 1.8rem; background: var(--ink); color: var(--paper); border-radius: 18px; }
+.why h2 { font-size: 1.7rem; margin-bottom: 1rem; }
+.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.1rem; }
+.why-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 1.1rem; }
+.why-ico { font-size: 1.8rem; }
+.why-card h3 { color: var(--water-2); font-size: 1.1rem; margin: .3rem 0 .4rem; }
+.why-card p { margin: 0; font-size: .92rem; color: #d9e2df; }
+.why-card b { color: #fff; }
+
+/* ================= Experto ================= */
+.expert-head { margin: 1rem 2rem 0; padding-top: 1.5rem; border-top: 2px dashed var(--line); }
+.expert-head h2 { font-size: 1.5rem; }
+.expert-head h2 span { font-family: var(--sans); font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; background: var(--paper-2); color: var(--muted); padding: .2rem .55rem; border-radius: 999px; vertical-align: middle; margin-left: .4rem; }
+.expert-head p { color: var(--ink-2); max-width: 90ch; margin: .3rem 0 0; }
+#m-quick { margin-bottom: 1rem; }
+
+@media (max-width: 1100px) { .kpis { grid-template-columns: repeat(2, 1fr); } .why-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 760px) {
+  .dash, .why, .expert-head { margin-left: 1rem; margin-right: 1rem; }
+  .dash-top { grid-template-columns: 1fr; } .kpis, .why-grid { grid-template-columns: 1fr; }
+}
