@@ -425,3 +425,8 @@ body[data-view="home"] .foot-wave { background: var(--mist); }
 /* Barra de navegación: degradado celeste (izq.) → blanco → coral (der.) */
 .nav { background: linear-gradient(90deg, rgba(190, 232, 240, .96) 0%, rgba(255, 255, 255, .96) 50%, rgba(250, 200, 205, .96) 100%); }
 .nav nav a.active { background: rgba(255, 255, 255, .85); }
+/* Pestaña activa sin óvalo: texto en negrita y una línea fina debajo */
+.nav nav a:not(.nav-cta), .nav nav a:not(.nav-cta):hover, .nav nav a.active:not(.nav-cta) { background: transparent; }
+.nav nav a:not(.nav-cta) { position: relative; }
+.nav nav a.active:not(.nav-cta) { color: var(--abyss); font-weight: 700; }
+.nav nav a.active:not(.nav-cta)::after { content: ""; position: absolute; left: .9rem; right: .9rem; bottom: .2rem; height: 2px; border-radius: 2px; background: var(--abyss); }
