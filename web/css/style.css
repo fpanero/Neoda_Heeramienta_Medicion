@@ -415,3 +415,10 @@ body[data-view="home"] .foot-wave { background: var(--mist); }
 .pdf-btn:disabled { opacity: .6; cursor: wait; }
 @media (max-width: 860px) { .nav-right { gap: .4rem; } .lang-switch { width: 72px; height: 32px; } .lang-switch .ls-knob { width: 33px; height: 26px; } .lang-switch.is-en .ls-knob { transform: translateX(33px); } }
 @media (prefers-reduced-motion: reduce) { .lang-switch .ls-knob { transition: none; } }
+/* Botón del informe: siempre en coral */
+.pdf-btn, .pdf-btn:hover { background: var(--worse); border-color: var(--worse); color: #fff; }
+.pdf-btn:hover { background: #d93d49; border-color: #d93d49; }
+.pdf-btn svg { color: #fff; }
+/* Interpretación del gráfico de contribuciones */
+.contrib-note { margin-top: .4rem; font-size: .92rem; color: var(--abyss); line-height: 1.5; }
+.contrib-note .how-read { display: block; margin-top: .5rem; font-size: .82rem; color: var(--slate); }

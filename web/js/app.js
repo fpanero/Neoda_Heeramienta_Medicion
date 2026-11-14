@@ -167,6 +167,22 @@
     return head + T(` Pero la tendencia <b>no es significativa</b> (${pTxt(r.mk.p)}): puede ser variabilidad natural. Con más años de datos podría llegar a confirmarse.`, ` But the trend is <b>not significant</b> (${pTxt(r.mk.p)}): it may be natural variability. More years of data could confirm it.`);
   }
 
+  /** Interpretación del gráfico «¿Qué variable empuja el cambio?». */
+  function contribText(ix, regionName) {
+    const c = ix.contrib.filter((d) => S.isNum(d.perDecade));
+    const item = (d) => `${T("la variable ", "")}<b>${esc(lc(vname(varById(d.id))))}</b> (${fmtSigned(d.perDecade, 2)} ${T("σ por década", "σ per decade")}, ${d.significant ? T("comprobado", "confirmed") : T("sin cambio claro", "no clear change")})`;
+    const neg = c.filter((d) => d.perDecade < 0), pos = c.filter((d) => d.perDecade > 0).reverse();
+    let t = "";
+    if (neg.length) {
+      t += T(`En ${esc(regionName)}, lo que más está reduciendo el agua disponible es ${item(neg[0])}`, `In ${esc(regionName)}, the factor reducing available water the most is ${item(neg[0])}`);
+      if (neg[1]) t += T(`, seguido de ${item(neg[1])}`, `, followed by ${item(neg[1])}`);
+      t += ". ";
+    } else t += T(`En ${esc(regionName)}, ninguna variable está reduciendo el agua disponible. `, `In ${esc(regionName)}, no variable is reducing available water. `);
+    t += pos.length ? T(`A favor del agua juega ${item(pos[0])}.`, `Working in favour of water: ${item(pos[0])}.`) : T("Ninguna variable juega a favor del agua.", "No variable is working in favour of water.");
+    t += `<span class="how-read">${T("Cómo leerlo: hacia la izquierda (coral) la variable resta agua, hacia la derecha (azul) la suma; cuanto más larga la barra, más pesa en el cambio. Las barras pálidas no tienen un cambio comprobado.", "How to read it: bars to the left (coral) take water away, bars to the right (blue) add it; the longer the bar, the more it weighs in the change. Pale bars have no confirmed change.")}</span>`;
+    return t;
+  }
+
   function verdict(ix) {
     if (!ix || !ix.mk.valid) return { title: T("Sin índice combinado", "No combined index"), badge: "—", cls: "flat" };
     if (!ix.mk.significant) return { title: T("Sin tendencia significativa en el agua disponible", "No significant trend in available water"), badge: T("estable / no concluyente", "stable / inconclusive"), cls: "flat" };
@@ -231,7 +247,8 @@
         marker: { color: c.map((d) => (d.perDecade < 0 ? COLORS.worse : COLORS.better)), opacity: c.map((d) => (d.significant ? 1 : 0.45)) },
         hovertemplate: `%{y}: %{x:.2f} ${T("σ/década", "σ/decade")}<extra></extra>`,
       }], { ...baseLayout(""), margin: { l: 10, r: 10, t: 6, b: 32 }, hovermode: "closest", yaxis: { automargin: true }, xaxis: { title: { text: T("σ por década", "σ per decade"), font: { size: 11 } }, gridcolor: COLORS.grid, zerolinecolor: "#06283d" } }, PLOT_CFG);
-    } else { Plotly.purge("chart-index"); Plotly.purge("chart-contrib"); }
+      $("#contrib-note").innerHTML = contribText(ix, rname(main));
+    } else { Plotly.purge("chart-index"); Plotly.purge("chart-contrib"); $("#contrib-note").innerHTML = ""; }
 
     const cards = $("#cards"); cards.innerHTML = "";
     let snap = null;
