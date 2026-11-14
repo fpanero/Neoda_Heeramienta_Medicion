@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
 </head>
 <body>
   <header class="topbar">
@@ -17,7 +17,7 @@
       <svg viewBox="0 0 32 32" class="logo" aria-hidden="true"><path d="M16 3 C16 3 6 15 6 21 a10 10 0 0 0 20 0 C26 15 16 3 16 3Z" fill="currentColor"/><path d="M10 22 l4 -3 l3 2 l5 -6" stroke="#f6f1e7" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div>
         <h1>Neoda <span>· Detective de recursos hídricos</span></h1>
-        <p class="tagline">¿Están cambiando de verdad los recursos hídricos de tu región? Datos de satélite de la NASA + estadística.</p>
+        <p class="tagline">¿Están cambiando de verdad los recursos hídricos de tu región? Datos de NASA POWER en directo + estadística. Detectamos tendencias, no predecimos.</p>
       </div>
     </div>
     <nav class="toplinks">
@@ -26,9 +26,7 @@
     </nav>
   </header>
 
-  <div id="demo-banner" class="banner" hidden>
-    <strong>Datos de demostración.</strong> Algunas series son <em>simuladas</em> mientras se integran los datos reales de la NASA. Las marcadas con <span class="pill demo">DEMO</span> no deben usarse para sacar conclusiones.
-  </div>
+  <div id="demo-banner" class="banner" hidden></div>
 
   <main class="layout">
     <!-- ===== Panel de control ===== -->
@@ -82,7 +80,7 @@
     <section class="results" aria-live="polite">
       <div id="empty" class="empty">
         <h2>Elige una región y unas variables</h2>
-        <p>La herramienta descarga las series mensuales de satélite, calcula la <strong>tasa de cambio</strong> (pendiente de Sen) y comprueba si la tendencia es <strong>estadísticamente significativa</strong> (Mann-Kendall, t-test e intervalos de confianza).</p>
+        <p>Al pulsar «Analizar», la herramienta descarga <strong>en directo</strong> las series mensuales de <a href="https://power.larc.nasa.gov/" target="_blank" rel="noopener">NASA POWER</a> (1981–hoy), calcula la <strong>tasa de cambio</strong> (pendiente de Sen) y comprueba si la tendencia es <strong>estadísticamente significativa</strong> (Mann-Kendall, t-test e intervalos de confianza).</p>
         <p>Además, combina las variables elegidas en un <strong>índice de recursos hídricos</strong> para ver la tendencia global del agua disponible.</p>
       </div>
 
@@ -96,6 +94,7 @@
             <div id="sum-badge" class="badge"></div>
           </header>
           <p id="sum-text" class="lead"></p>
+          <p id="data-info" class="note"></p>
           <div class="summary-grid">
             <div id="chart-index" class="chart"></div>
             <div>
@@ -119,18 +118,20 @@
     <h2>Cómo funciona</h2>
     <div class="method-grid">
       <div><h3>1 · Variables</h3><p>Cada variable describe una parte del ciclo del agua: lo que <b>entra</b> (lluvia), lo que la atmósfera <b>demanda</b> (temperatura, evapotranspiración, viento, radiación), lo que queda <b>almacenado</b> (humedad del suelo, nieve, acuíferos) y cómo <b>responde</b> la superficie (vegetación).</p></div>
-      <div><h3>2 · Región</h3><p>Promediamos los datos de satélite y modelos de la NASA (GPM, GLDAS, MODIS, GRACE) dentro del recuadro de la región elegida, mes a mes.</p></div>
+      <div><h3>2 · Región</h3><p>Descargamos en directo la API mensual de <b>NASA POWER</b> (reanálisis MERRA-2, lluvia corregida con GPM, humedad del suelo GEOS/GLDAS) en varios puntos repartidos por la región y hacemos la media, mes a mes, desde 1981.</p></div>
       <div><h3>3 · Serie temporal</h3><p>En modo <b>anual</b> sumamos o promediamos los 12 meses de cada año. En modo <b>mensual</b> restamos a cada mes su media histórica para quitar el ciclo de las estaciones, que si no taparía la tendencia.</p></div>
       <div><h3>4 · Estadística</h3><p><b>Pendiente de Sen</b>: tasa de cambio robusta a valores extremos. <b>Mann-Kendall</b>: ¿la serie sube o baja de forma consistente? <b>t-test</b> sobre la recta de regresión e <b>intervalos de confianza</b>. Una tendencia es <i>significativa</i> si p &lt; α: es poco probable que sea casualidad.</p></div>
+      <div><h3>Variables calculadas</h3><p><b>ETo</b>: FAO-56 Penman-Monteith con T2M ± T2M_RANGE/2, RH2M, WS2M, radiación y presión. <b>Balance</b> = P − ETo. <b>Aridez</b> = P / ETo anual (clases UNEP). <b>SPI-12</b>: ajuste gamma de la lluvia acumulada en 12 meses. <b>Anomalía de humedad</b>: humedad en raíces menos su media del mes.</p></div>
       <div><h3>Índice combinado</h3><p>Pasamos cada variable a anomalías estandarizadas (z), les damos signo según su efecto sobre el agua (+ lluvia, − temperatura…) y hacemos la media. Es una síntesis orientativa, inspirada en indicadores como el SPEI o el Combined Drought Indicator europeo.</p></div>
-      <div><h3>Limitaciones</h3><p>Los satélites no ven las desaladoras ni el bombeo de pozos. La resolución va de ~5 km (MODIS) a ~300 km (GRACE). Correlación no es causalidad: que varias variables cambien a la vez no demuestra que una cause la otra.</p></div>
+      <div><h3>Limitaciones</h3><p>Los satélites no ven las desaladoras ni el bombeo de pozos. La rejilla de NASA POWER es de ~50 km: describe el clima de la comarca, no de una finca. Correlación no es causalidad: que varias variables cambien a la vez no demuestra que una cause la otra.</p></div>
     </div>
     <p class="foot">Proyecto para el <a href="https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/" target="_blank" rel="noopener">NASA Space Apps Challenge 2026 — Be an Earth System Trend Detective</a> · Granada. Código abierto en GitHub.</p>
   </section>
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/stats.js?v=4"></script>
+  <script src="js/power.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
 </html>

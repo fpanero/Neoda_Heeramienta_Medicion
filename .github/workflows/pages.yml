@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "17 4 * * 1"   # cada lunes: refresca la copia de respaldo de NASA POWER
 
 permissions:
   contents: read
@@ -34,6 +36,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Copia de respaldo de NASA POWER (si falla, la web sigue usando la API en directo)
+        continue-on-error: true
+        timeout-minutes: 20
+        run: python pipeline/fetch_power.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: web }

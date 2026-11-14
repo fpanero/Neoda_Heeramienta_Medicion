@@ -1,86 +1,88 @@
 {
-  "_doc": "Catálogo de variables. 'water_sign' indica el efecto sobre los recursos hídricos al aumentar la variable (+1 = más agua disponible, -1 = menos). 'aggregation' indica cómo se pasa de mensual a anual (sum o mean). Ver docs/DATA_CONTRACT.md",
+  "_doc": "Catálogo de variables. Todas salen de NASA POWER (API mensual, community=AG) o se calculan a partir de ellas en web/js/power.js. water_sign: +1 = más valor, más agua disponible; -1 = menos agua; 0 = no entra en el índice combinado. aggregation (de mensual a anual): sum | mean | max | min | ratio.",
+  "period": { "first": 1981, "last": 2025, "default_from": 1991 },
   "groups": [
     { "id": "oferta", "name": "Entrada de agua", "description": "Agua que llega al sistema" },
-    { "id": "demanda", "name": "Demanda atmosférica", "description": "Factores que hacen que el agua se evapore o se consuma" },
-    { "id": "almacenamiento", "name": "Agua almacenada", "description": "Agua que queda en el suelo, la nieve o el subsuelo" },
-    { "id": "estado", "name": "Estado de la superficie", "description": "Cómo responde la vegetación y la superficie" }
+    { "id": "demanda", "name": "Demanda atmosférica", "description": "Factores que hacen que el agua se evapore" },
+    { "id": "almacenamiento", "name": "Agua en el suelo", "description": "Agua almacenada en el suelo" },
+    { "id": "indicadores", "name": "Indicadores derivados", "description": "Calculados a partir de las variables de NASA POWER" }
   ],
   "variables": [
-    {
-      "id": "precip", "name": "Precipitación", "group": "oferta", "units": "mm/mes", "aggregation": "sum", "water_sign": 1,
-      "description": "Lluvia y nieve que cae sobre la región. Es la principal entrada de agua.",
-      "source": { "dataset": "GPM IMERG Final Monthly (GPM_3IMERGM)", "provider": "NASA GES DISC", "resolution": "0.1°" }
-    },
-    {
-      "id": "precip_extreme", "name": "Lluvia máxima diaria", "group": "oferta", "units": "mm/día", "aggregation": "max", "water_sign": 0,
-      "description": "La lluvia del día más lluvioso del mes. Sirve para ver si las tormentas fuertes (DANA) son más frecuentes. No entra en el índice combinado porque más lluvia torrencial no significa más agua aprovechable.",
-      "source": { "dataset": "GPM IMERG Final Daily (GPM_3IMERGDF)", "provider": "NASA GES DISC", "resolution": "0.1°" }
-    },
-    {
-      "id": "tair", "name": "Temperatura del aire", "group": "demanda", "units": "°C", "aggregation": "mean", "water_sign": -1,
-      "description": "Temperatura media del aire a 2 m. Más calor significa más evaporación y más demanda de riego.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (GLDAS_NOAH025_M)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "lst", "name": "Temperatura de la superficie", "group": "demanda", "units": "°C", "aggregation": "mean", "water_sign": -1,
-      "description": "Temperatura del suelo medida por satélite durante el día. Detecta efectos locales como el enfriamiento de los invernaderos.",
-      "source": { "dataset": "MODIS MOD11C3 (LST mensual)", "provider": "NASA LP DAAC", "resolution": "0.05°" }
-    },
-    {
-      "id": "et", "name": "Evapotranspiración", "group": "demanda", "units": "mm/mes", "aggregation": "sum", "water_sign": -1,
-      "description": "Agua que vuelve a la atmósfera por evaporación del suelo y transpiración de las plantas.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (Evap_tavg)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "pet", "name": "Evapotranspiración potencial", "group": "demanda", "units": "mm/mes", "aggregation": "sum", "water_sign": -1,
-      "description": "Agua que se evaporaría si hubiera agua ilimitada. Mide la 'sed' de la atmósfera.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (PotEvap_tavg)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "qair", "name": "Humedad del aire", "group": "demanda", "units": "g/kg", "aggregation": "mean", "water_sign": 1,
-      "description": "Cantidad de vapor de agua en el aire (humedad específica). Aire más húmedo evapora menos.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (Qair_f_inst)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "wind", "name": "Velocidad del viento", "group": "demanda", "units": "m/s", "aggregation": "mean", "water_sign": -1,
-      "description": "El viento aumenta la evaporación.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (Wind_f_inst)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "swrad", "name": "Radiación solar", "group": "demanda", "units": "W/m²", "aggregation": "mean", "water_sign": -1,
-      "description": "Energía del sol que llega al suelo. Más radiación, más evaporación.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (SWdown_f_tavg)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "sm_surface", "name": "Humedad del suelo superficial", "group": "almacenamiento", "units": "kg/m²", "aggregation": "mean", "water_sign": 1,
-      "description": "Agua en los primeros 10 cm del suelo. Reacciona rápido a la lluvia y a la sequía.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (SoilMoi0_10cm_inst)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "sm_root", "name": "Humedad en la zona de raíces", "group": "almacenamiento", "units": "kg/m²", "aggregation": "mean", "water_sign": 1,
-      "description": "Agua disponible para las raíces de los cultivos (hasta ~1 m).",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (RootMoist_inst)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "runoff", "name": "Escorrentía", "group": "almacenamiento", "units": "mm/mes", "aggregation": "sum", "water_sign": 1,
-      "description": "Agua que corre por la superficie hacia ríos y embalses.",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (Qs_acc + Qsb_acc)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "swe", "name": "Agua en forma de nieve", "group": "almacenamiento", "units": "kg/m²", "aggregation": "mean", "water_sign": 1,
-      "description": "Agua guardada en la nieve (relevante en Sierra Nevada o el Pirineo).",
-      "source": { "dataset": "GLDAS Noah 2.1 mensual (SWE_inst)", "provider": "NASA GES DISC", "resolution": "0.25°" }
-    },
-    {
-      "id": "tws", "name": "Almacenamiento total de agua", "group": "almacenamiento", "units": "cm", "aggregation": "mean", "water_sign": 1,
-      "description": "Anomalía de toda el agua del terreno, incluida la subterránea (acuíferos). Resolución muy gruesa (~300 km).",
-      "source": { "dataset": "GRACE/GRACE-FO JPL Mascon RL06.3 (TELLUS_GRAC-GRFO_MASCON_CRI_GRID)", "provider": "NASA PO.DAAC", "resolution": "~3° efectiva" }
-    },
-    {
-      "id": "ndvi", "name": "Vegetación (NDVI)", "group": "estado", "units": "índice", "aggregation": "mean", "water_sign": 1,
-      "description": "Verdor de la vegetación. Una vegetación más sana suele indicar más agua disponible.",
-      "source": { "dataset": "MODIS MOD13C2 (NDVI mensual)", "provider": "NASA LP DAAC", "resolution": "0.05°" }
-    }
+    { "id": "precip", "tier": 1, "power": "PRECTOTCORR", "name": "Precipitación", "group": "oferta",
+      "units": "mm/mes", "units_annual": "mm/año", "aggregation": "sum", "water_sign": 1, "pct": true,
+      "question": "¿Llueve menos que antes?",
+      "description": "Lluvia más nieve fundida que llega al suelo, corregida con datos de satélite GPM. Es la variable madre del balance hídrico." },
+    { "id": "snow", "tier": 1, "power": "PRECSNOLAND", "name": "Precipitación en forma de nieve", "group": "oferta",
+      "units": "mm/mes", "units_annual": "mm/año", "aggregation": "sum", "water_sign": 1, "pct": true,
+      "question": "¿Nieva menos? La nieve es una reserva de agua para la primavera.",
+      "description": "Agua equivalente que cae como nieve sobre tierra." },
+    { "id": "tair", "tier": 1, "power": "T2M", "name": "Temperatura media", "group": "demanda",
+      "units": "°C", "aggregation": "mean", "water_sign": -1,
+      "question": "¿El calentamiento aumenta la demanda de agua?",
+      "description": "Temperatura media del aire a 2 metros." },
+    { "id": "tmax", "tier": 1, "power": "T2M_MAX", "name": "Temperatura máxima extrema", "group": "demanda",
+      "units": "°C", "units_annual": "°C (la más alta del año)", "aggregation": "max", "water_sign": -1,
+      "question": "¿Son los veranos más extremos? Más estrés térmico, más demanda de riego.",
+      "description": "Temperatura más alta registrada en el mes (en anual: la más alta del año)." },
+    { "id": "tmin", "tier": 1, "power": "T2M_MIN", "name": "Temperatura mínima extrema", "group": "demanda",
+      "units": "°C", "units_annual": "°C (la más baja del año)", "aggregation": "min", "water_sign": 0,
+      "question": "¿Son los inviernos más suaves?",
+      "description": "Temperatura más baja registrada en el mes. No entra en el índice: su efecto sobre el agua es indirecto." },
+    { "id": "rh", "tier": 1, "power": "RH2M", "name": "Humedad relativa", "group": "demanda",
+      "units": "%", "aggregation": "mean", "water_sign": 1,
+      "question": "¿El aire se está secando? Aire seco, más evapotranspiración.",
+      "description": "Vapor de agua en el aire respecto al máximo posible a esa temperatura." },
+    { "id": "qv", "tier": 1, "power": "QV2M", "name": "Humedad específica", "group": "demanda",
+      "units": "g/kg", "aggregation": "mean", "water_sign": 1,
+      "question": "¿Cuánta humedad hay realmente en la atmósfera?",
+      "description": "Gramos de vapor de agua por kilogramo de aire: medida absoluta de humedad." },
+    { "id": "wind", "tier": 1, "power": "WS10M", "name": "Velocidad del viento", "group": "demanda",
+      "units": "m/s", "aggregation": "mean", "water_sign": -1,
+      "question": "¿Más viento acelera la pérdida de agua del suelo y los cultivos?",
+      "description": "Viento medio a 10 m de altura." },
+    { "id": "rad", "tier": 1, "power": "ALLSKY_SFC_SW_DWN", "name": "Radiación solar", "group": "demanda",
+      "units": "MJ/m²/día", "aggregation": "mean", "water_sign": -1,
+      "question": "¿Cambia la energía que impulsa la evaporación?",
+      "description": "Energía solar que llega al suelo teniendo en cuenta las nubes." },
+    { "id": "cloud", "tier": 1, "power": "CLOUD_AMT", "name": "Nubosidad", "group": "demanda",
+      "units": "%", "aggregation": "mean", "water_sign": 0,
+      "question": "¿Hay menos nubes? Contexto de radiación y lluvia.",
+      "description": "Porcentaje del cielo cubierto por nubes. Variable de contexto (no entra en el índice)." },
+    { "id": "ps", "tier": 1, "power": "PS", "name": "Presión atmosférica", "group": "demanda",
+      "units": "kPa", "aggregation": "mean", "water_sign": 0,
+      "question": "Variable de soporte para el cálculo de la evapotranspiración.",
+      "description": "Presión del aire en superficie. Se usa en FAO-56; no entra en el índice." },
+    { "id": "eto", "tier": 2, "name": "Evapotranspiración de referencia (ETo)", "group": "demanda",
+      "units": "mm/mes", "units_annual": "mm/año", "aggregation": "sum", "water_sign": -1, "pct": true,
+      "question": "¿Cuánta agua «pide» el clima?",
+      "description": "Agua que evaporaría un césped de referencia con el clima observado. Calculada con FAO-56 Penman-Monteith a partir de T2M, T2M_RANGE, RH2M, WS2M, ALLSKY_SFC_SW_DWN y PS." },
+    { "id": "gwettop", "tier": 1, "power": "GWETTOP", "name": "Humedad del suelo superficial", "group": "almacenamiento",
+      "units": "fracción 0–1", "aggregation": "mean", "water_sign": 1,
+      "question": "¿Se seca antes la capa superficial? Responde rápido a sequías cortas.",
+      "description": "Humedad de la capa superficial del suelo (0 = seco total, 1 = saturado)." },
+    { "id": "gwetroot", "tier": 1, "power": "GWETROOT", "name": "Humedad en la zona de raíces", "group": "almacenamiento",
+      "units": "fracción 0–1", "aggregation": "mean", "water_sign": 1,
+      "question": "¿El suelo tiene menos agua almacenada? Es la variable más directamente «recurso hídrico».",
+      "description": "Agua disponible para las plantas en el primer metro de suelo." },
+    { "id": "gwetprof", "tier": 1, "power": "GWETPROF", "name": "Humedad del perfil del suelo", "group": "almacenamiento",
+      "units": "fracción 0–1", "aggregation": "mean", "water_sign": 1,
+      "question": "¿Está bajando el almacenamiento profundo?",
+      "description": "Humedad de toda la columna de suelo. Más estable; refleja el almacenamiento profundo." },
+    { "id": "soil_anom", "tier": 2, "name": "Anomalía de humedad del suelo", "group": "almacenamiento",
+      "units": "fracción", "aggregation": "mean", "water_sign": 1,
+      "question": "¿El suelo está más seco de lo normal para la época del año?",
+      "description": "Humedad en la zona de raíces menos la media histórica de ese mes (1981–hoy). Quita la estacionalidad. Mide lo mismo que la humedad en raíces: no la elijas a la vez para el índice." },
+    { "id": "balance", "tier": 2, "name": "Balance hídrico (P − ETo)", "group": "indicadores",
+      "units": "mm/mes", "units_annual": "mm/año", "aggregation": "sum", "water_sign": 1,
+      "question": "¿La cuenta del agua cierra? Negativo = el clima gasta más agua de la que da.",
+      "description": "Precipitación menos evapotranspiración de referencia." },
+    { "id": "aridity", "tier": 2, "name": "Índice de aridez (P / ETo)", "group": "indicadores",
+      "units": "adimensional", "aggregation": "ratio", "ratio_of": ["precip", "eto"], "water_sign": 1,
+      "question": "¿Se está desertificando? Es la métrica de referencia de la ONU (UNEP).",
+      "description": "Precipitación dividida por ETo. < 0,05 hiperárido · 0,05–0,2 árido · 0,2–0,5 semiárido · 0,5–0,65 subhúmedo seco · > 0,65 húmedo." },
+    { "id": "spi12", "tier": 2, "name": "SPI-12 (índice de sequía)", "group": "indicadores",
+      "units": "desviaciones típicas", "aggregation": "mean", "water_sign": 1,
+      "question": "¿Hay más sequía estadística que antes?",
+      "description": "Índice Estandarizado de Precipitación a 12 meses (OMM). < −1 sequía, < −2 sequía severa. Ajuste gamma sobre la lluvia acumulada de 12 meses, calibrado con todo el periodo 1981–hoy." }
   ]
 }

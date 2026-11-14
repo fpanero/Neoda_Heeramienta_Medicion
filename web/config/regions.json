@@ -1,26 +1,26 @@
 {
-  "_doc": "Regiones disponibles. bbox = [oeste, sur, este, norte] en grados (WGS84). Los límites son rectángulos aproximados; ver docs/DATA_CONTRACT.md para usar polígonos reales.",
+  "_doc": "Regiones. NASA POWER da datos por punto (rejilla de ~0,5° × 0,625°). Cada región se representa con varios puntos en tierra repartidos por su territorio; la serie regional es la media de los puntos. lonlat = [longitud, latitud]. bbox = [oeste, sur, este, norte], solo para el mapa.",
   "regions": [
     {
-      "id": "almeria",
-      "name": "Almería",
-      "type": "provincia",
-      "bbox": [
-        -3.15,
-        36.65,
-        -1.62,
-        37.92
+      "id": "almeria", "name": "Almería", "type": "provincia", "bbox": [-3.15, 36.65, -1.62, 37.92],
+      "points": [
+        { "name": "Poniente (Campo de Dalías)", "lonlat": [-2.75, 36.78] },
+        { "name": "Almería capital", "lonlat": [-2.45, 36.90] },
+        { "name": "Níjar", "lonlat": [-2.10, 36.95] },
+        { "name": "Tabernas", "lonlat": [-2.40, 37.10] },
+        { "name": "Valle del Almanzora", "lonlat": [-2.20, 37.35] },
+        { "name": "Vélez / Huércal-Overa", "lonlat": [-1.90, 37.55] }
       ]
     },
     {
-      "id": "galicia",
-      "name": "Galicia",
-      "type": "comunidad autónoma",
-      "bbox": [
-        -9.3,
-        41.8,
-        -6.73,
-        43.8
+      "id": "galicia", "name": "Galicia", "type": "comunidad autónoma", "bbox": [-9.30, 41.80, -6.73, 43.80],
+      "points": [
+        { "name": "A Coruña", "lonlat": [-8.40, 43.30] },
+        { "name": "Santiago", "lonlat": [-8.55, 42.88] },
+        { "name": "Pontevedra / Vigo", "lonlat": [-8.60, 42.35] },
+        { "name": "Lugo", "lonlat": [-7.55, 43.00] },
+        { "name": "Ourense", "lonlat": [-7.85, 42.35] },
+        { "name": "Montaña de Lugo", "lonlat": [-7.10, 42.75] }
       ]
     }
   ]

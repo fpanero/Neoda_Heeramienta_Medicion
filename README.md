@@ -1,7 +1,7 @@
 # Neoda · Detective de recursos hídricos 💧
 
-Herramienta web para detectar **tendencias estadísticamente significativas** en los recursos hídricos de España
-con datos de satélite de la NASA. Proyecto para el **NASA Space Apps Challenge 2026** —
+Herramienta web para **detectar tendencias** (no predecir) estadísticamente significativas en los recursos hídricos,
+con datos de **NASA POWER descargados en directo**. Proyecto para el **NASA Space Apps Challenge 2026** —
 [Be an Earth System Trend Detective](https://www.spaceappschallenge.org/2026/challenges/earth-system-trend-detective/) (Granada).
 
 **👉 App en vivo:** https://fpanero.github.io/Neoda_Heeramienta_Medicion/
@@ -9,8 +9,8 @@ con datos de satélite de la NASA. Proyecto para el **NASA Space Apps Challenge 
 ## Qué hace
 
 1. **Eliges la región** y, opcionalmente, otra para comparar. Para la demo del hackathon: **Almería** (semiárida, invernaderos) frente a **Galicia** (atlántica, húmeda).
-2. **Eliges las variables** del ciclo del agua (15 disponibles): precipitación, temperatura, evapotranspiración,
-   humedad del suelo, nieve, agua subterránea (GRACE), vegetación…
+2. **Eliges las variables** del ciclo del agua (19: 15 de NASA POWER y 4 calculadas): precipitación, temperatura, ETo, balance, aridez, SPI-12,
+   humedad del suelo, nieve, viento, radiación…
 3. La app genera la **serie temporal** (anual, o mensual sin ciclo estacional) y calcula:
    - **tasa de cambio** por década (pendiente de Sen),
    - **significancia** (Mann-Kendall y t-test),
@@ -23,25 +23,24 @@ Los resultados se pueden descargar en CSV y la URL guarda el análisis para comp
 
 | Parte | Estado |
 |---|---|
-| Web (selección, gráficas, estadística, índice, mapa, CSV) | ✅ |
-| Estadística validada contra `pymannkendall` y `scipy` | ✅ (`pytest pipeline/tests`) |
-| Datos | ⚠️ **DEMO (simulados)** hasta ejecutar el pipeline de la NASA |
-| Pipeline NASA: GLDAS (10 variables) + GPM IMERG (lluvia) | 🧪 implementado, pendiente de probar con credenciales |
-| Pipeline NASA: MODIS (LST, NDVI), GRACE, IMERG diario | ⏳ pendiente |
+| Datos en directo de NASA POWER (16 parámetros, 1981–2025, 6 puntos por región) | ✅ |
+| Variables calculadas: ETo FAO-56, balance P − ETo, aridez P/ETo, anomalía de humedad, SPI-12 | ✅ |
+| Estadística validada (pymannkendall, scipy, ejemplo 17 de FAO-56) | ✅ `pytest pipeline/tests` |
+| Copia de respaldo por si no hay conexión | ✅ se regenera en cada despliegue |
 
 ## Estructura
 
 ```
-web/                 → la app (se publica tal cual en GitHub Pages)
-  config/            → catálogo de variables y regiones (editable)
-  data/series/       → series mensuales por región y variable (JSON)
-  js/stats.js        → Mann-Kendall, Sen, OLS, anomalías, z-scores
-  js/app.js          → interfaz
+web/                   → la app (se publica tal cual en GitHub Pages)
+  config/variables.json → catálogo de 19 variables (Tier 1 NASA POWER + Tier 2 calculadas)
+  config/regions.json   → regiones y puntos de muestreo
+  js/power.js          → descarga NASA POWER + ETo FAO-56, balance, aridez, SPI-12
+  js/stats.js          → Mann-Kendall, Sen, OLS, anomalías, z-scores
+  js/app.js            → interfaz
 pipeline/
-  generate_demo.py   → genera datos simulados
-  fetch_nasa.py      → descarga datos reales de NASA Earthdata y los promedia por región
-  tests/             → valida la estadística JS contra Python
-docs/DATA_CONTRACT.md → formato de datos y cómo añadir variables/regiones
+  fetch_power.py       → copia de respaldo de NASA POWER (la ejecuta GitHub Actions)
+  tests/               → validación de la estadística y de FAO-56/SPI
+docs/DATA_CONTRACT.md  → de dónde sale cada variable y cómo se calcula
 ```
 
 ## Desarrollo local
@@ -50,28 +49,18 @@ docs/DATA_CONTRACT.md → formato de datos y cómo añadir variables/regiones
 # Ver la web
 cd web && python3 -m http.server 8000   # → http://localhost:8000
 
-# Regenerar datos de demostración
-python3 pipeline/generate_demo.py
-
 # Tests de la estadística (necesita Node.js)
 pip install numpy scipy pymannkendall pytest && pytest pipeline/tests
 ```
 
-## Pasar a datos reales de la NASA
-
-1. Crear cuenta gratuita en [NASA Earthdata](https://urs.earthdata.nasa.gov/users/new).
-2. En GitHub: *Settings → Secrets and variables → Actions* → añadir `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD`.
-3. *Actions → "Actualizar datos de la NASA" → Run workflow* (o en local: `python pipeline/fetch_nasa.py --regions almeria --variables precip tair`).
-4. Las series pasan de `DEMO` a `NASA` automáticamente y la web se vuelve a desplegar.
-
 ## Escalabilidad
 
 - **Cualquier región del mundo**: los datos de la NASA son globales; basta con añadir regiones a `regions.json`.
-- **Más variables y fuentes** (Copernicus, AEMET) con el mismo formato de datos.
-- **Previsión y alertas** a corto plazo sobre las mismas series.
+- **Más variables y fuentes** (GRACE para acuíferos, MODIS para vegetación, Copernicus, AEMET).
+- **Alertas** cuando una tendencia se vuelve significativa (seguimos detectando, no prediciendo).
 - **API** para cooperativas, ayuntamientos y confederaciones hidrográficas.
 
 ## Limitaciones
 
-Los satélites no ven las desaladoras ni el bombeo de pozos; la resolución va de ~5 km (MODIS) a ~300 km (GRACE);
+Los satélites no ven las desaladoras ni el bombeo de pozos; la rejilla de NASA POWER es de ~50 km;
 y correlación no implica causalidad.

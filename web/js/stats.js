@@ -148,6 +148,7 @@
       if (vs.length >= minMonths) {
         if (agg === "sum") v = vs.reduce((a, b) => a + b, 0) * (12 / vs.length);
         else if (agg === "max") v = Math.max(...vs);
+        else if (agg === "min") v = Math.min(...vs);
         else v = vs.reduce((a, b) => a + b, 0) / vs.length;
       }
       return { year, t: year, v };

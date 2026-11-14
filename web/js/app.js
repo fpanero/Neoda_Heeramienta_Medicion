@@ -3,13 +3,13 @@
   "use strict";
   const S = window.Stats;
   const $ = (sel) => document.querySelector(sel);
-  const RECOMMENDED = ["precip", "tair", "et", "sm_root", "ndvi"];
+  const RECOMMENDED = ["precip", "tair", "rh", "eto", "gwetroot", "aridity"];
   const COLORS = { main: "#1f6f8b", compare: "#c2622d", trend: "#12302f", trend2: "#8a3a12", grid: "#e9e1d2" };
   const PLOT_CFG = { displayModeBar: false, responsive: true };
 
   const state = { region: "almeria", compare: "galicia", vars: new Set(RECOMMENDED), from: null, to: null, mode: "annual", alpha: 0.05 };
-  let CFG = { variables: [], groups: [], regions: [], manifest: { series: {} } };
-  const cache = new Map();
+  let CFG = { variables: [], groups: [], regions: [], period: { first: 1981, last: 2025, default_from: 1991 } };
+  const regionCache = new Map();
   let lastResults = null, map, rectLayers = {};
 
   // ---------- Formato ----------
@@ -20,6 +20,7 @@
   const smart = (v) => { const a = Math.abs(v); return a === 0 ? 2 : a < 0.01 ? 4 : a < 1 ? 3 : a < 100 ? 2 : 1; };
   const varById = (id) => CFG.variables.find((v) => v.id === id);
   const regionById = (id) => CFG.regions.find((r) => r.id === id);
+  const lc = (s) => s.charAt(0).toLowerCase() + s.slice(1);
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   // ---------- Carga de datos ----------
@@ -28,28 +29,38 @@
     if (!r.ok) throw new Error(`${r.status} al cargar ${url}`);
     return r.json();
   }
-  async function loadSeries(region, variable) {
-    const key = `${region}/${variable}`;
-    if (!CFG.manifest.series[region] || !CFG.manifest.series[region][variable]) return null;
-    if (!cache.has(key)) cache.set(key, getJSON(`data/series/${key}.json`).catch(() => null));
-    return cache.get(key);
+  /** Descarga (una vez por sesión) todos los datos de NASA POWER de una región. */
+  function regionData(rid, onProgress) {
+    if (!regionCache.has(rid)) {
+      const p = Power.loadRegion(regionById(rid), CFG.period.first, CFG.period.last, onProgress);
+      p.catch(() => regionCache.delete(rid));
+      regionCache.set(rid, p);
+    }
+    return regionCache.get(rid);
   }
 
   function unitsFor(v, mode) {
     if (mode === "monthly") return `anomalía, ${v.units}`;
-    if (v.aggregation === "sum") return v.units.replace("/mes", "/año");
-    if (v.aggregation === "max") return `${v.units}, máx. del año`;
-    return v.units;
+    return v.units_annual || v.units;
   }
 
   /** Construye la serie a analizar: anual agregada o mensual sin ciclo estacional. */
   async function prepared(regionId, v) {
-    const raw = await loadSeries(regionId, v.id);
-    if (!raw) return null;
-    const rows = S.filterYears(S.toMonthly(raw.start, raw.values), state.from, state.to);
-    const series = state.mode === "annual" ? S.annual(rows, v.aggregation) : S.monthlyAnomalies(rows);
-    const baseline = state.mode === "annual" ? S.mean(series.map((r) => r.v)) : (() => { const a = S.annual(rows, v.aggregation); return S.mean(a.map((r) => r.v)); })();
-    return { t: series.map((r) => r.t), v: series.map((r) => r.v), baseline, source: raw.source || {}, units: unitsFor(v, state.mode) };
+    const data = await regionData(regionId);
+    const values = data.vars[v.id];
+    if (!values) return null;
+    const rowsOf = (arr) => S.filterYears(S.toMonthly(data.start, arr), state.from, state.to);
+    const rows = rowsOf(values);
+    let annualRows;
+    if (v.aggregation === "ratio") {
+      // Índice anual = suma anual del numerador / suma anual del denominador (no media de cocientes mensuales)
+      const num = S.annual(rowsOf(data.vars[v.ratio_of[0]]), "sum"), den = S.annual(rowsOf(data.vars[v.ratio_of[1]]), "sum");
+      annualRows = num.map((r, i) => ({ ...r, v: S.isNum(r.v) && S.isNum(den[i].v) && den[i].v > 0 ? r.v / den[i].v : null }));
+    } else annualRows = S.annual(rows, v.aggregation);
+    const series = state.mode === "annual" ? annualRows : S.monthlyAnomalies(rows);
+    const baseline = S.mean(annualRows.map((r) => r.v));
+    const recent = S.mean(annualRows.slice(-10).map((r) => r.v));
+    return { t: series.map((r) => r.t), v: series.map((r) => r.v), baseline, recent, source: data.meta, units: unitsFor(v, state.mode) };
   }
 
   function analyse(p) {
@@ -69,6 +80,11 @@
       const regions = [state.region, state.compare].filter(Boolean);
       const vars = CFG.variables.filter((v) => state.vars.has(v.id));
       const results = {};
+      const totalPts = regions.reduce((a, rid) => a + (regionCache.has(rid) ? 0 : regionById(rid).points.length), 0);
+      let donePts = 0;
+      if (totalPts) btn.textContent = `Descargando NASA POWER (0/${totalPts})…`;
+      await Promise.all(regions.map((rid) => regionData(rid, () => { donePts++; btn.textContent = `Descargando NASA POWER (${donePts}/${totalPts})…`; })));
+      btn.textContent = "Calculando tendencias…";
       for (const rid of regions) {
         results[rid] = {};
         await Promise.all(vars.map(async (v) => {
@@ -114,14 +130,20 @@
     const per = r.sen.slope * 10, conf = Math.round((1 - state.alpha) * 100);
     const dir = per > 0 ? "aumenta" : per < 0 ? "disminuye" : "no cambia";
     let pct = "";
-    const allowPct = state.mode === "annual" && !/°C|índice|cm/.test(v.units) && S.isNum(r.baseline) && r.baseline > 1e-6;
+    const allowPct = state.mode === "annual" && v.pct && S.isNum(r.baseline) && r.baseline > 1e-6;
     if (allowPct) pct = ` (${fmtSigned((per / r.baseline) * 100, 1)} % por década respecto a la media)`;
-    const head = `En ${regionName}, ${v.name.toLowerCase()} ${dir} a un ritmo de ${fmt(Math.abs(per), smart(per))} ${r.units} cada década${pct}.`;
+    let head = `En ${regionName}, ${lc(v.name)} ${dir} a un ritmo de ${fmt(Math.abs(per), smart(per))} ${r.units} cada década${pct}.`;
+    if (v.id === "aridity" && S.isNum(r.recent)) head += ` Clasificación UNEP de los últimos 10 años: <b>${aridityClass(r.recent)}</b> (P/ETo = ${fmt(r.recent, 2)}).`;
+    if (v.id === "balance" && S.isNum(r.recent) && state.mode === "annual") head += ` Balance medio de los últimos 10 años: <b>${fmtSigned(r.recent, 0)} mm/año</b> (${r.recent < 0 ? "el clima gasta más agua de la que da" : "superávit"}).`;
     if (r.mk.significant) {
       const effect = v.water_sign === 0 ? "" : (per * v.water_sign < 0 ? " Este cambio juega en contra de los recursos hídricos." : " Este cambio favorece los recursos hídricos.");
       return `${head} La tendencia es <b>estadísticamente significativa</b> al ${conf} % (Mann-Kendall, ${pTxt(r.mk.p)}): es muy poco probable que sea casualidad.${effect}`;
     }
     return `${head} Pero la tendencia <b>no es significativa</b> (${pTxt(r.mk.p)}): puede ser variabilidad natural. Con más años de datos podría llegar a confirmarse.`;
+  }
+
+  function aridityClass(x) {
+    return x < 0.05 ? "hiperárido" : x < 0.2 ? "árido" : x < 0.5 ? "semiárido" : x < 0.65 ? "subhúmedo seco" : "húmedo";
   }
 
   function verdict(ix) {
@@ -139,8 +161,8 @@
     let t = `Combinando ${ix.nVars} variable${ix.nVars > 1 ? "s" : ""} en ${rn} (${L.from}–${L.to}), el índice ${per < 0 ? "baja" : "sube"} ${fmt(Math.abs(per), 2)} desviaciones típicas por década (IC ${conf} %: ${fmtSigned(ix.sen.ciLow * 10)} a ${fmtSigned(ix.sen.ciHigh * 10)}; Mann-Kendall ${pTxt(ix.mk.p)}; t-test ${pTxt(ix.ols.p)}).`;
     const neg = ix.contrib.filter((c) => S.isNum(c.perDecade) && c.perDecade < 0).slice(0, 2);
     const pos = ix.contrib.filter((c) => S.isNum(c.perDecade) && c.perDecade > 0).slice(-2).reverse();
-    if (neg.length) t += ` Lo que más resta agua: ${neg.map((c) => c.name.toLowerCase()).join(" y ")}.`;
-    if (pos.length) t += ` Lo que más suma: ${pos.map((c) => c.name.toLowerCase()).join(" y ")}.`;
+    if (neg.length) t += ` Lo que más resta agua: ${neg.map((c) => lc(c.name)).join(" y ")}.`;
+    if (pos.length) t += ` Lo que más suma: ${pos.map((c) => lc(c.name)).join(" y ")}.`;
     if (L.regions[1] && L.index[L.regions[1]] && L.index[L.regions[1]].mk.valid) {
       const c = L.index[L.regions[1]], cp = c.sen.slope * 10;
       t += ` En comparación, en ${regionById(L.regions[1]).name} el índice ${cp < 0 ? "baja" : "sube"} ${fmt(Math.abs(cp), 2)} σ/década (${c.mk.significant ? "significativo" : "no significativo"}, ${pTxt(c.mk.p)}).`;
@@ -167,7 +189,7 @@
   }
 
   function sourceTag(src) {
-    return src.type === "demo" ? '<span class="pill demo">DEMO</span>' : '<span class="pill real">NASA</span>';
+    return src.mode === "snapshot" ? '<span class="pill demo" title="Copia guardada: no se pudo conectar en directo">NASA POWER · copia</span>' : '<span class="pill real" title="Descargado en directo">NASA POWER · en vivo</span>';
   }
 
   function render(L) {
@@ -198,8 +220,8 @@
     let anyDemo = false;
     L.vars.forEach((v) => {
       const r = L.results[main][v.id], rc = cmp ? L.results[cmp][v.id] : null;
-      if (r && r.source.type === "demo") anyDemo = true;
-      if (rc && rc.source.type === "demo") anyDemo = true;
+      if (r && r.source.mode === "snapshot") anyDemo = r.source;
+      if (rc && rc.source.mode === "snapshot") anyDemo = rc.source;
       const el = document.createElement("article");
       el.className = "card vcard";
       const per = r && r.sen.valid ? r.sen.slope * 10 : null;
@@ -209,7 +231,7 @@
         <p class="interp">${interpretVar(v, r, regionById(main).name)}</p>
         <div class="chart" id="ch-${v.id}"></div>
         ${r ? statsTable(r, rc, cmp) : ""}
-        <p class="src">${esc(v.description)}<br>Fuente prevista: ${esc(v.source.dataset)} · ${esc(v.source.provider)} · ${esc(v.source.resolution)}</p>`;
+        <p class="src"><i>${esc(v.question)}</i><br>${esc(v.description)}<br>Fuente: ${v.power ? `NASA POWER · <code>${esc(v.power)}</code>` : "calculada a partir de NASA POWER"} · media de ${regionById(main).points.length} puntos de la región</p>`;
       cards.appendChild(el);
       if (r) {
         const tr = traces(r, regionById(main).name, COLORS.main, COLORS.trend);
@@ -217,7 +239,11 @@
         Plotly.newPlot(`ch-${v.id}`, tr, baseLayout(r.units), PLOT_CFG);
       }
     });
-    $("#demo-banner").hidden = !anyDemo;
+    const banner = $("#demo-banner");
+    banner.hidden = !anyDemo;
+    if (anyDemo) banner.innerHTML = `<strong>Sin conexión con NASA POWER.</strong> Se muestran datos de la copia guardada el ${new Date(anyDemo.fetched).toLocaleDateString("es-ES")}. Pulsa «Analizar» de nuevo para reintentar en directo.`;
+    const m0 = L.results[main][L.vars[0].id];
+    $("#data-info").textContent = m0 ? `Datos: NASA POWER (MERRA-2 + GPM, rejilla 0,5° × 0,625°) · ${m0.source.mode === "live" ? "descargados en vivo" : "copia guardada"} el ${new Date(m0.source.fetched).toLocaleString("es-ES")} · ${m0.source.points} puntos por región.` : "";
     $("#share-hint").hidden = false;
   }
 
@@ -246,7 +272,7 @@
       lines.push([rid, name, `"${units}"`, L.mode, L.from, L.to, r.mk.n, r.sen.slope * 10, r.sen.ciLow * 10, r.sen.ciHigh * 10, r.mk.p, r.mk.tau, r.ols.p, r.ols.r2, r.mk.significant, src].join(","));
     };
     L.regions.forEach((rid) => {
-      L.vars.forEach((v) => { const r = L.results[rid][v.id]; if (r) push(rid, v.id, v.id, r, r.units, r.source.type); });
+      L.vars.forEach((v) => { const r = L.results[rid][v.id]; if (r) push(rid, v.id, v.power || v.id, r, r.units, "NASA POWER " + r.source.mode); });
       if (L.index[rid]) push(rid, "indice", "indice_combinado", L.index[rid], "sigma", "derivado");
     });
     const blob = new Blob(["﻿" + lines.join("\n")], { type: "text/csv;charset=utf-8" });
@@ -259,13 +285,10 @@
     $("#sel-region").innerHTML = regOpts;
     $("#sel-compare").innerHTML = '<option value="">— Ninguna —</option>' + regOpts;
 
-    // Años disponibles según el manifiesto
-    let minY = 9999, maxY = 0;
-    Object.values(CFG.manifest.series).forEach((vars) => Object.values(vars).forEach((m) => { minY = Math.min(minY, +m.start.slice(0, 4)); maxY = Math.max(maxY, +m.end.slice(0, 4)); }));
-    if (minY > maxY) { minY = 2001; maxY = 2025; }
+    const minY = CFG.period.first, maxY = CFG.period.last;
     const yrs = []; for (let y = minY; y <= maxY; y++) yrs.push(`<option>${y}</option>`);
     $("#sel-from").innerHTML = yrs.join(""); $("#sel-to").innerHTML = yrs.join("");
-    if (state.from === null) state.from = minY; if (state.to === null) state.to = maxY;
+    if (state.from === null) state.from = CFG.period.default_from || minY; if (state.to === null) state.to = maxY;
 
     const list = $("#var-list"); list.innerHTML = "";
     CFG.groups.forEach((g) => {
@@ -274,8 +297,8 @@
       const box = document.createElement("div"); box.className = "var-group";
       box.innerHTML = `<h4 title="${esc(g.description)}">${esc(g.name)}</h4>` + vs.map((v) => {
         const sc = v.water_sign > 0 ? "pos" : v.water_sign < 0 ? "neg" : "zero", st = v.water_sign > 0 ? "+" : v.water_sign < 0 ? "−" : "·";
-        const tip = `${v.description} Unidades: ${v.units}. Efecto sobre el agua: ${v.water_sign > 0 ? "más = más agua" : v.water_sign < 0 ? "más = menos agua" : "no entra en el índice"}.`;
-        return `<label class="var-item"><input type="checkbox" value="${v.id}"><span class="vname">${esc(v.name)}</span><span class="sign ${sc}" title="Efecto sobre el agua">${st}</span><button type="button" class="info" data-tip="${esc(tip)}" aria-label="Qué es ${esc(v.name)}">i</button></label>`;
+        const tip = `${v.question} ${v.description} Unidades: ${v.units}. Efecto sobre el agua: ${v.water_sign > 0 ? "más = más agua" : v.water_sign < 0 ? "más = menos agua" : "no entra en el índice"}.${v.tier === 2 ? " (Variable calculada)" : ""}`;
+        return `<label class="var-item"><input type="checkbox" value="${v.id}"><span class="vname">${esc(v.name)}${v.tier === 2 ? ' <small class="calc">calc.</small>' : ""}</span><span class="sign ${sc}" title="Efecto sobre el agua">${st}</span><button type="button" class="info" data-tip="${esc(tip)}" aria-label="Qué es ${esc(v.name)}">i</button></label>`;
       }).join("");
       list.appendChild(box);
     });
@@ -296,7 +319,7 @@
     $("#btn-run").addEventListener("click", run);
     $("#btn-csv").addEventListener("click", downloadCSV);
     $("#btn-demo").addEventListener("click", () => {
-      Object.assign(state, { region: "almeria", compare: "galicia", vars: new Set([...RECOMMENDED, "pet", "tws"]), mode: "annual", alpha: 0.05 });
+      Object.assign(state, { region: "almeria", compare: "galicia", vars: new Set([...RECOMMENDED, "balance", "spi12"]), mode: "annual", alpha: 0.05, from: CFG.period.default_from, to: CFG.period.last });
       syncControls(); highlightMap(); run().then(() => $("#output").scrollIntoView({ behavior: "smooth" }));
     });
   }
@@ -317,6 +340,7 @@
       const [w, s, e, n] = r.bbox;
       const rect = L.rectangle([[s, w], [n, e]], { weight: 1, color: "#1f6f8b", fillOpacity: 0.08 }).addTo(map);
       rect.bindTooltip(r.name);
+      (r.points || []).forEach((p) => L.circleMarker([p.lonlat[1], p.lonlat[0]], { radius: 3, color: "#12302f", weight: 1, fillOpacity: 0.9 }).bindTooltip(`${r.name}: ${p.name}`).addTo(map));
       rect.on("click", () => { state.region = r.id; if (state.compare === r.id) state.compare = ""; syncControls(); highlightMap(); });
       rectLayers[r.id] = rect;
     });
@@ -353,8 +377,8 @@
   // ---------- Inicio ----------
   async function init() {
     try {
-      const [vars, regs, manifest] = await Promise.all([getJSON("config/variables.json"), getJSON("config/regions.json"), getJSON("data/manifest.json")]);
-      CFG = { variables: vars.variables, groups: vars.groups, regions: regs.regions, manifest };
+      const [vars, regs] = await Promise.all([getJSON("config/variables.json"), getJSON("config/regions.json")]);
+      CFG = { variables: vars.variables, groups: vars.groups, regions: regs.regions, period: vars.period || CFG.period };
     } catch (e) {
       $("#empty").innerHTML = `<h2>No se pudieron cargar los datos</h2><p>${esc(e.message)}</p>`;
       return;
