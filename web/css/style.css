@@ -476,3 +476,10 @@ details.method .method-grid { padding: 0 1.4rem 1.4rem; }
   .story-visual { display: flex; align-items: center; justify-content: center; overflow: hidden; height: 34vh; }
   .story-visual .tank { height: calc(34vh - 1.6rem); max-height: calc(34vh - 1.6rem); width: auto; max-width: 70vw; flex: none; }
 }
+/* ---------- Vídeo demo en la home ---------- */
+.demo { padding: clamp(3rem, 7vw, 6rem) clamp(1rem, 6vw, 6rem) 1rem; background: var(--mist); text-align: center; }
+.demo h2 { font-size: clamp(1.8rem, 3.6vw, 2.8rem); font-weight: 900; font-variation-settings: var(--wide); color: var(--abyss); }
+.demo-sub { color: var(--slate); font-size: 1.1rem; max-width: 52ch; margin: .8rem auto 2rem; }
+.demo-frame { max-width: 960px; margin: 0 auto; border-radius: var(--r-lg); overflow: hidden; background: var(--abyss); box-shadow: 0 30px 70px -30px rgba(6,40,61,.45); aspect-ratio: 16 / 9; }
+.demo-frame video { display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 860px) { .demo-frame { border-radius: var(--r-md); } }

@@ -11,6 +11,8 @@
     "nav.map": "Map of Spain",
     "nav.panel": "Analysis panel",
     "nav.map.s": "Map",
+    "demo.h": "How Neoda works, in 30 seconds",
+    "demo.p": "Pick a question or a province, Neoda downloads NASA data and tells you what has really changed.",
     "nav.panel.s": "Panel",
     "hero.title": "Is Spain running out of water?",
     "hero.sub": "More heat, more evaporation, crops that need more irrigation. Neoda uses 45 years of NASA data to measure what is really changing in each Spanish province.",

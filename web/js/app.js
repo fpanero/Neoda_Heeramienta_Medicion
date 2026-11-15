@@ -719,6 +719,7 @@
     const changed = document.body.dataset.view !== v;
     document.body.dataset.view = v;
     document.querySelectorAll(".view").forEach((el) => (el.hidden = el.dataset.view !== v));
+    document.querySelectorAll(".view[hidden] video").forEach((vid) => vid.pause()); // el vídeo no sigue sonando en otra pestaña
     document.querySelectorAll(".nav nav a").forEach((a) => a.classList.toggle("active", a.dataset.go === v));
     if (changed) window.scrollTo({ top: 0 });
     if (v === "mapa" && M.map) setTimeout(() => { M.map.invalidateSize(); fitChoropleth(); }, 30);
