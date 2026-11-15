@@ -3,7 +3,7 @@
   "use strict";
   const S = window.Stats;
   const $ = (sel) => document.querySelector(sel);
-  const RECOMMENDED = ["precip", "tair", "rh", "eto", "gwetroot", "aridity"];
+  const RECOMMENDED = ["precip", "tair", "rh", "eto", "gwetroot"];
   const COLORS = { main: "#0a5f7e", compare: "#f2a93b", trend: "#06283d", trend2: "#b8741a", grid: "#e3eff2", worse: "#ef4e5a", better: "#0a5f7e", green: "#0fa67b", neutral: "#9db4bc" };
   const PLOT_CFG = { displayModeBar: false, responsive: true };
 
@@ -29,6 +29,8 @@
   const int = (v) => { if (!S.isNum(v)) return "—"; try { return new Intl.NumberFormat(LOC(), { maximumFractionDigits: 0, useGrouping: "always" }).format(Math.round(v)); } catch (e) { return Math.round(v).toLocaleString(LOC()); } };
   const signedInt = (v) => (S.isNum(v) ? (v > 0 ? "+" : v < 0 ? "−" : "") + int(Math.abs(v)) : "—");
   const signed1 = (v) => (S.isNum(v) ? (v > 0 ? "+" : v < 0 ? "−" : "") + fmt(Math.abs(v), 1) : "—");
+  /** Número legible con 2 cifras significativas (0,301 → 0,30; 1,504 → 1,5). */
+  const sig2 = (v) => { if (!S.isNum(v) || v === 0) return fmt(0, 0); const d = Math.min(4, Math.max(0, 1 - Math.floor(Math.log10(Math.abs(v))))); return fmt(v, d); };
   const pct = (x, d = 0) => (EN() ? `${fmt(x, d)}%` : `${fmt(x, d)} %`);
   const varById = (id) => CFG.variables.find((v) => v.id === id);
   const regionById = (id) => CFG.regions.find((r) => r.id === id);
@@ -87,8 +89,13 @@
     return { t: series.map((r) => r.t), v: series.map((r) => r.v), baseline, recent, source: data.meta };
   }
 
+  /** Una serie casi constante (p. ej. nieve que casi siempre es 0) puede dar Mann-Kendall significativo con pendiente 0:
+   *  en ese caso no hay una tendencia medible y no se marca como significativa. */
+  const flatTrend = (mk, sen) => mk.valid && sen.valid && sen.slope === 0;
+  function guard(mk, sen) { return flatTrend(mk, sen) ? { ...mk, significant: false, flat: true } : mk; }
   function analyse(p) {
-    return { mk: S.mannKendall(p.v, state.alpha), sen: S.senSlope(p.t, p.v, state.alpha), ols: S.linearRegression(p.t, p.v, state.alpha) };
+    const sen = S.senSlope(p.t, p.v, state.alpha);
+    return { mk: guard(S.mannKendall(p.v, state.alpha), sen), sen, ols: S.linearRegression(p.t, p.v, state.alpha) };
   }
 
   // ---------- Análisis completo ----------
@@ -129,7 +136,7 @@
 
   /** Índice combinado: media de anomalías estandarizadas con signo según su efecto sobre el agua. */
   function buildIndex(res, vars) {
-    const used = vars.filter((v) => v.water_sign !== 0 && res[v.id] && res[v.id].mk.valid);
+    const used = vars.filter((v) => v.water_sign !== 0 && res[v.id] && res[v.id].mk.valid && !res[v.id].mk.flat);
     if (!used.length) return null;
     const byT = new Map(), contrib = [];
     used.forEach((v) => {
@@ -149,15 +156,18 @@
   function interpretVar(v, r, regionName, L) {
     if (!r) return T("Todavía no hay datos de esta variable para esta región.", "No data yet for this variable in this region.");
     if (!r.mk.valid || !r.sen.valid) return T("No hay suficientes datos válidos en el periodo elegido para calcular una tendencia.", "Not enough valid data in the chosen period to compute a trend.");
-    const per = r.sen.slope * 10, conf = Math.round((1 - L.alpha) * 100), units = unitsFor(v, L.mode);
+    if (r.mk.flat) return T(`En ${regionName}, la variable ${lc(vname(v))} apenas varía en este periodo (casi todos los datos son iguales; por ejemplo, años sin nieve), así que no hay una tendencia que medir.`,
+      `In ${regionName}, the variable ${lc(vname(v))} barely varies in this period (almost all values are the same, e.g. years without snow), so there is no trend to measure.`);
+    const per = r.sen.slope * 10, conf = Math.round((1 - L.alpha) * 100), units = L.mode === "monthly" ? vunits(v) : vunitsAnnual(v);
     const dir = per > 0 ? T("aumenta", "increases") : per < 0 ? T("disminuye", "decreases") : T("no cambia", "does not change");
     let rel = "";
     if (L.mode === "annual" && v.pct && S.isNum(r.baseline) && r.baseline > 1e-6) {
       const x = fmtSigned((per / r.baseline) * 100, 1);
       rel = T(` (${x} % por década respecto a la media)`, ` (${x}% per decade relative to the mean)`);
     }
-    let head = T(`En ${regionName}, la variable ${lc(vname(v))} ${dir} a un ritmo de ${fmt(Math.abs(per), smart(per))} ${units} cada década${rel}.`,
-      `In ${regionName}, the variable ${lc(vname(v))} ${dir} at a rate of ${fmt(Math.abs(per), smart(per))} ${units} per decade${rel}.`);
+    const vs = L.mode === "monthly" ? T(" respecto a lo normal de cada mes", " compared with each month's normal") : "";
+    let head = T(`En ${regionName}, la variable ${lc(vname(v))} ${dir} unos ${sig2(Math.abs(per))} ${units} por década${vs}${rel}.`,
+      `In ${regionName}, the variable ${lc(vname(v))} ${dir} by about ${sig2(Math.abs(per))} ${units} per decade${vs}${rel}.`);
     if (v.id === "aridity" && S.isNum(r.recent)) head += T(` Clasificación UNEP de los últimos 10 años: <b>${aridityClass(r.recent)}</b> (P/ETo = ${fmt(r.recent, 2)}).`, ` UNEP class over the last 10 years: <b>${aridityClass(r.recent)}</b> (P/ETo = ${fmt(r.recent, 2)}).`);
     if (v.id === "balance" && S.isNum(r.recent) && L.mode === "annual") head += T(` Balance medio de los últimos 10 años: <b>${fmtSigned(r.recent, 0)} mm/año</b> (${r.recent < 0 ? "el clima gasta más agua de la que da" : "superávit"}).`, ` Mean balance over the last 10 years: <b>${fmtSigned(r.recent, 0)} mm/year</b> (${r.recent < 0 ? "the climate spends more water than it receives" : "surplus"}).`);
     if (r.mk.significant) {
@@ -258,7 +268,7 @@
       const el = document.createElement("article");
       el.className = "card vcard";
       const per = r && r.sen.valid ? r.sen.slope * 10 : null;
-      const tag = !r ? "" : !r.mk.significant ? `<span class="tag">${T("sin tendencia significativa", "no significant trend")}</span>` : per < 0 ? `<span class="tag down">▼ ${T("significativa", "significant")}</span>` : `<span class="tag up">▲ ${T("significativa", "significant")}</span>`;
+      const tag = !r ? "" : r.mk.flat ? `<span class="tag">${T("sin variación", "no variation")}</span>` : !r.mk.significant ? `<span class="tag">${T("sin tendencia significativa", "no significant trend")}</span>` : per < 0 ? `<span class="tag down">▼ ${T("significativa", "significant")}</span>` : `<span class="tag up">▲ ${T("significativa", "significant")}</span>`;
       const npts = regionById(main).points.length;
       el.innerHTML = `
         <h3>${esc(vname(v))} ${r ? sourceTag(r.source) : ""} ${tag}</h3>
@@ -289,7 +299,7 @@
       [T(`IC ${conf} % de la tasa`, `${conf}% CI of the rate`), (x) => (x.sen.valid ? `${fmtSigned(x.sen.ciLow * 10, smart(x.sen.ciLow * 10))} … ${fmtSigned(x.sen.ciHigh * 10, smart(x.sen.ciHigh * 10))}` : "—")],
       [T("Mann-Kendall p-valor", "Mann-Kendall p-value"), (x) => fmtP(x.mk.p)],
       [T("τ de Kendall", "Kendall's τ"), (x) => fmt(x.mk.tau, 2)],
-      [T("t-test p-valor (regresión)", "t-test p-value (regression)"), (x) => fmtP(x.ols.p)],
+      [T("t-test p-valor (regresión)", "t-test p-value (regression)"), (x) => (S.isNum(x.ols.p) ? fmtP(x.ols.p) : `<span class="na" title="${T("No aplica: la serie no varía", "Not applicable: the series does not vary")}">${T("n/a", "n/a")}</span>`)],
       [T("R² de la regresión", "R² of the regression"), (x) => fmt(x.ols.r2, 2)],
       [T("Nº de datos", "No. of data points"), (x) => String(x.mk.n ?? "—")],
     ];
@@ -356,6 +366,7 @@
       // Tabla por región
       const trendLabel = (v, r) => {
         if (!r || !r.mk.valid) return T("sin datos", "no data");
+        if (r.mk.flat) return T("Sin variación", "No variation");
         if (!r.mk.significant) return T("Sin cambio claro", "No clear change");
         const up = r.sen.slope > 0;
         return (up ? T("Sube", "Rises") : T("Baja", "Falls")) + T(" (comprobado)", " (confirmed)");
@@ -418,7 +429,7 @@
       const vs = CFG.variables.filter((v) => v.group === g.id);
       if (!vs.length) return;
       const box = document.createElement("div"); box.className = "var-group";
-      box.innerHTML = `<h4 title="${esc(gdesc(g))}">${esc(gname(g))}</h4>` + vs.map((v) => {
+      box.innerHTML = `<h3 class="vg-h" title="${esc(gdesc(g))}">${esc(gname(g))}</h3>` + vs.map((v) => {
         const sc = v.water_sign > 0 ? "pos" : v.water_sign < 0 ? "neg" : "zero", st = v.water_sign > 0 ? "+" : v.water_sign < 0 ? "−" : "·";
         const eff = v.water_sign > 0 ? T("más = más agua", "more = more water") : v.water_sign < 0 ? T("más = menos agua", "more = less water") : T("no entra en el índice", "not part of the index");
         const tip = `${vq(v)} ${vdesc(v)} ${T("Unidades", "Units")}: ${vunits(v)}. ${T("Efecto sobre el agua", "Effect on water")}: ${eff}.${v.tier === 2 ? T(" (Variable calculada)", " (Computed variable)") : ""}`;
@@ -437,7 +448,14 @@
     if (state.to === null) state.to = maxY;
     const list = $("#var-list");
     list.addEventListener("change", (e) => { if (e.target.type === "checkbox") { e.target.checked ? state.vars.add(e.target.value) : state.vars.delete(e.target.value); autoRun(); } });
-    list.addEventListener("click", (e) => { if (e.target.classList.contains("info")) e.preventDefault(); });
+    list.addEventListener("click", (e) => {
+      if (!e.target.classList.contains("info")) return;
+      e.preventDefault();
+      const open = !e.target.classList.contains("open");
+      list.querySelectorAll(".info.open").forEach((b) => { b.classList.remove("open"); b.setAttribute("aria-expanded", "false"); });
+      e.target.classList.toggle("open", open); e.target.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".info")) list.querySelectorAll(".info.open").forEach((b) => { b.classList.remove("open"); b.setAttribute("aria-expanded", "false"); }); });
     document.querySelectorAll(".quick button").forEach((b) => b.addEventListener("click", () => {
       const p = b.dataset.preset;
       state.vars = new Set(p === "todas" ? CFG.variables.map((v) => v.id) : p === "ninguna" ? [] : RECOMMENDED);
@@ -548,7 +566,7 @@
       const series = vals[M.var]; if (!series) return;
       const t = idx.map((i) => D.years[i]), y = idx.map((i) => series[i]);
       if (M.mode === "mean") { out[rid] = { value: S.mean(y) }; return; }
-      const mk = S.mannKendall(y, state.alpha), sen = S.senSlope(t, y, state.alpha);
+      const sen = S.senSlope(t, y, state.alpha), mk = guard(S.mannKendall(y, state.alpha), sen);
       out[rid] = mk.valid && sen.valid ? { value: sen.slope * 10, p: mk.p, significant: mk.significant, mean: S.mean(y) } : { value: null };
     });
     return out;
@@ -631,8 +649,8 @@
         <p class="note">${T(`Media de ${M.from} a ${M.to}.`, `Mean from ${M.from} to ${M.to}.`)}</p>`;
     }
     // Ranking (panel derecho)
-    const li = ([rid, r]) => `<li data-rid="${rid}">${esc(rname(rid))}<span>${plainValue(v, r)}</span></li>`;
-    const list = (title, rows) => `<h4>${title}</h4>` + (rows.length ? `<ol>${rows.map(li).join("")}</ol>` : `<p class="note">${T("Ninguna.", "None.")}</p>`);
+    const li = ([rid, r]) => `<li><button type="button" data-rid="${rid}">${esc(rname(rid))}<span>${plainValue(v, r)}</span></button></li>`;
+    const list = (title, rows) => `<h2>${title}</h2>` + (rows.length ? `<ol>${rows.map(li).join("")}</ol>` : `<p class="note">${T("Ninguna.", "None.")}</p>`);
     let html;
     if (M.mode === "trend") {
       const sig = entries.filter(([, r]) => r.significant);
@@ -657,7 +675,7 @@
       renderMap();
     });
     document.querySelectorAll('input[name="m-mode"]').forEach((r) => r.addEventListener("change", (e) => { M.mode = e.target.value; renderMap(); }));
-    $("#m-rank").addEventListener("click", (e) => { const li = e.target.closest("li"); if (li) selectFromMap(li.dataset.rid); });
+    $("#m-rank").addEventListener("click", (e) => { const b = e.target.closest("[data-rid]"); if (b) selectFromMap(b.dataset.rid); });
     M.map = L.map("chmap", { scrollWheelZoom: false, zoomSnap: 0.25, zoomControl: false }).setView([39.6, -3.7], 5.75);
     L.control.zoom({ position: "bottomright" }).addTo(M.map);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> · NASA POWER', maxZoom: 9, opacity: 0.35 }).addTo(M.map);
@@ -687,7 +705,8 @@
     if (!M.map || !Object.keys(M.layers).length) return;
     const wide = window.innerWidth > 860;
     // Deja sitio al panel flotante de la izquierda y al ranking de la derecha
-    M.map.fitBounds(L.featureGroup(Object.values(M.layers)).getBounds(), wide ? { paddingTopLeft: [430, 30], paddingBottomRight: [window.innerWidth > 1100 ? 330 : 30, 30] } : { padding: [10, 10] });
+    if (!wide) { M.map.fitBounds([[35.9, -9.4], [43.8, 4.4]], { padding: [6, 6] }); return; } // en móvil, península y Baleares a buen tamaño
+    M.map.fitBounds(L.featureGroup(Object.values(M.layers)).getBounds(), { paddingTopLeft: [430, 30], paddingBottomRight: [window.innerWidth > 1100 ? 330 : 30, 30] });
   }
   function currentView() {
     const h = location.hash;
@@ -727,7 +746,7 @@
       const stat = (vid) => provs.map((rid) => {
         const ser = D0.regions[rid][vid]; if (!ser) return null;
         const t = idx.map((i) => D0.years[i]), y = idx.map((i) => ser[i]);
-        const mk = S.mannKendall(y, 0.05), sen = S.senSlope(t, y, 0.05);
+        const sen = S.senSlope(t, y, 0.05), mk = guard(S.mannKendall(y, 0.05), sen);
         return mk.valid && sen.valid ? { sig: mk.significant, slope: sen.slope, mean: S.mean(y) } : null;
       }).filter(Boolean);
       const up = (a) => a.filter((x) => x.sig && x.slope > 0).length, down = (a) => a.filter((x) => x.sig && x.slope < 0).length;

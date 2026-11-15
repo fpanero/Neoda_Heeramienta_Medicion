@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
-  <link rel="stylesheet" href="css/style.css?v=37" />
+  <link rel="stylesheet" href="css/style.css?v=38" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2C16 2 6 14 6 20a10 10 0 0 0 20 0C26 14 16 2 16 2Z' fill='%2316A6B6'/%3E%3C/svg%3E" />
 </head>
 <body data-view="home">
@@ -22,8 +22,8 @@
     <div class="nav-right">
       <nav aria-label="Secciones">
         <a href="#" data-go="home" data-i18n="nav.home">Inicio</a>
-        <a href="#mapa" data-go="mapa" data-i18n="nav.map">Mapa de España</a>
-        <a href="#explorar" data-go="explorar" class="nav-cta" data-i18n="nav.panel">Panel de análisis</a>
+        <a href="#mapa" data-go="mapa"><span class="nl" data-i18n="nav.map">Mapa de España</span><span class="ns" data-i18n="nav.map.s">Mapa</span></a>
+        <a href="#explorar" data-go="explorar" class="nav-cta"><span class="nl" data-i18n="nav.panel">Panel de análisis</span><span class="ns" data-i18n="nav.panel.s">Panel</span></a>
       </nav>
       <button type="button" class="lang-switch" id="lang-switch" role="switch" aria-checked="false" aria-label="English / Español">
         <span class="ls-opt" data-l="es">ES</span><span class="ls-opt" data-l="en">EN</span><span class="ls-knob" aria-hidden="true"></span>
@@ -37,7 +37,7 @@
     <section class="hero">
       <div class="hero-text">
         <h1 data-i18n="hero.title">¿Se está quedando España sin agua?</h1>
-        <p class="hero-sub" data-i18n="hero.sub">Sequías más largas, cultivos que piden más riego, suelos que se secan. Neoda mide con 45 años de datos de la NASA qué está cambiando de verdad en cada provincia.</p>
+        <p class="hero-sub" data-i18n="hero.sub">Más calor, más evaporación, cultivos que piden más riego. Neoda mide con 45 años de datos de la NASA qué está cambiando de verdad en cada provincia.</p>
       </div>
       <figure class="tap" aria-hidden="true">
         <svg viewBox="0 0 420 540" class="tap-svg">
@@ -103,7 +103,7 @@
         <article class="step-card" data-step="4">
           <p class="step-num warn" data-live="balance">43 de 52</p>
           <h2 data-i18n="s4.h">Y en buena parte del país la cuenta ya no sale.</h2>
-          <p data-i18n="s4.p">En <span data-live="balance-text">muchas</span> provincias el clima evapora más agua de la que llueve, y <span data-live="arid-text">varias</span> son ya zonas áridas o semiáridas según la ONU. Ese hueco lo cubren embalses, acuíferos y desaladoras, cada vez con más presión.</p>
+          <p data-i18n="s4.p">En <span data-live="balance-text">muchas</span> provincias el clima evapora más agua de la que llueve, y <span data-live="arid-text">varias</span> son ya zonas áridas o semiáridas según la ONU. Ese hueco lo tienen que cubrir embalses, acuíferos y desaladoras.</p>
         </article>
       </div>
     </section>
@@ -120,7 +120,7 @@
   <!-- ======================= MAPA ======================= -->
   <div class="view" data-view="mapa" hidden>
     <section id="mapa" class="mapview">
-      <div id="chmap" class="chmap" role="img" aria-label="Mapa"></div>
+      <div id="chmap" class="chmap" role="region" aria-label="Mapa de provincias"></div>
       <div class="map-panel">
         <h1 data-i18n="map.title">El agua en España, provincia a provincia</h1>
         <p class="m-step" data-i18n="map.ask">¿Qué quieres saber?</p>
@@ -133,9 +133,9 @@
         <p id="m-answer" class="m-answer"></p>
         <div id="m-legend" class="legend"></div>
       </div>
-      <aside class="rank-panel">
+      <div class="rank-panel">
         <div id="m-rank" class="rank"></div>
-      </aside>
+      </div>
     </section>
   </div>
 
@@ -146,15 +146,15 @@
       <p data-i18n="panel.intro">Para el equipo científico: elige provincia, otra para comparar e indicadores. Cada cambio se recalcula al momento con datos de NASA POWER descargados en directo, con la pendiente de Sen, el test de Mann-Kendall, el t-test y sus intervalos de confianza.</p>
       <div id="demo-banner" class="banner" hidden></div>
       <div class="layout">
-        <aside class="panel">
+        <div class="panel">
           <section class="step">
-            <h3 data-i18n="panel.where">Dónde</h3>
+            <h2 class="step-h" data-i18n="panel.where">Dónde</h2>
             <label class="field"><span data-i18n="panel.province">Provincia</span><select id="sel-region"></select></label>
-            <div id="map" class="map" role="img" aria-label="Mapa"></div>
+            <div id="map" class="map" role="region" aria-label="Mapa para elegir provincia"></div>
             <label class="field"><span data-i18n="panel.compare">Comparar con</span> <small data-i18n="panel.optional">(opcional)</small><select id="sel-compare"></select></label>
           </section>
           <section class="step">
-            <h3 data-i18n="panel.what">Qué variables</h3>
+            <h2 class="step-h" data-i18n="panel.what">Qué variables</h2>
             <div class="quick">
               <button type="button" data-preset="recomendadas" data-i18n="panel.rec">Recomendadas</button>
               <button type="button" data-preset="todas" data-i18n="panel.all">Todas</button>
@@ -163,7 +163,7 @@
             <div id="var-list" class="var-list"></div>
           </section>
           <section class="step">
-            <h3 data-i18n="panel.how">Cómo</h3>
+            <h2 class="step-h" data-i18n="panel.how">Cómo</h2>
             <div class="row2">
               <label class="field"><span data-i18n="panel.from">Desde</span><select id="sel-from"></select></label>
               <label class="field"><span data-i18n="panel.to">Hasta</span><select id="sel-to"></select></label>
@@ -182,7 +182,7 @@
             </label>
           </section>
           <button id="btn-run" class="run" data-i18n="panel.run">Recalcular</button>
-        </aside>
+        </div>
 
         <section class="results" aria-live="polite">
           <div id="empty" class="empty"><h2 data-i18n="panel.loading">Cargando…</h2></div>
@@ -223,7 +223,7 @@
           <div><h3 data-i18n="m.3h">3 · Serie temporal</h3><p data-i18n="m.3p">En modo <b>anual</b> sumamos o promediamos los 12 meses de cada año. En modo <b>mensual</b> restamos a cada mes su media histórica para quitar el ciclo de las estaciones.</p></div>
           <div><h3 data-i18n="m.4h">4 · Estadística</h3><p data-i18n="m.4p"><b>Pendiente de Sen</b>: tasa de cambio robusta. <b>Mann-Kendall</b>: ¿la serie sube o baja de forma consistente? <b>t-test</b> sobre la regresión e <b>intervalos de confianza</b>. Una tendencia es <i>significativa</i> si p &lt; α.</p></div>
           <div><h3 data-i18n="m.5h">Variables calculadas</h3><p data-i18n="m.5p"><b>ETo</b>: FAO-56 Penman-Monteith. <b>Balance</b> = P − ETo. <b>Aridez</b> = P / ETo anual (clases UNEP). <b>SPI-12</b>: ajuste gamma de la lluvia acumulada en 12 meses. <b>Índice combinado</b>: media de anomalías estandarizadas con el signo de su efecto sobre el agua.</p></div>
-          <div><h3 data-i18n="m.6h">Limitaciones</h3><p data-i18n="m.6p">Los satélites no ven embalses, acuíferos ni desaladoras. La rejilla de NASA POWER es de ~50 km: describe el clima de la comarca, no de una finca. Que dos variables cambien a la vez no demuestra que una cause la otra.</p></div>
+          <div><h3 data-i18n="m.6h">Limitaciones</h3><p data-i18n="m.6p">Los satélites no ven embalses, acuíferos ni desaladoras. La rejilla de NASA POWER es de ~50 km: describe el clima de la comarca, no de una finca. Que dos variables cambien a la vez no demuestra que una cause la otra. Algunas variables están relacionadas entre sí (balance, aridez y SPI-12 se calculan a partir de la lluvia y la ETo): si se eligen todas, el índice combinado da más peso a esos dos factores.</p></div>
         </div>
       </details>
     </section>
@@ -240,9 +240,9 @@
 
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="js/stats.js?v=37"></script>
-  <script src="js/power.js?v=37"></script>
-  <script src="js/i18n.js?v=37"></script>
-  <script src="js/app.js?v=37"></script>
+  <script src="js/stats.js?v=38"></script>
+  <script src="js/power.js?v=38"></script>
+  <script src="js/i18n.js?v=38"></script>
+  <script src="js/app.js?v=38"></script>
 </body>
 </html>
